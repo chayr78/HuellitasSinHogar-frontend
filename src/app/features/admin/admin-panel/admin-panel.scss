@@ -1,0 +1,48 @@
+.contador {
+  min-width: 110px;
+  border-radius: 16px;
+}
+
+.pestanas {
+  --bs-nav-link-color: var(--bs-body-color);
+  --bs-nav-link-hover-color: var(--bs-body-color);
+  --bs-nav-link-font-weight: 700;
+  --bs-nav-pills-border-radius: 999px;
+  --bs-nav-pills-link-active-bg: var(--hs-sage);
+
+  .nav-link {
+    background-color: #fff;
+    border: 1px solid var(--hs-border);
+  }
+
+  .nav-link.active {
+    border-color: var(--hs-sage);
+  }
+}
+
+.buscador {
+  max-width: 420px;
+
+  .form-control {
+    background-color: #fff;
+  }
+}
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-border-color: var(--hs-border);
+
+  th {
+    font-size: 0.8rem;
+    color: var(--hs-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+}
+
+.miniatura {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}

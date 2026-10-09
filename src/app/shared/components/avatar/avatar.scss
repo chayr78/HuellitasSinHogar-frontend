@@ -1,0 +1,21 @@
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-weight: 800;
+  color: #b4532a;
+  background-color: var(--hs-peach-soft);
+  border-radius: 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

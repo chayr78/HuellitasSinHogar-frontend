@@ -1,0 +1,116 @@
+<div
+  class="zona d-flex flex-column flex-sm-row gap-3 p-3"
+  [class.arrastrando]="arrastrando()"
+  (dragover)="alArrastrar($event)"
+  (dragleave)="arrastrando.set(false)"
+  (drop)="alSoltar($event)"
+>
+  <div class="vista-previa" [class.circular]="forma === 'circular'">
+    @if (previewLocal(); as preview) {
+      <!-- Mascota: foto completa sobre fondo suave. Perfil (circular): se recorta, como en el avatar. -->
+      <img
+        class="w-100 h-100"
+        [class.object-fit-cover]="tipo === 'perfil'"
+        [class.object-fit-contain]="tipo !== 'perfil'"
+        [class.fondo-suave]="tipo !== 'perfil'"
+        [src]="preview"
+        alt="Vista previa de la foto seleccionada"
+      />
+    } @else if (urlActual(); as actual) {
+      <app-foto-mascota
+        class="w-100 h-100"
+        [fotoUrl]="actual"
+        [nombre]="tipo === 'perfil' ? 'tu perfil' : 'la mascota'"
+        [altura]="null"
+        [recortar]="tipo === 'perfil'"
+      />
+    } @else {
+      <div class="vista-vacia" aria-hidden="true">
+        <i class="bi bi-camera fs-2"></i>
+      </div>
+    }
+    @if (procesando()) {
+      <div class="capa-carga">
+        <div class="spinner-border spinner-border-sm text-primary" role="status">
+          <span class="visually-hidden">Subiendo foto...</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="flex-grow-1 d-flex flex-column gap-2">
+    <p class="small fw-bold mb-1">Arrastra una foto aquí o elige una opción.</p>
+
+    <div class="d-flex flex-wrap gap-2">
+      <input
+        #inputArchivo
+        type="file"
+        class="d-none"
+        accept="image/jpeg,image/png,image/webp"
+        tabindex="-1"
+        aria-hidden="true"
+        (change)="alElegirArchivo($event)"
+      />
+      <input
+        #inputCamara
+        type="file"
+        class="d-none"
+        accept="image/*"
+        capture="environment"
+        tabindex="-1"
+        aria-hidden="true"
+        (change)="alElegirArchivo($event)"
+      />
+      <button type="button" class="btn btn-hs-outline btn-sm px-3" [disabled]="procesando()" (click)="inputArchivo.click()">
+        <i class="bi bi-image me-1" aria-hidden="true"></i>Elegir de mi dispositivo
+      </button>
+      <button type="button" class="btn btn-hs-outline btn-sm px-3" [disabled]="procesando()" (click)="inputCamara.click()">
+        <i class="bi bi-camera me-1" aria-hidden="true"></i>Tomar foto
+      </button>
+      @if (urlActual() || procesando()) {
+        <button type="button" class="btn btn-link btn-sm text-hs-muted fw-bold text-decoration-none" (click)="quitarFoto()">
+          Quitar foto
+        </button>
+      }
+    </div>
+
+    @if (progreso() !== null) {
+      <div
+        class="progress"
+        role="progressbar"
+        aria-label="Progreso de la subida"
+        [attr.aria-valuenow]="progreso()"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <div class="progress-bar" [style.width.%]="progreso()"></div>
+      </div>
+    }
+
+    @if (error(); as mensaje) {
+      <div class="hs-alert-warn small py-2" role="alert">{{ mensaje }}</div>
+    }
+
+    @if (subidaNoConfigurada()) {
+      <div>
+        <label for="foto-url-manual" class="form-label small mb-1">URL de la foto</label>
+        <input
+          id="foto-url-manual"
+          type="url"
+          class="form-control"
+          placeholder="https://..."
+          [value]="urlActual() ?? ''"
+          (input)="escribirUrlManual($event)"
+        />
+      </div>
+    }
+
+    <p class="small text-hs-muted mb-0">
+      @if (tipo === 'perfil') {
+        Usa una foto luminosa y centrada; se mostrará en un círculo.
+      } @else {
+        Usa una foto luminosa donde se vea su rostro y cuerpo completo.
+      }
+    </p>
+  </div>
+</div>

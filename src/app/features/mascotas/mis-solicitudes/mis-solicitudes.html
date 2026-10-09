@@ -1,0 +1,61 @@
+<header class="mb-4">
+  <p class="hs-eyebrow mb-2">Seguimiento</p>
+  <h1 class="display-6 fw-extrabold mb-1">Mis solicitudes</h1>
+  <p class="text-hs-muted mb-0">Aquí verás en qué va cada una de tus solicitudes de adopción.</p>
+</header>
+
+@if (cargando()) {
+  <div class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando solicitudes...</span>
+    </div>
+  </div>
+} @else if (errorCarga()) {
+  <div class="alert alert-warning d-flex flex-column flex-sm-row align-items-sm-center gap-3" role="alert">
+    <i class="bi bi-emoji-frown fs-3" aria-hidden="true"></i>
+    <div class="flex-grow-1">
+      <strong>No pudimos cargar tus solicitudes.</strong>
+      <div>Revisa tu conexión o inténtalo de nuevo en unos minutos.</div>
+    </div>
+    <button type="button" class="btn btn-hs-outline" (click)="cargar()">Reintentar</button>
+  </div>
+} @else {
+  <div class="d-flex flex-column gap-3">
+    @for (solicitud of solicitudes(); track solicitud.id) {
+      @let estado = estados[solicitud.estado];
+      <article
+        class="hs-card p-3 p-md-4 d-flex flex-column flex-sm-row gap-3 align-items-sm-center"
+        [id]="'solicitud-' + solicitud.id"
+        [class.destacada]="destacada() === solicitud.id"
+      >
+        <app-foto-mascota class="miniatura" [fotoUrl]="solicitud.mascotaFotoUrl" [nombre]="solicitud.mascotaNombre" [altura]="null" recortar />
+
+        <div class="flex-grow-1 min-w-0">
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+            <h2 class="h5 fw-bold mb-0">
+              <a [routerLink]="['/mascotas', solicitud.mascotaId]" class="hs-enlace-mascota">{{ solicitud.mascotaNombre }}</a>
+            </h2>
+            @if (nuevas().has(solicitud.id)) {
+              <span class="punto-nuevo">Nuevo</span>
+            }
+          </div>
+          <p class="small text-hs-muted mb-2">
+            {{ solicitud.publicadorNombre }} · Enviada el {{ solicitud.fechaSolicitud | date: 'd MMM y' }}
+            @if (solicitud.porcentajeCompatibilidad !== null) {
+              · {{ solicitud.porcentajeCompatibilidad }}% de compatibilidad
+            }
+          </p>
+          <p class="small mb-0">{{ estado.explicacion }}</p>
+        </div>
+
+        <span class="align-self-start align-self-sm-center" [class]="estado.clase">{{ estado.etiqueta }}</span>
+      </article>
+    } @empty {
+      <div class="text-center py-5">
+        <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+        <p class="fs-5 text-hs-muted mb-3">Aún no has enviado solicitudes</p>
+        <a routerLink="/catalogo" class="btn btn-primary px-4">Ver mascotas</a>
+      </div>
+    }
+  </div>
+}

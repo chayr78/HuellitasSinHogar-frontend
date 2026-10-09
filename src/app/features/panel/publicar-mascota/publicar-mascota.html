@@ -1,0 +1,180 @@
+<div class="hs-contenido mx-auto">
+  <a routerLink="/panel" class="btn btn-link text-decoration-none text-hs-muted fw-bold px-0 mb-3"
+    >← Volver a mi panel</a
+  >
+
+  <header class="mb-4">
+    <p class="hs-eyebrow mb-2">{{ esEdicion() ? 'Editar publicación' : 'Nueva publicación' }}</p>
+    <h1 class="display-6 fw-extrabold mb-1">Ayúdale a encontrar un hogar</h1>
+    <p class="text-hs-muted mb-0">
+      Comparte información clara y una buena foto para presentar a tu mascota.
+    </p>
+  </header>
+
+  @if (cargando()) {
+    <div class="d-flex justify-content-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando mascota...</span>
+      </div>
+    </div>
+  } @else if (errorCarga()) {
+    <div class="alert alert-warning" role="alert">
+      {{
+        noEncontrada()
+          ? 'No encontramos esta mascota.'
+          : 'No pudimos cargar la mascota. Inténtalo de nuevo en unos minutos.'
+      }}
+      <a routerLink="/panel" class="fw-bold ms-1">Volver a mi panel</a>
+    </div>
+  } @else {
+    <form class="hs-card p-4 p-md-5" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+      <section class="mb-4" aria-labelledby="titulo-foto">
+        <h2 id="titulo-foto" class="h5 fw-bold mb-3">
+          Foto principal <span class="fw-normal small text-hs-muted">(opcional)</span>
+        </h2>
+        <app-foto-uploader
+          [url]="formulario.controls.fotoUrl.value"
+          (urlChange)="formulario.controls.fotoUrl.setValue($event)"
+          (procesandoChange)="subiendoFoto.set($event)"
+        />
+      </section>
+
+      <section class="mb-4" aria-labelledby="titulo-mas-fotos">
+        <h2 id="titulo-mas-fotos" class="h5 fw-bold mb-3">
+          Más fotos <span class="fw-normal small text-hs-muted">(opcional)</span>
+        </h2>
+        <app-fotos-adicionales-editor
+          [urls]="formulario.controls.fotosAdicionales.value"
+          [portada]="formulario.controls.fotoUrl.value"
+          [maximo]="5"
+          (urlsChange)="formulario.controls.fotosAdicionales.setValue($event)"
+          (hacerPortada)="hacerPrincipal($event)"
+          (procesandoChange)="subiendoFotosAdicionales.set($event)"
+        />
+      </section>
+
+      <section aria-labelledby="titulo-datos">
+        <h2 id="titulo-datos" class="h5 fw-bold mb-3">Datos de la mascota</h2>
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input
+            id="nombre"
+            type="text"
+            class="form-control"
+            formControlName="nombre"
+            [class.is-invalid]="invalido(formulario.controls.nombre)"
+          />
+          <div class="invalid-feedback">Escribe el nombre de la mascota.</div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <span class="form-label d-block" id="label-especie">Especie</span>
+            <div class="d-flex flex-wrap gap-2" role="group" aria-labelledby="label-especie">
+              @for (especie of especies; track especie) {
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="formulario.controls.especie.value === especie"
+                  [attr.aria-pressed]="formulario.controls.especie.value === especie"
+                  (click)="elegir(formulario.controls.especie, especie)"
+                >
+                  {{ etiquetaEspecie[especie] }}
+                </button>
+              }
+            </div>
+            @if (invalido(formulario.controls.especie)) {
+              <div class="invalid-feedback d-block">Elige la especie.</div>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <label for="edadAproximada" class="form-label">Edad aproximada</label>
+            <input
+              id="edadAproximada"
+              type="text"
+              class="form-control"
+              formControlName="edadAproximada"
+              placeholder="Ej. 2 años"
+            />
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <span class="form-label d-block" id="label-tamano">Tamaño</span>
+            <div class="d-flex flex-wrap gap-2" role="group" aria-labelledby="label-tamano">
+              @for (tamano of tamanos; track tamano) {
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="formulario.controls.tamano.value === tamano"
+                  [attr.aria-pressed]="formulario.controls.tamano.value === tamano"
+                  (click)="elegir(formulario.controls.tamano, tamano)"
+                >
+                  {{ etiquetaTamano[tamano] }}
+                </button>
+              }
+            </div>
+            @if (invalido(formulario.controls.tamano)) {
+              <div class="invalid-feedback d-block">Elige el tamaño.</div>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <span class="form-label d-block" id="label-energia">Nivel de energía</span>
+            <div class="d-flex flex-wrap gap-2" role="group" aria-labelledby="label-energia">
+              @for (energia of energias; track energia) {
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="formulario.controls.nivelEnergia.value === energia"
+                  [attr.aria-pressed]="formulario.controls.nivelEnergia.value === energia"
+                  (click)="elegir(formulario.controls.nivelEnergia, energia)"
+                >
+                  {{ etiquetaEnergia[energia] }}
+                </button>
+              }
+            </div>
+            @if (invalido(formulario.controls.nivelEnergia)) {
+              <div class="invalid-feedback d-block">Elige el nivel de energía.</div>
+            }
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="descripcion" class="form-label">Descripción</label>
+          <textarea
+            id="descripcion"
+            class="form-control"
+            rows="5"
+            formControlName="descripcion"
+            placeholder="Temperamento, historial, raza aparente, cómo se lleva con otros animales..."
+          ></textarea>
+        </div>
+      </section>
+
+      @if (error(); as mensaje) {
+        <div class="alert alert-warning" role="alert">{{ mensaje }}</div>
+      }
+
+      <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+        <button type="submit" class="btn btn-primary btn-lg px-5" [disabled]="guardando() || subiendoFoto() || subiendoFotosAdicionales()">
+          @if (guardando()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            Guardando...
+          } @else if (subiendoFoto() || subiendoFotosAdicionales()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            Subiendo foto...
+          } @else {
+            {{ esEdicion() ? 'Guardar cambios' : 'Publicar mascota' }}
+          }
+        </button>
+        <a routerLink="/panel" class="text-hs-muted fw-bold text-decoration-none text-center"
+          >Cancelar</a
+        >
+      </div>
+    </form>
+  }
+</div>

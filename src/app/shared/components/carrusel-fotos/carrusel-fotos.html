@@ -1,0 +1,65 @@
+@let fotos = lista();
+@let varias = fotos.length > 1;
+
+<div class="caja" [style.aspect-ratio]="proporcion">
+  @if (fotos.length === 0) {
+    <!-- Sin fotos: el placeholder 🐾, igual que antes -->
+    <app-foto-mascota class="h-100" [fotoUrl]="null" [nombre]="nombre" [altura]="null" />
+  } @else {
+    <div
+      #pista
+      class="pista"
+      tabindex="0"
+      role="region"
+      aria-roledescription="carrusel"
+      [attr.aria-label]="'Fotos de ' + nombre"
+      (scroll)="alDesplazar()"
+      (keydown.arrowleft)="alTeclear($event, -1)"
+      (keydown.arrowright)="alTeclear($event, 1)"
+    >
+      @for (foto of fotos; track $index; let i = $index) {
+        <div class="diapositiva">
+          <app-foto-mascota
+            class="h-100"
+            [fotoUrl]="foto"
+            [nombre]="nombre"
+            [alt]="nombre + ', foto ' + (i + 1) + ' de ' + fotos.length"
+            [altura]="null"
+            [carga]="i === 0 ? 'eager' : 'lazy'"
+          />
+        </div>
+      }
+    </div>
+
+    @if (varias) {
+      <span class="contador hs-badge-neutral" aria-hidden="true">{{ indice() + 1 }} / {{ fotos.length }}</span>
+      @if (indice() > 0) {
+        <button type="button" class="flecha izquierda" aria-label="Foto anterior" (click)="irA(indice() - 1)">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+      }
+      @if (indice() < fotos.length - 1) {
+        <button type="button" class="flecha derecha" aria-label="Foto siguiente" (click)="irA(indice() + 1)">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+      }
+    }
+  }
+</div>
+
+@if (varias) {
+  <div class="miniaturas">
+    @for (foto of fotos; track $index; let i = $index) {
+      <button
+        type="button"
+        class="miniatura"
+        [class.activa]="indice() === i"
+        [attr.aria-label]="'Ver foto ' + (i + 1)"
+        [attr.aria-current]="indice() === i"
+        (click)="irA(i)"
+      >
+        <app-foto-mascota class="h-100" [fotoUrl]="foto" [nombre]="nombre" [alt]="''" [altura]="null" recortar />
+      </button>
+    }
+  </div>
+}

@@ -1,0 +1,112 @@
+import { HttpEventType } from '@angular/common/http';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
+
+import { estadoHttp, mensajeError } from '../../../core/http/api.util';
+import { ErrorImagen, prepararImagen } from '../../../core/utils/preparar-imagen';
+import { UploadService } from '../../../services/upload.service';
+import { FotoMascota } from '../foto-mascota/foto-mascota';
+
+/** Avance de la subida: "Subiendo {actual} de {total}...". */
+interface Avance {
+  actual: number;
+  total: number;
+}
+
+/**
+ * Rejilla para agregar, quitar o promover a principal las fotos adicionales de una mascota.
+ * Recibe la lista con [urls] y avisa la nueva con (urlsChange). (hacerPortada) pide usar una foto como principal.
+ */
+@Component({
+  imports: [FotoMascota],
+  selector: 'app-fotos-adicionales-editor',
+  styleUrl: './fotos-adicionales-editor.scss',
+  templateUrl: './fotos-adicionales-editor.html',
+})
+export class FotosAdicionalesEditor {
+  private readonly uploadService = inject(UploadService);
+
+  @Input() urls: string[] = [];
+  @Input() maximo = 5;
+  /** URL de la foto principal; sin ella todavía no se pueden agregar fotos adicionales. */
+  @Input() portada: string | null = null;
+  @Output() readonly urlsChange = new EventEmitter<string[]>();
+  @Output() readonly hacerPortada = new EventEmitter<string>();
+  @Output() readonly procesandoChange = new EventEmitter<boolean>();
+
+  protected readonly avance = signal<Avance | null>(null);
+  /** Mensajes breves de los archivos que no se pudieron agregar. */
+  protected readonly avisos = signal<string[]>([]);
+  protected readonly subidaNoConfigurada = signal(false);
+
+  protected quitar(url: string): void {
+    this.urlsChange.emit(this.urls.filter((u) => u !== url));
+  }
+
+  protected alElegirArchivos(evento: Event): void {
+    const input = evento.target as HTMLInputElement;
+    const archivos = Array.from(input.files ?? []);
+    // Permite volver a elegir los mismos archivos después.
+    input.value = '';
+    if (archivos.length > 0) {
+      this.agregar(archivos);
+    }
+  }
+
+  /** Procesa y sube los archivos uno por uno; los que fallan se omiten con un aviso. */
+  private async agregar(archivos: File[]): Promise<void> {
+    const lista = [...this.urls];
+    const espacio = this.maximo - lista.length;
+    const avisos: string[] = [];
+    if (archivos.length > espacio) {
+      avisos.push(`Solo puedes agregar hasta ${this.maximo} fotos adicionales.`);
+    }
+    const seleccion = archivos.slice(0, Math.max(espacio, 0));
+    this.avisos.set(avisos);
+    this.subidaNoConfigurada.set(false);
+    if (seleccion.length === 0) {
+      return;
+    }
+
+    this.procesandoChange.emit(true);
+    for (let i = 0; i < seleccion.length; i++) {
+      const archivo = seleccion[i];
+      this.avance.set({ actual: i + 1, total: seleccion.length });
+      try {
+        const foto = await prepararImagen(archivo);
+        const url = await this.subir(foto);
+        lista.push(url);
+        this.urlsChange.emit([...lista]);
+      } catch (error: unknown) {
+        if (estadoHttp(error) === 503) {
+          this.subidaNoConfigurada.set(true);
+          break; // Si la subida no está configurada, fallarían todas.
+        }
+        const mensaje =
+          error instanceof ErrorImagen ? error.message : mensajeError(error, 'No pudimos subir la foto.');
+        avisos.push(`${archivo.name}: ${mensaje}`);
+        this.avisos.set([...avisos]);
+      }
+    }
+    this.avance.set(null);
+    this.procesandoChange.emit(false);
+  }
+
+  /** Sube una foto y resuelve con su URL. */
+  private subir(foto: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.uploadService.subirFotoMascota(foto, 'mascota.jpg').subscribe({
+        next: (evento) => {
+          if (evento.type === HttpEventType.Response) {
+            const url = evento.body?.datos?.url;
+            if (url) {
+              resolve(url);
+            } else {
+              reject(new Error('No recibimos la dirección de la foto.'));
+            }
+          }
+        },
+        error: (error: unknown) => reject(error),
+      });
+    });
+  }
+}

@@ -1,0 +1,81 @@
+<header class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4 mb-lg-5">
+  <div>
+    <p class="hs-eyebrow mb-2">{{ nombrePublicador().toUpperCase() }}</p>
+    <h1 class="display-6 fw-extrabold mb-1">Tu panel de publicaciones</h1>
+    <p class="text-hs-muted mb-0">Administra mascotas y da seguimiento a posibles familias.</p>
+  </div>
+  <a routerLink="/panel/nueva" class="btn btn-primary px-4 align-self-start align-self-md-end">+ Publicar nueva mascota</a>
+</header>
+
+<section aria-labelledby="titulo-publicadas">
+  <h2 id="titulo-publicadas" class="h4 fw-bold mb-3">Mascotas publicadas</h2>
+
+  @if (cargando()) {
+    <div class="d-flex justify-content-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando publicaciones...</span>
+      </div>
+    </div>
+  } @else if (errorCarga()) {
+    <div class="alert alert-warning d-flex flex-column flex-sm-row align-items-sm-center gap-3" role="alert">
+      <i class="bi bi-emoji-frown fs-3" aria-hidden="true"></i>
+      <div class="flex-grow-1">
+        <strong>No pudimos cargar tus publicaciones.</strong>
+        <div>Revisa tu conexión o inténtalo de nuevo en unos minutos.</div>
+      </div>
+      <button type="button" class="btn btn-hs-outline" (click)="cargar()">Reintentar</button>
+    </div>
+  } @else {
+    <div class="row row-cols-1 row-cols-lg-2 g-4">
+      @for (publicacion of publicaciones(); track publicacion.mascota.id) {
+        @let m = publicacion.mascota;
+        @let total = publicacion.solicitudes.length;
+        <div class="col">
+          <article class="hs-card h-100 overflow-hidden d-flex flex-column">
+            <app-foto-mascota class="foto-banner" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [altura]="200" />
+            <div class="p-3 p-md-4 d-flex flex-column flex-grow-1">
+              <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
+                <h3 class="h5 fw-bold mb-0 text-truncate">{{ m.nombre }}</h3>
+                <span appBadgeEstado [estado]="m.estado"></span>
+              </div>
+              <p class="small text-hs-muted mb-3">
+                Publicada el {{ m.fechaPublicacion | date: 'd MMM y' }} · {{ total }} {{ total === 1 ? 'solicitud' : 'solicitudes' }}
+              </p>
+              <div class="mt-auto d-grid gap-2">
+                <button type="button" class="btn btn-hs-outline" (click)="abrirGestion(publicacion)">
+                  Editar / cambiar estado
+                </button>
+                @if (m.estado === 'ADOPTADO') {
+                  <p class="small text-hs-muted mb-0">
+                    <i class="bi bi-lock me-1" aria-hidden="true"></i>Adoptada: sus datos ya no se pueden editar
+                  </p>
+                }
+                <div class="d-flex gap-2">
+                  @if (m.estado !== 'ADOPTADO') {
+                    <a [routerLink]="['/panel/editar', m.id]" class="btn btn-hs-outline btn-sm flex-fill">
+                      <i class="bi bi-pencil me-1" aria-hidden="true"></i>Editar datos
+                    </a>
+                  }
+                  <button
+                    type="button"
+                    class="btn btn-hs-outline btn-sm flex-fill hs-texto-peligro"
+                    [disabled]="eliminando() === m.id"
+                    (click)="eliminar(m)"
+                  >
+                    <i class="bi bi-trash me-1" aria-hidden="true"></i>Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      } @empty {
+        <div class="col-12 text-center py-5">
+          <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+          <p class="fs-5 text-hs-muted mb-3">Aún no has publicado mascotas</p>
+          <a routerLink="/panel/nueva" class="btn btn-primary px-4">Publicar mi primera mascota</a>
+        </div>
+      }
+    </div>
+  }
+</section>

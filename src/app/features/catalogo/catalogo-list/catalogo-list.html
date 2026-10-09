@@ -1,0 +1,82 @@
+<header class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-2 mb-4">
+  <div>
+    <p class="hs-eyebrow mb-2">Catálogo</p>
+    <h1 class="display-5 fw-extrabold mb-0">Mascotas en adopción</h1>
+  </div>
+  @if (!cargando() && !errorCarga()) {
+    <p class="text-hs-muted fw-semibold mb-1 text-nowrap">
+      {{ mascotasFiltradas().length }} {{ mascotasFiltradas().length === 1 ? 'mascota' : 'mascotas' }} en Tecámac
+    </p>
+  }
+</header>
+
+<section class="hs-card p-3 mb-4" aria-label="Filtros">
+  <div class="d-flex flex-wrap align-items-center gap-2">
+    <span class="small fw-bold text-hs-muted me-1"><i class="bi bi-sliders me-1" aria-hidden="true"></i>Filtrar</span>
+
+    <div ngbDropdown class="d-inline-block">
+      <button type="button" class="hs-chip" ngbDropdownToggle [class.active]="filtroTamano() !== 'TODOS'">
+        @if (filtroTamano() === 'TODOS') {
+          Tamaño
+        } @else {
+          Tamaño: {{ etiquetaDe(opcionesTamano, filtroTamano()).toLowerCase() }}
+        }
+      </button>
+      <div ngbDropdownMenu>
+        @for (opcion of opcionesTamano; track opcion.valor) {
+          <button type="button" ngbDropdownItem [class.active]="filtroTamano() === opcion.valor" (click)="filtroTamano.set(opcion.valor)">
+            {{ opcion.etiqueta }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div ngbDropdown class="d-inline-block">
+      <button type="button" class="hs-chip" ngbDropdownToggle [class.active]="filtroEspecie() !== 'TODAS'">
+        @if (filtroEspecie() === 'TODAS') {
+          Especie
+        } @else {
+          Especie: {{ etiquetaDe(opcionesEspecie, filtroEspecie()).toLowerCase() }}
+        }
+      </button>
+      <div ngbDropdownMenu>
+        @for (opcion of opcionesEspecie; track opcion.valor) {
+          <button type="button" ngbDropdownItem [class.active]="filtroEspecie() === opcion.valor" (click)="filtroEspecie.set(opcion.valor)">
+            {{ opcion.etiqueta }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+@if (cargando()) {
+  <div class="d-flex flex-column align-items-center py-5 gap-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando mascotas...</span>
+    </div>
+    <span class="text-hs-muted">Buscando huellitas...</span>
+  </div>
+} @else if (errorCarga()) {
+  <div class="alert alert-warning d-flex flex-column flex-sm-row align-items-sm-center gap-3" role="alert">
+    <i class="bi bi-emoji-frown fs-3" aria-hidden="true"></i>
+    <div class="flex-grow-1">
+      <strong>No pudimos cargar las mascotas.</strong>
+      <div>Revisa tu conexión o inténtalo de nuevo en unos minutos.</div>
+    </div>
+    <button type="button" class="btn btn-hs-outline" (click)="cargar()">Reintentar</button>
+  </div>
+} @else if (mascotasFiltradas().length === 0) {
+  <div class="text-center py-5">
+    <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+    <p class="fs-5 text-hs-muted mb-0">Aún no hay mascotas con esos filtros</p>
+  </div>
+} @else {
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @for (mascota of mascotasFiltradas(); track mascota.id) {
+      <div class="col">
+        <app-mascota-card [mascota]="mascota" />
+      </div>
+    }
+  </div>
+}

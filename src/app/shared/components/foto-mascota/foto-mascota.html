@@ -1,0 +1,16 @@
+@if (mostrarFoto()) {
+  @if (!recortar()) {
+    <!-- Fondo: la misma foto desenfocada para rellenar los costados -->
+    <div class="fondo" aria-hidden="true" [style.background-image]="fondo()"></div>
+  }
+  <img
+    class="foto"
+    [class.recortada]="recortar()"
+    [src]="fotoUrl()"
+    [alt]="textoAlt()"
+    [attr.loading]="carga()"
+    (error)="alFallar()"
+  />
+} @else {
+  <app-mascota-placeholder [etiqueta]="textoAlt()" />
+}

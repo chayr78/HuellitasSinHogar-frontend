@@ -1,0 +1,21 @@
+@let m = mascota();
+@let adoptado = variante() === 'adoptado';
+<a [routerLink]="['/mascotas', m.id]" class="tarjeta hs-card hs-card-hover d-flex flex-column h-100 overflow-hidden">
+  <app-foto-mascota class="foto" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [altura]="220" />
+
+  <div class="p-3 flex-grow-1" [class.pie-adoptado]="adoptado">
+    <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
+      <h2 class="h5 fw-bold mb-0 text-truncate">{{ m.nombre }}</h2>
+      @if (adoptado) {
+        <span class="hs-badge-ok">¡Adoptado!</span>
+      } @else {
+        <span appBadgeEstado [estado]="m.estado"></span>
+      }
+    </div>
+    <p class="small text-hs-muted mb-3">{{ m.edadAproximada }} aprox.</p>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="hs-badge-neutral">{{ etiquetaTamano[m.tamano] }}</span>
+      <span class="hs-badge-neutral">Energía {{ etiquetaEnergia[m.nivelEnergia].toLowerCase() }}</span>
+    </div>
+  </div>
+</a>

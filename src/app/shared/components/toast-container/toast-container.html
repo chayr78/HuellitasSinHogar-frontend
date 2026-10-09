@@ -1,0 +1,16 @@
+@for (toast of toastService.toasts(); track toast.id) {
+  <ngb-toast
+    class="hs-toast"
+    [class.hs-toast-exito]="toast.tipo === 'exito'"
+    [class.hs-toast-error]="toast.tipo === 'error'"
+    [autohide]="true"
+    [delay]="toast.tipo === 'error' ? 7000 : 4500"
+    (hidden)="toastService.quitar(toast.id)"
+  >
+    <div class="d-flex align-items-start gap-2">
+      <i class="bi mt-1" [class.bi-check-circle-fill]="toast.tipo === 'exito'" [class.bi-exclamation-circle-fill]="toast.tipo === 'error'" aria-hidden="true"></i>
+      <span class="flex-grow-1">{{ toast.texto }}</span>
+      <button type="button" class="btn-close btn-sm" aria-label="Cerrar aviso" (click)="toastService.quitar(toast.id)"></button>
+    </div>
+  </ngb-toast>
+}

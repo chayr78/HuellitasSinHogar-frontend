@@ -1,0 +1,7 @@
+<span class="avatar" [style.width.px]="tamano" [style.height.px]="tamano" [style.font-size.px]="tamano * 0.38">
+  @if (foto() && !fallo()) {
+    <img [src]="foto()" [alt]="'Foto de ' + (nombre ?? '')" (error)="fallo.set(true)" />
+  } @else {
+    <span aria-hidden="true">{{ iniciales() }}</span>
+  }
+</span>

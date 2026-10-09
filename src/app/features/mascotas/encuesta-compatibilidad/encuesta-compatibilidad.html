@@ -1,0 +1,116 @@
+@if (cargando()) {
+  <div class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando encuesta...</span>
+    </div>
+  </div>
+} @else if (errorCarga()) {
+  <div class="text-center py-5">
+    <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+    <p class="fs-5 fw-bold mb-3">
+      {{ noEncontrada() ? 'No encontramos esta mascota' : 'No pudimos cargar la información. Inténtalo de nuevo en unos minutos.' }}
+    </p>
+    <a routerLink="/catalogo" class="btn btn-primary px-4">Volver al catálogo</a>
+  </div>
+} @else if (mascota(); as m) {
+
+  <a [routerLink]="['/mascotas', m.id]" class="btn btn-link text-decoration-none text-hs-muted fw-bold px-0 mb-3">
+    ← Volver a {{ m.nombre }}
+  </a>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <p class="hs-eyebrow mb-2">Compatibilidad con {{ m.nombre.toUpperCase() }}</p>
+      <h1 class="display-6 fw-extrabold mb-2">Conozcamos un poco de tu hogar</h1>
+      <p class="text-hs-muted mb-4">Cinco preguntas rápidas para ayudarte a tomar una decisión responsable.</p>
+
+      <div class="d-flex flex-column gap-3">
+        @for (pregunta of preguntas; track pregunta.clave; let i = $index) {
+          <fieldset class="hs-card p-3 p-md-4 m-0">
+            <legend class="d-flex align-items-center gap-3 fs-6 fw-bold mb-3 float-none w-auto">
+              <span class="numero-pregunta" aria-hidden="true">{{ i + 1 }}</span>
+              {{ pregunta.texto }}
+            </legend>
+            <div class="d-flex flex-wrap gap-2">
+              @for (opcion of pregunta.opciones; track opcion.etiqueta) {
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="estaSeleccionada(pregunta.clave, opcion.valor)"
+                  [attr.aria-pressed]="estaSeleccionada(pregunta.clave, opcion.valor)"
+                  (click)="seleccionar(pregunta.clave, opcion.valor)"
+                >
+                  {{ opcion.etiqueta }}
+                </button>
+              }
+            </div>
+          </fieldset>
+        }
+      </div>
+
+      @if (errorCalculo(); as mensaje) {
+        <div class="alert alert-warning mt-4 mb-0" role="alert">{{ mensaje }}</div>
+      }
+
+      <button type="button" class="btn btn-primary btn-lg px-5 mt-4" [disabled]="!puedeCalcular()" (click)="calcular()">
+        @if (calculando()) {
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          Calculando...
+        } @else {
+          Ver mi resultado
+        }
+      </button>
+    </div>
+
+    <div class="col-lg-4">
+      <aside class="resultado hs-card p-4 sticky-lg-top" aria-live="polite">
+        @if (resultado(); as r) {
+          <p class="hs-eyebrow text-center mb-3">Tu resultado</p>
+
+          <div class="anillo mx-auto mb-3">
+            <svg viewBox="0 0 160 160" aria-hidden="true">
+              <circle class="anillo-fondo" cx="80" cy="80" [attr.r]="radio" />
+              <circle
+                class="anillo-progreso"
+                cx="80"
+                cy="80"
+                [attr.r]="radio"
+                [attr.stroke-dasharray]="circunferencia"
+                [style.stroke-dashoffset]="offsetAnillo()"
+                [style.--anillo-inicio]="circunferencia"
+              />
+            </svg>
+            <div class="anillo-texto">
+              <span class="display-6 fw-extrabold lh-1">{{ r.porcentaje }}%</span>
+              <span class="small text-hs-muted">compatibilidad</span>
+            </div>
+          </div>
+
+          @if (!r.advertencia) {
+            <h2 class="h5 fw-bold text-center">¡{{ m.nombre }} y tú hacen buen equipo!</h2>
+            <p class="small text-hs-muted text-center">
+              Tu rutina y hogar parecen adecuados para su energía. El refugio confirmará los detalles contigo.
+            </p>
+          } @else {
+            <div class="hs-badge-warn advertencia mb-3">
+              <p class="fw-bold mb-1">Compatibilidad menor a 75%</p>
+              <p class="mb-2">
+                Puedes continuar con tu solicitud, pero te sugerimos revisar otras mascotas que encajen mejor con tu estilo de vida.
+              </p>
+              <a routerLink="/catalogo" class="enlace-advertencia fw-bold">Ver otras mascotas</a>
+            </div>
+          }
+
+          <app-foto-mascota class="foto-resultado mb-3" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [altura]="120" />
+
+          <a [routerLink]="['/mascotas', m.id, 'solicitud']" class="btn btn-primary w-100">Continuar con la solicitud</a>
+        } @else {
+          <div class="text-center py-4">
+            <div class="display-5 mb-3" aria-hidden="true">🐾</div>
+            <p class="text-hs-muted mb-0">Responde las preguntas para ver tu compatibilidad</p>
+          </div>
+        }
+      </aside>
+    </div>
+  </div>
+}

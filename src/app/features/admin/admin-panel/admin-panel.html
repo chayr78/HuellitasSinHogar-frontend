@@ -1,0 +1,194 @@
+<header class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+  <div>
+    <p class="hs-eyebrow mb-2">Administración</p>
+    <h1 class="display-6 fw-extrabold mb-0">Panel de administración</h1>
+  </div>
+  <div class="d-flex gap-3">
+    <div class="contador hs-card px-3 py-2">
+      <span class="small text-hs-muted d-block">Usuarios</span>
+      <span class="fs-4 fw-extrabold">{{ usuarios()?.length ?? '—' }}</span>
+    </div>
+    <div class="contador hs-card px-3 py-2">
+      <span class="small text-hs-muted d-block">Mascotas</span>
+      <span class="fs-4 fw-extrabold">{{ mascotas()?.length ?? '—' }}</span>
+    </div>
+  </div>
+</header>
+
+<ul ngbNav #nav="ngbNav" [(activeId)]="pestana" class="nav-pills pestanas gap-2 mb-3">
+  <li ngbNavItem="usuarios">
+    <button type="button" ngbNavLink>Usuarios</button>
+    <ng-template ngbNavContent>
+      <div class="hs-card p-3 p-md-4">
+        <div class="buscador position-relative mb-3">
+          <label for="buscar-usuarios" class="visually-hidden">Buscar usuarios</label>
+          <i class="bi bi-search position-absolute top-50 translate-middle-y ms-3 text-hs-muted" aria-hidden="true"></i>
+          <input
+            id="buscar-usuarios"
+            type="search"
+            class="form-control rounded-pill ps-5"
+            placeholder="Buscar por nombre, correo o ubicación"
+            [value]="busquedaUsuarios()"
+            (input)="busquedaUsuarios.set(leerTexto($event))"
+          />
+        </div>
+
+        @if (cargandoUsuarios()) {
+          <div class="d-flex justify-content-center py-4">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando usuarios...</span></div>
+          </div>
+        } @else if (errorUsuarios()) {
+          <div class="alert alert-warning d-flex align-items-center gap-3 mb-0" role="alert">
+            <span class="flex-grow-1">No pudimos cargar los usuarios.</span>
+            <button type="button" class="btn btn-hs-outline btn-sm" (click)="cargarUsuarios()">Reintentar</button>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Correo</th>
+                  <th scope="col">Rol</th>
+                  <th scope="col">Tipo / ubicación</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col"><span class="visually-hidden">Acciones</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (usuario of usuariosFiltrados(); track usuario.id) {
+                  <tr>
+                    <td class="fw-bold">{{ usuario.nombre }}</td>
+                    <td class="text-break">{{ usuario.correo }}</td>
+                    <td>
+                      <span
+                        [class.hs-badge-warn]="usuario.rol === 'ADMINISTRADOR'"
+                        [class.hs-badge-ok]="usuario.rol === 'PUBLICADOR'"
+                        [class.hs-badge-neutral]="usuario.rol === 'ADOPTANTE'"
+                      >
+                        {{ etiquetaRol[usuario.rol] }}
+                      </span>
+                    </td>
+                    <td class="small">
+                      @if (usuario.tipoPublicador) {
+                        {{ etiquetaTipoPublicador[usuario.tipoPublicador] }}
+                      }
+                      @if (usuario.tipoPublicador && usuario.ubicacion) {
+                        ·
+                      }
+                      {{ usuario.ubicacion ?? '' }}
+                      @if (!usuario.tipoPublicador && !usuario.ubicacion) {
+                        <span class="text-hs-muted">—</span>
+                      }
+                    </td>
+                    <td>
+                      @if (usuario.activo) {
+                        <span class="hs-badge-ok">Activo</span>
+                      } @else {
+                        <span class="hs-badge-neutral">Desactivado</span>
+                      }
+                    </td>
+                    <td class="text-end">
+                      <button
+                        type="button"
+                        class="btn btn-sm text-nowrap"
+                        [class.btn-hs-outline]="usuario.activo"
+                        [class.btn-primary]="!usuario.activo"
+                        [disabled]="!puedeCambiarEstado(usuario) || procesando() === usuario.id"
+                        [attr.title]="puedeCambiarEstado(usuario) ? null : 'No puedes cambiar el estado de esta cuenta'"
+                        (click)="cambiarEstadoUsuario(usuario)"
+                      >
+                        {{ usuario.activo ? 'Dar de baja' : 'Reactivar' }}
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="6" class="text-center text-hs-muted py-4">No hay usuarios que coincidan con la búsqueda.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </ng-template>
+  </li>
+
+  <li ngbNavItem="mascotas">
+    <button type="button" ngbNavLink>Mascotas</button>
+    <ng-template ngbNavContent>
+      <div class="hs-card p-3 p-md-4">
+        <div class="buscador position-relative mb-3">
+          <label for="buscar-mascotas" class="visually-hidden">Buscar mascotas</label>
+          <i class="bi bi-search position-absolute top-50 translate-middle-y ms-3 text-hs-muted" aria-hidden="true"></i>
+          <input
+            id="buscar-mascotas"
+            type="search"
+            class="form-control rounded-pill ps-5"
+            placeholder="Buscar por nombre o publicador"
+            [value]="busquedaMascotas()"
+            (input)="busquedaMascotas.set(leerTexto($event))"
+          />
+        </div>
+
+        @if (cargandoMascotas()) {
+          <div class="d-flex justify-content-center py-4">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando mascotas...</span></div>
+          </div>
+        } @else if (errorMascotas()) {
+          <div class="alert alert-warning d-flex align-items-center gap-3 mb-0" role="alert">
+            <span class="flex-grow-1">No pudimos cargar las mascotas.</span>
+            <button type="button" class="btn btn-hs-outline btn-sm" (click)="cargarMascotas()">Reintentar</button>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col"><span class="visually-hidden">Foto</span></th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Especie</th>
+                  <th scope="col">Publicador</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col"><span class="visually-hidden">Acciones</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (mascota of mascotasFiltradas(); track mascota.id) {
+                  <tr>
+                    <td>
+                      <app-foto-mascota class="miniatura" [fotoUrl]="mascota.fotoUrl" [nombre]="mascota.nombre" [altura]="null" recortar />
+                    </td>
+                    <td class="fw-bold">
+                      <a [routerLink]="['/mascotas', mascota.id]" class="hs-enlace-mascota">{{ mascota.nombre }}</a>
+                    </td>
+                    <td>{{ etiquetaEspecie[mascota.especie] }}</td>
+                    <td>{{ mascota.publicadorNombre }}</td>
+                    <td><span appBadgeEstado [estado]="mascota.estado"></span></td>
+                    <td class="text-end">
+                      <button
+                        type="button"
+                        class="btn btn-hs-outline btn-sm text-nowrap hs-texto-peligro"
+                        [disabled]="procesando() === mascota.id"
+                        (click)="eliminarMascota(mascota)"
+                      >
+                        Dar de baja publicación
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="6" class="text-center text-hs-muted py-4">No hay mascotas que coincidan con la búsqueda.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav"></div>

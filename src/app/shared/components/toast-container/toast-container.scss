@@ -1,0 +1,31 @@
+:host {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  max-width: 100%;
+  pointer-events: none;
+}
+
+.hs-toast {
+  pointer-events: auto;
+  font-weight: 600;
+  border-radius: 16px;
+  box-shadow: var(--hs-shadow-hover);
+}
+
+.hs-toast-exito {
+  color: var(--hs-sage);
+  background-color: var(--hs-sage-soft);
+  border: 1px solid #c7d9c2;
+}
+
+.hs-toast-error {
+  color: #b4532a;
+  background-color: var(--hs-peach-soft);
+  border: 1px solid #f5c9b2;
+}

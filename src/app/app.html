@@ -1,0 +1,14 @@
+<app-navbar />
+<app-toast-container />
+
+<!-- Inicio usa todo el ancho (sobreBanner); las demás páginas conservan el container de siempre. -->
+<main
+  class="flex-grow-1"
+  [class.container]="!navbarEstado.sobreBanner()"
+  [class.py-4]="!navbarEstado.sobreBanner()"
+  [class.py-lg-5]="!navbarEstado.sobreBanner()"
+>
+  <router-outlet />
+</main>
+
+<app-footer />

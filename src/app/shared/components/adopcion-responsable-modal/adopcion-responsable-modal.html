@@ -1,0 +1,28 @@
+<div class="modal-header border-0 px-4 pt-4 pb-0">
+  <h2 class="modal-title h5 fw-extrabold" id="titulo-adopcion-responsable">Antes de continuar: adopción responsable</h2>
+</div>
+<div class="modal-body px-4">
+  <p class="text-hs-muted">Adoptar es una decisión hermosa y también una gran responsabilidad. Tómate un momento para leer esto:</p>
+  <ul class="d-flex flex-column gap-2 ps-3 mb-4">
+    <li>Es un compromiso por toda la vida del animal, que puede durar muchos años.</li>
+    <li>Necesitará cuidados veterinarios: vacunas, desparasitación y esterilización.</li>
+    <li>Requiere tiempo, espacio y dinero para su comida, salud y bienestar.</li>
+    <li>
+      Nunca se abandona. Si algún día ya no puedes cuidarlo, devuélvelo al refugio o búscale un hogar responsable.
+    </li>
+    <li>Ponle identificación (placa o microchip) y no lo dejes suelto en la calle.</li>
+    <li>El refugio puede hacerte preguntas antes de la adopción y darle seguimiento después.</li>
+  </ul>
+  <div class="form-check">
+    <input id="acepto-adopcion-responsable" class="form-check-input" type="checkbox" (change)="alMarcar($event)" />
+    <label for="acepto-adopcion-responsable" class="form-check-label fw-bold">
+      Entiendo y me comprometo a una adopción responsable
+    </label>
+  </div>
+</div>
+<div class="modal-footer border-0 px-4 pb-4">
+  <button type="button" class="btn btn-hs-outline px-4" (click)="activeModal.dismiss()">Cancelar</button>
+  <button type="button" class="btn btn-primary px-4" [disabled]="!aceptado()" (click)="activeModal.close()">
+    Continuar
+  </button>
+</div>

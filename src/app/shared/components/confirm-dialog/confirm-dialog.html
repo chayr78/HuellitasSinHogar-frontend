@@ -1,0 +1,14 @@
+@let o = opciones();
+<div class="modal-header border-0 px-4 pt-4 pb-0">
+  <h2 class="modal-title h5 fw-extrabold" id="titulo-confirmacion">{{ o.titulo }}</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body px-4">
+  <p class="mb-0">{{ o.mensaje }}</p>
+</div>
+<div class="modal-footer border-0 px-4 pb-4">
+  <button type="button" class="btn btn-hs-outline px-4" (click)="activeModal.dismiss()">{{ o.textoCancelar }}</button>
+  <button type="button" class="btn px-4" [class.btn-primary]="!o.peligro" [class.btn-peligro]="o.peligro" (click)="activeModal.close()">
+    {{ o.textoConfirmar }}
+  </button>
+</div>

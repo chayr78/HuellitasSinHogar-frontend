@@ -1,0 +1,128 @@
+@if (mascota(); as m) {
+  <div class="modal-header border-0 pb-0 px-4 pt-4">
+    <div>
+      <p class="hs-eyebrow mb-1">Gestionar publicación</p>
+      <h2 class="modal-title h4 fw-extrabold" id="titulo-gestion">{{ m.nombre }}</h2>
+    </div>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body px-4">
+    @if (error(); as mensaje) {
+      <div class="alert alert-warning py-2" role="alert">{{ mensaje }}</div>
+    }
+
+    <section class="mb-4" aria-labelledby="titulo-estado">
+      <h3 id="titulo-estado" class="h6 fw-bold mb-2">Estado de la mascota</h3>
+      <div class="d-flex flex-wrap gap-2" role="group" aria-labelledby="titulo-estado">
+        @for (estado of estadosMascota; track estado) {
+          <button
+            type="button"
+            class="hs-chip"
+            [class.active]="m.estado === estado"
+            [attr.aria-pressed]="m.estado === estado"
+            [disabled]="guardandoEstado()"
+            (click)="cambiarEstadoMascota(estado)"
+          >
+            {{ etiquetaEstado[estado] }}
+          </button>
+        }
+        @if (guardandoEstado()) {
+          <span class="spinner-border spinner-border-sm text-hs-muted align-self-center" role="status">
+            <span class="visually-hidden">Guardando...</span>
+          </span>
+        }
+      </div>
+    </section>
+
+    <section aria-labelledby="titulo-solicitudes">
+      <h3 id="titulo-solicitudes" class="h6 fw-bold mb-3">Solicitudes recibidas</h3>
+
+      <div class="hs-alert-ok small d-flex gap-2 mb-3" role="note">
+        <i class="bi bi-heart-pulse" aria-hidden="true"></i>
+        <span>
+          Recuerda orientar al adoptante sobre adopción responsable: esterilización, vacunas, seguimiento y devolución si no
+          puede cuidarlo. Conviene conocer a la persona y el lugar antes de entregar a la mascota.
+        </span>
+      </div>
+
+      @if (errorSolicitudes()) {
+        <div class="alert alert-warning mb-0" role="alert">
+          No pudimos cargar las solicitudes de esta mascota. Cierra esta ventana e inténtalo de nuevo en unos minutos.
+        </div>
+      } @else {
+        @for (solicitud of solicitudes(); track solicitud.id) {
+          <article
+            class="solicitud p-3 mb-3"
+            [id]="'solicitud-' + solicitud.id"
+            [class.destacada]="destacada() === solicitud.id"
+          >
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+              <div class="d-flex align-items-center gap-2">
+                <app-avatar [fotoUrl]="solicitud.adoptanteFotoUrl" [nombre]="solicitud.adoptanteNombre" [tamano]="40" />
+                <div>
+                  <h4 class="h6 fw-bold mb-0">
+                    {{ solicitud.adoptanteNombre || solicitud.nombreContacto }}
+                    @if (nuevas().has(solicitud.id)) {
+                      <span class="hs-badge-warn ms-1">Nueva</span>
+                    }
+                  </h4>
+                  @if (solicitud.adoptanteNombre && solicitud.adoptanteNombre !== solicitud.nombreContacto) {
+                    <span class="d-block small">Contacto: {{ solicitud.nombreContacto }}</span>
+                  }
+                  <span class="small text-hs-muted">{{ solicitud.fechaSolicitud | date: 'd MMM y, HH:mm' }}</span>
+                </div>
+              </div>
+              @if (solicitud.porcentajeCompatibilidad !== null) {
+                <span class="hs-badge-ok">{{ solicitud.porcentajeCompatibilidad }}% compatibilidad</span>
+              } @else {
+                <span class="hs-badge-neutral">Sin encuesta</span>
+              }
+            </div>
+
+            <ul class="list-unstyled small mb-2">
+              <li>
+                <i class="bi bi-telephone me-2 text-hs-muted" aria-hidden="true"></i>
+                <a [href]="'tel:' + solicitud.telefonoContacto">{{ solicitud.telefonoContacto }}</a>
+              </li>
+              <li>
+                <i class="bi bi-envelope me-2 text-hs-muted" aria-hidden="true"></i>
+                <a [href]="'mailto:' + solicitud.correoContacto">{{ solicitud.correoContacto }}</a>
+              </li>
+            </ul>
+
+            @if (solicitud.mensaje) {
+              <p class="mensaje small mb-3">“{{ solicitud.mensaje }}”</p>
+            }
+
+            <div class="d-flex flex-wrap align-items-center gap-2" role="group" [attr.aria-label]="'Estado de la solicitud de ' + solicitud.nombreContacto">
+              @for (estado of estadosSolicitud; track estado) {
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="solicitud.estado === estado"
+                  [attr.aria-pressed]="solicitud.estado === estado"
+                  [disabled]="guardandoSolicitud() !== null"
+                  (click)="cambiarEstadoSolicitud(solicitud, estado)"
+                >
+                  {{ etiquetaEstadoSolicitud[estado] }}
+                </button>
+              }
+              @if (guardandoSolicitud() === solicitud.id) {
+                <span class="spinner-border spinner-border-sm text-hs-muted" role="status">
+                  <span class="visually-hidden">Guardando...</span>
+                </span>
+              }
+            </div>
+          </article>
+        } @empty {
+          <p class="text-hs-muted mb-0">Todavía no hay solicitudes para esta mascota.</p>
+        }
+      }
+    </section>
+  </div>
+
+  <div class="modal-footer border-0 px-4 pb-4">
+    <button type="button" class="btn btn-hs-outline px-4" (click)="activeModal.close()">Cerrar</button>
+  </div>
+}

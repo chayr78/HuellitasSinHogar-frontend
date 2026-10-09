@@ -1,0 +1,32 @@
+.miniatura {
+  flex-shrink: 0;
+  width: 88px;
+  height: 88px;
+  border-radius: 16px;
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
+.punto-nuevo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--bs-primary);
+
+  &::before {
+    width: 8px;
+    height: 8px;
+    content: '';
+    background-color: var(--bs-primary);
+    border-radius: 50%;
+  }
+}
+
+// Solicitud a la que se llegó desde una notificación
+.destacada {
+  background-color: var(--hs-peach-soft);
+}

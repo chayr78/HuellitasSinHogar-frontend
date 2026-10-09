@@ -1,0 +1,34 @@
+<section #banner class="hero" aria-labelledby="titulo-inicio">
+  <!-- Capa de imagen (decorativa); se mueve con el parallax -->
+  <div #capa class="capa-imagen" aria-hidden="true">
+    @if (!imagenFallo()) {
+      <img [src]="imagen" alt="" fetchpriority="high" (error)="imagenFallo.set(true)" />
+    }
+  </div>
+  <div class="capa-oscura" aria-hidden="true"></div>
+
+  <div class="container contenido">
+    <div class="texto">
+      <p class="eyebrow aparecer">Adopta cerca de ti</p>
+      <h1 id="titulo-inicio" class="titulo aparecer">Tu nuevo mejor amigo te está esperando</h1>
+      <p class="subtitulo aparecer">
+        Perros y gatos de refugios y rescatistas de Tecámac esperan una familia responsable.
+      </p>
+
+      @if (disponibles !== null && adoptados !== null) {
+        <p class="insignia aparecer">
+          🐾 {{ disponibles }} {{ disponibles === 1 ? 'mascota esperando' : 'mascotas esperando' }} hogar ·
+          {{ adoptados }} ya {{ adoptados === 1 ? 'encontró' : 'encontraron' }} familia
+        </p>
+      }
+
+      <div class="botones aparecer">
+        <a routerLink="/catalogo" class="btn btn-primary btn-lg px-4">Ver mascotas</a>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="flecha" aria-label="Ir a la siguiente sección" (click)="irASiguiente()">
+    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+  </button>
+</section>

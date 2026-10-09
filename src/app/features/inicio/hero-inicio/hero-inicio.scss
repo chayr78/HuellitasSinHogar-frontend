@@ -1,0 +1,153 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 440px;
+  overflow: hidden;
+  color: #fff;
+  // Respaldo cálido si la foto no existe o no carga
+  background: linear-gradient(135deg, var(--hs-peach-soft), var(--hs-sage-soft));
+
+  @media (min-width: 768px) {
+    min-height: clamp(520px, 88vh, 760px);
+  }
+}
+
+// La capa es más alta que el banner (top -40%, alto 140%) para que el parallax no deje huecos
+.capa-imagen {
+  position: absolute;
+  top: -40%;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  will-change: transform;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Oscurece la izquierda (texto) y la parte de arriba (navbar) para que se lean sobre cualquier foto
+.capa-oscura {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(46, 38, 32, 0.55), rgba(46, 38, 32, 0) 30%),
+    linear-gradient(to right, rgba(46, 38, 32, 0.78), rgba(46, 38, 32, 0.15));
+}
+
+.contenido {
+  position: relative;
+  // Deja espacio para el navbar fijo
+  padding-top: 6rem;
+  padding-bottom: 4.5rem;
+}
+
+.texto {
+  max-width: 640px;
+}
+
+.eyebrow {
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f3b48f;
+}
+
+.titulo {
+  margin-bottom: 1rem;
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+
+  @media (min-width: 992px) {
+    font-size: 4rem; // tamaño de display-3 en escritorio
+  }
+}
+
+.subtitulo {
+  margin-bottom: 1.25rem;
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.insignia {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background-color: rgba(46, 38, 32, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+}
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  .btn:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+}
+
+.flecha {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
+  font-size: 1.3rem;
+  color: #fff;
+  background: rgba(46, 38, 32, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: rebote 2s ease-in-out infinite;
+
+  &:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+}
+
+// Entrada escalonada: cada línea sube y aparece un poco después de la anterior
+.aparecer {
+  animation: aparecer 600ms ease-out both;
+
+  &:nth-child(2) { animation-delay: 100ms; }
+  &:nth-child(3) { animation-delay: 200ms; }
+  &:nth-child(4) { animation-delay: 300ms; }
+  &:nth-child(5) { animation-delay: 400ms; }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rebote {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+// Sin animaciones para quien prefiere menos movimiento
+@media (prefers-reduced-motion: reduce) {
+  .aparecer,
+  .flecha {
+    animation: none;
+  }
+}

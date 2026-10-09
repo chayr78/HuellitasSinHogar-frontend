@@ -1,0 +1,31 @@
+:host {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--hs-peach-soft);
+}
+
+// Capa de fondo: la foto desenfocada y un poco agrandada para que el blur no deje bordes.
+.fondo {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  filter: blur(20px);
+  transform: scale(1.15);
+  pointer-events: none;
+}
+
+// Capa de frente: la foto completa, sin recortar.
+.foto {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+  &.recortada {
+    object-fit: cover;
+  }
+}

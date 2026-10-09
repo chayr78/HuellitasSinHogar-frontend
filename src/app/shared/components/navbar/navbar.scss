@@ -1,0 +1,147 @@
+.navbar-hs {
+  background-color: var(--hs-card-bg);
+  border-bottom: 1px solid var(--hs-border);
+}
+
+.marca-circulo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  background-color: var(--hs-peach-soft);
+  border-radius: 50%;
+}
+
+.navbar-brand {
+  font-size: 1.05rem;
+}
+
+.nav-link {
+  --bs-nav-link-color: var(--bs-body-color);
+  --bs-navbar-active-color: var(--bs-primary);
+  --bs-nav-link-hover-color: var(--bs-primary);
+}
+
+
+.navbar-toggler {
+  padding: 0.2rem 0.5rem;
+  border-color: var(--hs-border);
+  border-radius: 12px;
+}
+
+// Botones de icono (campana y avatar) sin el caret de Bootstrap
+.btn-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  color: var(--bs-body-color);
+  background: none;
+  border: 0;
+  border-radius: 50%;
+
+  &::after {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--hs-sage);
+  }
+}
+
+.contador-notificaciones {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  min-width: 1.15rem;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  background-color: var(--bs-danger); // círculo rojo de avisos sin leer
+  border-radius: 999px;
+}
+
+.menu-notificaciones {
+  width: min(340px, 90vw);
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.item-notificacion {
+  white-space: normal;
+  border-bottom: 1px solid var(--hs-border);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+// Inicio: el navbar queda fijo encima del banner (en las demás páginas sigue sticky y sólido)
+.navbar-hs.sobre-banner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease,
+    box-shadow 250ms ease;
+
+  // Sólido después de hacer scroll: con una sombra ligera
+  &:not(.transparente) {
+    box-shadow: 0 4px 16px rgba(46, 38, 32, 0.08);
+  }
+}
+
+// Transparente arriba del banner: textos e iconos en blanco
+.navbar-hs.transparente {
+  background-color: transparent;
+  border-bottom-color: transparent;
+
+  .navbar-brand,
+  .btn-icono {
+    color: #fff;
+  }
+
+  .nav-link {
+    --bs-nav-link-color: #fff;
+    --bs-navbar-active-color: #fff;
+    --bs-nav-link-hover-color: #fff;
+
+    &.active {
+      text-decoration: underline;
+      text-underline-offset: 6px;
+    }
+  }
+
+  .btn-hs-outline {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: #fff;
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: #fff;
+    --bs-btn-hover-border-color: #fff;
+  }
+
+  .navbar-toggler {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .btn-icono:focus-visible,
+  .navbar-brand:focus-visible,
+  .nav-link:focus-visible {
+    outline: 2px solid #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-hs.sobre-banner {
+    transition: none;
+  }
+}

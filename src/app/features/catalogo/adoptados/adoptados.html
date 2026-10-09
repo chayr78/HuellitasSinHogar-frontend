@@ -1,0 +1,34 @@
+<header class="mb-4">
+  <p class="hs-eyebrow mb-2">Historias felices</p>
+  <h1 class="display-5 fw-extrabold mb-0">Ya encontraron un hogar 🎉</h1>
+</header>
+
+@if (cargando()) {
+  <div class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando historias...</span>
+    </div>
+  </div>
+} @else if (errorCarga()) {
+  <div class="alert alert-warning d-flex flex-column flex-sm-row align-items-sm-center gap-3" role="alert">
+    <i class="bi bi-emoji-frown fs-3" aria-hidden="true"></i>
+    <div class="flex-grow-1">
+      <strong>No pudimos cargar las historias.</strong>
+      <div>Revisa tu conexión o inténtalo de nuevo en unos minutos.</div>
+    </div>
+    <button type="button" class="btn btn-hs-outline" (click)="cargar()">Reintentar</button>
+  </div>
+} @else {
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @for (mascota of adoptados(); track mascota.id) {
+      <div class="col">
+        <app-mascota-card [mascota]="mascota" variante="adoptado" />
+      </div>
+    } @empty {
+      <div class="col-12 text-center py-5">
+        <div class="display-4 mb-3" aria-hidden="true">🏡</div>
+        <p class="fs-5 text-hs-muted mb-0">Pronto verás aquí a las mascotas que encuentren familia.</p>
+      </div>
+    }
+  </div>
+}

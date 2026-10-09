@@ -1,0 +1,76 @@
+<div class="rejilla">
+  @for (url of urls; track url; let i = $index) {
+    <div class="celda">
+      <app-foto-mascota class="miniatura" [fotoUrl]="url" [nombre]="'foto adicional ' + (i + 1)" [altura]="null" recortar />
+      <div class="acciones">
+        <button
+          type="button"
+          class="btn-accion"
+          title="Hacer principal"
+          [attr.aria-label]="'Hacer principal la foto ' + (i + 1)"
+          [disabled]="avance() !== null"
+          (click)="hacerPortada.emit(url)"
+        >
+          <i class="bi bi-star" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="btn-accion"
+          title="Quitar"
+          [attr.aria-label]="'Quitar la foto ' + (i + 1)"
+          [disabled]="avance() !== null"
+          (click)="quitar(url)"
+        >
+          <i class="bi bi-x" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (portada) {
+    <button
+      type="button"
+      class="celda agregar"
+      [disabled]="urls.length >= maximo || avance() !== null"
+      (click)="inputArchivos.click()"
+    >
+      @if (avance()) {
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      } @else {
+        <i class="bi bi-plus-lg fs-4" aria-hidden="true"></i>
+        <span class="small fw-bold">Agregar fotos</span>
+      }
+    </button>
+  }
+</div>
+
+<input
+  #inputArchivos
+  type="file"
+  class="d-none"
+  multiple
+  accept="image/jpeg,image/png,image/webp"
+  tabindex="-1"
+  aria-hidden="true"
+  (change)="alElegirArchivos($event)"
+/>
+
+@if (!portada) {
+  <p class="small fw-bold mt-2 mb-1">Primero elige la foto principal.</p>
+}
+
+@if (avance(); as a) {
+  <p class="small mt-2 mb-1" role="status">Subiendo {{ a.actual }} de {{ a.total }}...</p>
+}
+
+@if (subidaNoConfigurada()) {
+  <div class="hs-alert-warn small py-2 mt-2" role="alert">La subida de fotos aún no está configurada</div>
+}
+
+@for (aviso of avisos(); track $index) {
+  <div class="hs-alert-warn small py-2 mt-2" role="alert">{{ aviso }}</div>
+}
+
+<p class="small text-hs-muted mt-2 mb-0">
+  Opcional: hasta {{ maximo }} fotos más. La foto principal es la que se ve en el catálogo.
+</p>

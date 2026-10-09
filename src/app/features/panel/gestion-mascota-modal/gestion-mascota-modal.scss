@@ -1,0 +1,17 @@
+.solicitud {
+  background-color: #fff;
+  border: 1px solid var(--hs-border);
+  border-radius: 16px;
+}
+
+.mensaje {
+  padding: 0.5rem 0.75rem;
+  white-space: pre-line;
+  background-color: #f6f0e6;
+  border-radius: 10px;
+}
+
+// Solicitud a la que se llegó desde una notificación
+.solicitud.destacada {
+  background-color: var(--hs-peach-soft);
+}

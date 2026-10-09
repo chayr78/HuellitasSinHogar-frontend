@@ -1,0 +1,75 @@
+<app-hero-inicio [disponibles]="disponibles()?.length ?? null" [adoptados]="totalAdoptados()" />
+
+<!-- Qué buscamos -->
+<section id="que-buscamos" class="seccion" aria-labelledby="titulo-mision">
+  <div class="container">
+    <div class="mision mx-auto text-center">
+      <p class="hs-eyebrow mb-2">Nuestra misión</p>
+      <h2 id="titulo-mision" class="display-6 fw-extrabold mb-3">Que cada huellita encuentre un hogar</h2>
+      <p class="fs-5 text-hs-muted lh-lg mb-0">
+        Huellitas sin Hogar es una plataforma web que reúne en un solo lugar a los perros y gatos que buscan familia en
+        Tecámac. Buscamos conectar a refugios o personas que rescatan animales con personas que quieran adoptar de una
+        manera responsable. Huellitas sin Hogar confía en que cada perrito o gatito tiene una historia especial y un lugar en
+        alguna familia que aún no lo ha encontrado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Cómo funciona -->
+<section class="seccion pt-0" aria-labelledby="titulo-pasos">
+  <div class="container">
+    <h2 id="titulo-pasos" class="h2 fw-extrabold text-center mb-4 mb-lg-5">Así de fácil</h2>
+    <ol class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 list-unstyled mb-0">
+      @for (paso of pasos; track paso.texto; let i = $index) {
+        <li class="col">
+          <div class="paso hs-card h-100 p-4 text-center">
+            <span class="numero" aria-hidden="true">{{ i + 1 }}</span>
+            <i class="bi {{ paso.icono }} fs-3 d-block my-2 text-hs-muted" aria-hidden="true"></i>
+            <p class="fw-bold mb-0"><span class="visually-hidden">Paso {{ i + 1 }}: </span>{{ paso.texto }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<!-- Mascotas destacadas: se oculta si falla la carga o no hay mascotas -->
+@if (cargandoDisponibles()) {
+  <div class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando mascotas...</span>
+    </div>
+  </div>
+} @else if (destacadas().length > 0) {
+  <section class="seccion pt-0" aria-labelledby="titulo-destacadas">
+    <div class="container">
+      <h2 id="titulo-destacadas" class="h2 fw-extrabold mb-4">Conoce a algunas mascotas</h2>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @for (mascota of destacadas(); track mascota.id) {
+          <div class="col">
+            <app-mascota-card [mascota]="mascota" />
+          </div>
+        }
+      </div>
+      <div class="text-center mt-4">
+        <a routerLink="/catalogo" class="btn btn-hs-outline btn-lg px-4">Ver todas las mascotas</a>
+      </div>
+    </div>
+  </section>
+}
+
+<!-- Invitación a publicar (visitantes y publicadores) -->
+@if (mostrarInvitacion()) {
+  <section class="seccion pt-0" aria-labelledby="titulo-publicar">
+    <div class="container">
+      <div class="invitacion d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 p-4 p-md-5">
+        <div>
+          <h2 id="titulo-publicar" class="h3 fw-extrabold mb-1">¿Tienes un refugio o rescataste a un animal?</h2>
+          <p class="mb-0">Publica su historia y encuentra una familia responsable.</p>
+        </div>
+        <a [routerLink]="destinoPublicar()" class="btn btn-primary btn-lg px-4 flex-shrink-0">Publicar una mascota</a>
+      </div>
+    </div>
+  </section>
+}

@@ -1,0 +1,91 @@
+@if (usuario(); as u) {
+  <div class="hs-contenido mx-auto">
+    <header class="d-flex align-items-center gap-3 gap-md-4 mb-4">
+      <app-avatar [fotoUrl]="formulario.controls.fotoPerfilUrl.value" [nombre]="u.nombre" [tamano]="96" />
+      <div>
+        <p class="hs-eyebrow mb-1">{{ tipoCuenta() }}</p>
+        <h1 class="display-6 fw-extrabold mb-0">Mi perfil</h1>
+      </div>
+    </header>
+
+    <form class="hs-card p-4 p-md-5" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+      <section class="mb-4" aria-labelledby="titulo-foto-perfil">
+        <h2 id="titulo-foto-perfil" class="h5 fw-bold mb-3">
+          Foto de perfil <span class="fw-normal small text-hs-muted">(opcional)</span>
+        </h2>
+        <app-foto-uploader
+          tipo="perfil"
+          forma="circular"
+          [ladoMaximo]="600"
+          [url]="formulario.controls.fotoPerfilUrl.value"
+          (urlChange)="formulario.controls.fotoPerfilUrl.setValue($event)"
+          (procesandoChange)="subiendoFoto.set($event)"
+        />
+      </section>
+
+      <section class="mb-4" aria-labelledby="titulo-datos-perfil">
+        <h2 id="titulo-datos-perfil" class="h5 fw-bold mb-3">Tus datos</h2>
+
+        <div class="mb-3">
+          <label for="perfil-nombre" class="form-label">Nombre</label>
+          <input
+            id="perfil-nombre"
+            type="text"
+            class="form-control"
+            formControlName="nombre"
+            autocomplete="name"
+            [class.is-invalid]="invalido(formulario.controls.nombre)"
+          />
+          <div class="invalid-feedback">Escribe tu nombre.</div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="perfil-telefono" class="form-label">Teléfono</label>
+            <input
+              id="perfil-telefono"
+              type="tel"
+              class="form-control"
+              formControlName="telefono"
+              autocomplete="tel"
+              [class.is-invalid]="invalido(formulario.controls.telefono)"
+            />
+            <div class="invalid-feedback">Escribe un teléfono de contacto.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="perfil-correo" class="form-label">Correo electrónico</label>
+            <input id="perfil-correo" type="email" class="form-control" [value]="u.correo" readonly />
+          </div>
+        </div>
+
+        <div>
+          <label for="perfil-ubicacion" class="form-label">
+            Municipio <span class="fw-normal text-hs-muted">(Estado de México, opcional)</span>
+          </label>
+          <select id="perfil-ubicacion" class="form-select" formControlName="ubicacion">
+            <option value="">Sin especificar</option>
+            @if (ubicacionAnterior) {
+              <option [value]="ubicacionAnterior">{{ ubicacionAnterior }}</option>
+            }
+            @for (municipio of municipios; track municipio) {
+              <option [value]="municipio">{{ municipio }}</option>
+            }
+          </select>
+        </div>
+      </section>
+
+      @if (error(); as mensaje) {
+        <div class="alert alert-warning" role="alert">{{ mensaje }}</div>
+      }
+
+      <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="guardando() || subiendoFoto()">
+        @if (guardando()) {
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          Guardando...
+        } @else {
+          Guardar cambios
+        }
+      </button>
+    </form>
+  </div>
+}
