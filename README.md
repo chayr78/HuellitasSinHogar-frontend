@@ -1,59 +1,37 @@
-# HuellitasFrontend
+# Huellitas sin Hogar — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.0.
+Aplicación web (Angular) de **Huellitas sin Hogar**, una plataforma de adopción de mascotas: catálogo de mascotas, encuesta de compatibilidad, solicitudes de adopción, panel para publicadores y panel de administración.
 
-## Development server
+## Requisitos
 
-To start a local development server, run:
+- **Node.js** 22.22.3+ o 24.15+ (recomendado: Node 24 LTS)
+- **npm** (incluido con Node)
+- **Angular CLI** 22 (opcional de forma global: `npm install -g @angular/cli`; también puede usarse con `npx ng`)
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Correr en local
 
 ```bash
-ng generate component component-name
+npm install
+npm start          # equivale a ng serve
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Abre `http://localhost:4200/`. En local, la app consume el backend en `http://localhost:8080/api`, así que el backend debe estar corriendo en ese puerto.
+
+## Build de producción
 
 ```bash
-ng generate --help
+npm run build      # equivale a ng build (configuración de producción)
 ```
 
-## Building
+La salida queda en `dist/huellitas-frontend/browser`.
 
-To build the project run:
+## Backend
 
-```bash
-ng build
-```
+La URL de la API se define en un solo lugar: `src/app/core/config/api.config.ts`.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- En `localhost` / `127.0.0.1`: `http://localhost:8080/api`
+- En cualquier otro dominio (producción): `https://huellitassinhogar-production-4c97.up.railway.app/api`
 
-## Running unit tests
+## Despliegue en Netlify
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+El archivo `netlify.toml` ya configura el comando de build, la carpeta a publicar, la versión de Node (24) y la redirección `/* → /index.html` para que las rutas de Angular funcionen al recargar la página.

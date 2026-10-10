@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist/huellitas-frontend/browser"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Las rutas de Angular se resuelven en el navegador: cualquier URL sirve index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
