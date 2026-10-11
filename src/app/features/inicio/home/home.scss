@@ -1,151 +1,272 @@
 .seccion {
-  padding-block: 4rem;
+  padding-block: 4.5rem;
 
   @media (min-width: 992px) {
-    padding-block: 6.5rem;
+    padding-block: 7rem;
   }
-}
-
-// Al llegar con la flecha del banner, que el navbar fijo no tape el título
-#que-buscamos {
-  scroll-margin-top: 80px;
-}
-
-.titulo-mision {
-  font-size: clamp(2.2rem, 1.5rem + 2.8vw, 3.75rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-
-  em {
-    font-weight: 500;
-    color: var(--bs-primary);
-  }
-}
-
-.mision {
-  max-width: 62ch;
 }
 
 .titulo-seccion {
-  font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.5rem);
-  line-height: 1.1;
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 
-// "Así de fácil": banda crema con la línea de tiempo
-.seccion-pasos {
-  background-color: var(--hs-cream-deep);
+// ---- Misión: lectura guiada por el scroll ----
+.mision {
+  // La línea de tiempo de la sección: avanza mientras la sección cruza la pantalla
+  view-timeline-name: --mision;
+  scroll-margin-top: 40px;
 }
 
-.pasos {
-  position: relative;
-  display: grid;
-  gap: 2rem;
+.huella-mision {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--bs-primary);
+  transform: rotate(-12deg);
+}
 
-  // La línea que une los pasos: vertical en móvil, horizontal en escritorio
-  &::before {
-    position: absolute;
-    top: 24px;
-    bottom: 24px;
-    left: 23px;
-    width: 2px;
-    content: '';
-    background-color: var(--hs-accent);
-    transform-origin: top;
-  }
+.mision-texto {
+  max-width: 30ch;
+  margin-bottom: 0;
+  font-family: var(--hs-font-display);
+  font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3.4rem);
+  font-weight: 500;
+  font-variation-settings: 'SOFT' 100;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  text-wrap: pretty;
 
   @media (min-width: 992px) {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2.5rem;
+    max-width: 26ch;
+  }
+}
 
-    &::before {
-      top: 23px;
-      // Termina en el centro del último nodo: ancho de una columna menos medio nodo
-      right: calc((100% - 7.5rem) / 4 - 24px);
-      bottom: auto;
-      left: 24px;
-      width: auto;
-      height: 2px;
-      transform-origin: left;
+// Cada palabra pasa de tenue a tinta según avanza la lectura. Sin soporte, el texto se ve normal.
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .palabra {
+      animation: leer linear both;
+      animation-timeline: --mision;
+      animation-range: cover calc(18% + var(--p) * 32%) cover calc(22% + var(--p) * 32%);
     }
   }
 }
 
-.paso {
-  position: relative;
-  padding-left: 4.25rem;
-
-  @media (min-width: 992px) {
-    padding-left: 0;
+@keyframes leer {
+  from {
+    color: #d8cbba;
+  }
+  to {
+    color: var(--hs-ink);
   }
 }
 
-.nodo {
-  position: absolute;
-  top: 0;
-  left: 0;
+// ---- Pasos: tarjetas que se apilan al hacer scroll ----
+.pasos-intro {
+  @media (min-width: 992px) {
+    position: sticky;
+    top: 120px;
+  }
+}
+
+.paso {
+  position: sticky;
+  top: calc(84px + var(--i) * 22px);
+  display: flex;
+  flex-direction: column;
+  min-height: 250px;
+  margin-bottom: 1.25rem;
+  padding: 1.75rem;
+  border-radius: 24px;
+  box-shadow: 0 -16px 32px -24px rgba(46, 38, 32, 0.35);
+
+  @media (min-width: 768px) {
+    min-height: 290px;
+    padding: 2.25rem 2.5rem;
+  }
+
+  @media (min-width: 992px) {
+    top: calc(110px + var(--i) * 26px);
+  }
+
+  p {
+    max-width: 42ch;
+    font-size: 1.1rem;
+  }
+}
+
+.paso-1 {
+  background-color: var(--hs-peach-soft);
+}
+
+.paso-2 {
+  background-color: var(--hs-sage-soft);
+}
+
+.paso-3 {
+  background-color: #f3e2c9;
+}
+
+.paso-4 {
+  color: #fbf6ee;
+  background-color: var(--hs-ink);
+
+  p {
+    color: rgba(251, 246, 238, 0.78);
+  }
+
+  .paso-icono {
+    color: var(--hs-ink);
+    background-color: #f6b48e;
+  }
+}
+
+.paso-cabeza {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: auto;
+  padding-bottom: 1.5rem;
+}
+
+.paso-numero {
+  font-family: var(--hs-font-display);
+  font-size: 4.5rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  opacity: 0.9;
+}
+
+.paso-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  font-size: 1.3rem;
+  color: #fff;
+  background-color: var(--hs-ink);
+  border-radius: 50%;
+}
+
+.paso-titulo {
+  margin-bottom: 0.5rem;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+}
+
+// ---- Carrusel de mascotas ----
+.destacadas {
+  // Ancho del .container de Bootstrap en cada punto de quiebre, para alinear el carrusel con el resto
+  --ancho: 100vw;
+
+  @media (min-width: 576px) { --ancho: 540px; }
+  @media (min-width: 768px) { --ancho: 720px; }
+  @media (min-width: 992px) { --ancho: 960px; }
+  @media (min-width: 1200px) { --ancho: 1140px; }
+  @media (min-width: 1400px) { --ancho: 1320px; }
+}
+
+.carril {
+  --margen: max(12px, calc((100vw - var(--ancho)) / 2 + 12px));
+  display: flex;
+  gap: 1.25rem;
+  padding: 0.5rem var(--margen) 1.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--margen);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.carril-item {
+  flex: 0 0 min(300px, 80vw);
+  scroll-snap-align: start;
+}
+
+.btn-carril {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  font-size: 1.15rem;
-  color: #fff;
-  background-color: var(--bs-primary);
-  border: 4px solid var(--hs-cream-deep);
+  font-size: 1.1rem;
+  color: var(--hs-ink);
+  background-color: var(--hs-card-bg);
+  border: 1px solid var(--hs-border);
   border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 
-  @media (min-width: 992px) {
-    position: relative;
-    margin-bottom: 1.25rem;
+  &:hover {
+    color: #fff;
+    background-color: var(--hs-ink);
+    border-color: var(--hs-ink);
   }
 }
 
-.numero {
-  font-size: 0.85rem;
+// Última tarjeta del carrusel: lleva al catálogo completo
+.ver-todas {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  min-height: 380px;
+  padding: 1.75rem;
+  color: #fbf6ee;
+  text-decoration: none;
+  background:
+    radial-gradient(80% 60% at 100% 0%, rgba(232, 122, 69, 0.35), transparent 70%),
+    var(--hs-ink);
+  border-radius: var(--hs-radius);
+  transition: transform 0.35s var(--hs-ease-out);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.ver-todas-numero {
+  font-family: var(--hs-font-display);
+  font-size: 5.5rem;
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #f6b48e;
+}
+
+.ver-todas-texto {
+  margin: 0.5rem 0 1.5rem;
+  font-family: var(--hs-font-display);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.ver-todas-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-weight: 800;
-  color: #9a4522;
-}
 
-// Momento animado de la página: la línea se dibuja y cada paso aparece cuando la línea lo alcanza.
-// Sin IntersectionObserver o con movimiento reducido, todo se ve estático (no hay .revelar-listo).
-.pasos.revelar-listo {
-  &::before {
-    transform: scale(0, 1);
-    transition: transform 1.4s var(--hs-ease-out);
-
-    @media (max-width: 991.98px) {
-      transform: scale(1, 0);
-    }
+  .bi {
+    transition: transform 0.3s var(--hs-ease-out);
   }
 
-  .paso {
-    opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity 0.7s var(--hs-ease-out),
-      transform 0.7s var(--hs-ease-out);
-    transition-delay: calc(var(--i) * 260ms + 150ms);
-  }
-
-  .nodo {
-    transform: scale(0.4);
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transition-delay: calc(var(--i) * 260ms + 150ms);
-  }
-
-  &.revelado {
-    &::before {
-      transform: none;
-    }
-
-    .paso,
-    .nodo {
-      opacity: 1;
-      transform: none;
-    }
+  .ver-todas:hover & .bi {
+    transform: translateX(4px);
   }
 }
 
+// ---- Invitación a publicar ----
 .invitacion {
   position: relative;
   padding: 2.5rem 1.75rem;

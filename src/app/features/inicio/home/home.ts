@@ -7,7 +7,6 @@ import { MascotaResponse } from '../../../models/mascota.model';
 import { MascotaService } from '../../../services/mascota.service';
 import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 import { MascotaCard } from '../../../shared/components/mascota-card/mascota-card';
-import { Revelar } from '../../../shared/directives/revelar';
 import { HeroInicio } from '../hero-inicio/hero-inicio';
 
 /** Un paso de "Así de fácil". */
@@ -19,7 +18,7 @@ interface Paso {
 
 /** Página de inicio (/): banner, misión, cómo funciona, mascotas destacadas e invitación a publicar. */
 @Component({
-  imports: [RouterLink, HeroInicio, MascotaCard, IconoHuella, Revelar],
+  imports: [RouterLink, HeroInicio, MascotaCard, IconoHuella],
   selector: 'app-home',
   styleUrl: './home.scss',
   templateUrl: './home.html',
@@ -72,9 +71,28 @@ export class Home implements OnInit, OnDestroy {
     this.navbarEstado.sobreBanner.set(false);
   }
 
-  /** Las primeras 3 disponibles para "Conoce a algunas mascotas". */
-  protected destacadas(): MascotaResponse[] {
+  /** Texto de la misión, separado en palabras para revelarlo al hacer scroll. */
+  protected readonly palabrasMision = (
+    'Huellitas sin Hogar es una plataforma web que reúne en un solo lugar a los perros y gatos que buscan familia en ' +
+    'Tecámac. Buscamos conectar a refugios o personas que rescatan animales con personas que quieran adoptar de una ' +
+    'manera responsable. Huellitas sin Hogar confía en que cada perrito o gatito tiene una historia especial y un lugar ' +
+    'en alguna familia que aún no lo ha encontrado.'
+  ).split(' ');
+
+  /** Las primeras 3 disponibles para el abanico de fotos del banner. */
+  protected abanico(): MascotaResponse[] {
     return (this.disponibles() ?? []).slice(0, 3);
+  }
+
+  /** Hasta 8 disponibles para el carrusel "Conoce a algunas mascotas". */
+  protected destacadas(): MascotaResponse[] {
+    return (this.disponibles() ?? []).slice(0, 8);
+  }
+
+  /** Desplaza el carrusel casi una pantalla hacia un lado (sin animación si se prefiere menos movimiento). */
+  protected moverCarril(carril: HTMLElement, direccion: 1 | -1): void {
+    const sinAnimacion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    carril.scrollBy({ left: direccion * carril.clientWidth * 0.8, behavior: sinAnimacion ? 'auto' : 'smooth' });
   }
 
   /** La invitación a publicar es para visitantes sin sesión y publicadores. */

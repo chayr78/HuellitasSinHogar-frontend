@@ -10,11 +10,9 @@ import {
   TAMANOS,
 } from '../../../models/etiquetas';
 import { Especie, MascotaResponse, Tamano } from '../../../models/mascota.model';
-import { BusquedaService } from '../../../services/busqueda.service';
 import { MascotaService } from '../../../services/mascota.service';
 import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 import { MascotaCard } from '../../../shared/components/mascota-card/mascota-card';
-import { coincideBusqueda } from '../../../shared/utils/texto';
 
 type FiltroTamano = Tamano | 'TODOS';
 type FiltroEspecie = Especie | 'TODAS';
@@ -25,7 +23,7 @@ interface Opcion<T> {
 }
 
 /**
- * Catálogo público: lista de mascotas con buscador y filtros.
+ * Catálogo público: lista de mascotas con filtros.
  * Los filtros viven en la URL (?especie=PERRO&tamano=CHICO) para poder compartir el enlace o llegar desde Inicio.
  */
 @Component({
@@ -39,7 +37,6 @@ export class CatalogoList implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  protected readonly busqueda = inject(BusquedaService);
 
   protected readonly mascotas = signal<MascotaResponse[]>([]);
   protected readonly cargando = signal(true);
@@ -70,22 +67,20 @@ export class CatalogoList implements OnInit {
     this.cargar();
   }
 
-  /** Mascotas que cumplen los filtros y la búsqueda. */
+  /** Mascotas que cumplen los filtros. */
   protected mascotasFiltradas(): MascotaResponse[] {
     const tamano = this.filtroTamano();
     const especie = this.filtroEspecie();
-    const termino = this.busqueda.termino();
 
     return this.mascotas().filter(
       (m) =>
         (tamano === 'TODOS' || m.tamano === tamano) &&
-        (especie === 'TODAS' || m.especie === especie) &&
-        coincideBusqueda(termino, m.nombre, m.publicadorNombre),
+        (especie === 'TODAS' || m.especie === especie),
     );
   }
 
   protected hayFiltros(): boolean {
-    return this.filtroTamano() !== 'TODOS' || this.filtroEspecie() !== 'TODAS' || this.busqueda.termino().trim() !== '';
+    return this.filtroTamano() !== 'TODOS' || this.filtroEspecie() !== 'TODAS';
   }
 
   /** Escribe los filtros en la URL; el cambio de la URL actualiza las señales. "Todos" se quita de la URL. */
@@ -101,12 +96,7 @@ export class CatalogoList implements OnInit {
   }
 
   protected limpiarFiltros(): void {
-    this.busqueda.termino.set('');
     this.cambiarFiltros({ especie: 'TODAS', tamano: 'TODOS' });
-  }
-
-  protected leerTexto(evento: Event): string {
-    return (evento.target as HTMLInputElement).value;
   }
 
   /** El catálogo muestra solo las mascotas disponibles. */

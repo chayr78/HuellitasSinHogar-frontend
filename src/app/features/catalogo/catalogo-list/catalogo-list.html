@@ -15,18 +15,6 @@
 </header>
 
 <section class="filtros hs-card mb-4 mb-lg-5" aria-label="Filtros">
-  <div class="buscador">
-    <i class="bi bi-search" aria-hidden="true"></i>
-    <input
-      type="search"
-      class="form-control"
-      placeholder="Buscar por nombre o refugio"
-      aria-label="Buscar por nombre o refugio"
-      [value]="busqueda.termino()"
-      (input)="busqueda.termino.set(leerTexto($event))"
-    />
-  </div>
-
   <div class="grupos">
     <div class="grupo" role="group" aria-label="Especie">
       @for (opcion of opcionesEspecie; track opcion.valor) {
@@ -71,7 +59,7 @@
     @for (n of [1, 2, 3, 4, 5, 6]; track n) {
       <div class="col">
         <div class="hs-card overflow-hidden">
-          <span class="hs-esqueleto rounded-0" style="height: 240px"></span>
+          <span class="hs-esqueleto rounded-0" style="aspect-ratio: 4 / 4.6"></span>
           <div class="p-3">
             <span class="hs-esqueleto mb-2" style="width: 50%; height: 1.5rem"></span>
             <span class="hs-esqueleto mb-3" style="width: 30%; height: 0.9rem"></span>
