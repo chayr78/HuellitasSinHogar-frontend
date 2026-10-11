@@ -4,4 +4,4 @@
 export const HERO_IMAGEN = 'hero.jpg';
 
 /** Foto del panel lateral del registro. */
-export const REGISTRO_IMAGEN = 'footer-dog.jpg';
+export const REGISTRO_IMAGEN = 'registro.webp';
