@@ -30,9 +30,6 @@
   border-radius: var(--hs-radius);
   backdrop-filter: saturate(1.4) blur(12px);
 
-  @media (min-width: 1200px) {
-    border-radius: 999px;
-  }
 }
 
 .grupos {
@@ -46,6 +43,24 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
+
+  // En el teléfono cada grupo es una sola fila que se desliza de lado
+  @media (max-width: 575.98px) {
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-inline: -0.6rem;
+    padding-inline: 0.6rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hs-chip {
+      flex-shrink: 0;
+    }
+  }
 }
 
 .separador {

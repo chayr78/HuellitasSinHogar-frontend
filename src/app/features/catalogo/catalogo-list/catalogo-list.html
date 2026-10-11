@@ -32,6 +32,25 @@
 
     <span class="separador" aria-hidden="true"></span>
 
+    <div class="grupo" role="group" aria-label="Sexo">
+      @for (opcion of opcionesSexo; track opcion.valor) {
+        <button
+          type="button"
+          class="hs-chip"
+          [class.active]="filtroSexo() === opcion.valor"
+          [attr.aria-pressed]="filtroSexo() === opcion.valor"
+          (click)="cambiarFiltros({ sexo: opcion.valor })"
+        >
+          @if (opcion.icono) {
+            <i class="bi {{ opcion.icono }}" aria-hidden="true"></i>
+          }
+          {{ opcion.etiqueta }}
+        </button>
+      }
+    </div>
+
+    <span class="separador" aria-hidden="true"></span>
+
     <div class="grupo" role="group" aria-label="Tamaño">
       @for (opcion of opcionesTamano; track opcion.valor) {
         <button
