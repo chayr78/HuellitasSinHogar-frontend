@@ -87,6 +87,19 @@
       </div>
     }
 
+    @if (sinMascota()) {
+      <div class="alert alert-warning small py-2 mb-0" role="alert">
+        <p class="mb-2">
+          <i class="bi bi-question-circle me-1" aria-hidden="true"></i>
+          No detectamos un perro o gato en la foto. ¿Seguro que quieres usarla?
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button" class="btn btn-primary btn-sm px-3" (click)="usarDeTodosModos()">Usarla de todos modos</button>
+          <button type="button" class="btn btn-hs-outline btn-sm px-3" (click)="sinMascota.set(null)">Elegir otra</button>
+        </div>
+      </div>
+    }
+
     @if (progreso() !== null) {
       <div
         class="progress"

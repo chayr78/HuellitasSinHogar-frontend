@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output, inject, signal } fro
 import { Subscription } from 'rxjs';
 
 import { estadoHttp, mensajeError } from '../../../core/http/api.util';
+import { DeteccionMascotaService } from '../../../services/deteccion-mascota.service';
 import { ModeracionImagenService } from '../../../services/moderacion-imagen.service';
 import { UploadService } from '../../../services/upload.service';
 import { ErrorImagen, esFormatoPermitido, prepararImagen } from '../../../core/utils/preparar-imagen';
@@ -21,6 +22,7 @@ import { FotoMascota } from '../foto-mascota/foto-mascota';
 export class FotoUploader implements OnDestroy {
   private readonly uploadService = inject(UploadService);
   private readonly moderacion = inject(ModeracionImagenService);
+  private readonly deteccion = inject(DeteccionMascotaService);
 
   @Input() set url(valor: string | null) {
     this.urlActual.set(valor?.trim() ? valor : null);
@@ -44,6 +46,8 @@ export class FotoUploader implements OnDestroy {
   protected readonly revisando = signal(false);
   /** Mensaje cuando la foto se rechazó por contenido inapropiado. */
   protected readonly rechazo = signal<string | null>(null);
+  /** Foto de mascota en la que no se detectó un perro o gato; espera a que el usuario decida. */
+  protected readonly sinMascota = signal<File | null>(null);
   /** El backend respondió 503 (subida no configurada): se ofrece escribir la URL a mano. */
   protected readonly subidaNoConfigurada = signal(false);
   protected readonly arrastrando = signal(false);
@@ -93,14 +97,29 @@ export class FotoUploader implements OnDestroy {
     this.intento++;
     this.revisando.set(false);
     this.rechazo.set(null);
+    this.sinMascota.set(null);
     this.subida?.unsubscribe();
     this.terminar(null);
     this.cambiarUrl(null);
   }
 
-  private async procesar(archivo: File): Promise<void> {
+  /** El usuario decidió usar la foto aunque no se detectó un perro o gato. */
+  protected usarDeTodosModos(): void {
+    const archivo = this.sinMascota();
+    this.sinMascota.set(null);
+    if (archivo) {
+      this.procesar(archivo, true);
+    }
+  }
+
+  /**
+   * `confirmada`: la foto ya pasó las revisiones y el usuario confirmó que quiere usarla,
+   * así que no se vuelve a revisar.
+   */
+  private async procesar(archivo: File, confirmada = false): Promise<void> {
     this.error.set(null);
     this.rechazo.set(null);
+    this.sinMascota.set(null);
     // El formato se revisa antes de mostrar el spinner, como siempre.
     if (!esFormatoPermitido(archivo)) {
       this.error.set('Formato no permitido. Usa una foto JPEG, PNG o WebP.');
@@ -110,17 +129,26 @@ export class FotoUploader implements OnDestroy {
     const intento = ++this.intento;
     this.cambiarProcesando(true);
 
-    // 1) Revisar la foto ANTES de achicarla o subirla.
-    this.revisando.set(true);
-    const revision = await this.moderacion.validar(archivo);
-    this.revisando.set(false);
-    if (intento !== this.intento) {
-      return; // El usuario quitó la foto mientras se revisaba.
-    }
-    if (!revision.aceptada) {
-      this.terminar(null);
-      this.rechazo.set(revision.motivo ?? null);
-      return; // Rechazada: no se agrega ni se sube.
+    if (!confirmada) {
+      // 1) Revisar la foto ANTES de achicarla o subirla.
+      this.revisando.set(true);
+      const revision = await this.moderacion.validar(archivo);
+      // Solo en fotos de mascota (no de perfil): ¿parece haber un perro o gato?
+      const hayMascota = revision.aceptada && this.tipo === 'mascota' ? await this.deteccion.contieneMascota(archivo) : true;
+      this.revisando.set(false);
+      if (intento !== this.intento) {
+        return; // El usuario quitó la foto mientras se revisaba.
+      }
+      if (!revision.aceptada) {
+        this.terminar(null);
+        this.rechazo.set(revision.motivo ?? null);
+        return; // Rechazada: no se agrega ni se sube.
+      }
+      if (!hayMascota) {
+        this.terminar(null);
+        this.sinMascota.set(archivo);
+        return; // No se bloquea: se espera a que el usuario decida con el aviso.
+      }
     }
 
     // 2) Achicarla y subirla.

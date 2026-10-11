@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output, inject, signal } from '@angular
 
 import { estadoHttp, mensajeError } from '../../../core/http/api.util';
 import { ErrorImagen, prepararImagen } from '../../../core/utils/preparar-imagen';
+import { DeteccionMascotaService } from '../../../services/deteccion-mascota.service';
 import { ModeracionImagenService } from '../../../services/moderacion-imagen.service';
 import { UploadService } from '../../../services/upload.service';
 import { FotoMascota } from '../foto-mascota/foto-mascota';
@@ -27,6 +28,7 @@ interface Avance {
 export class FotosAdicionalesEditor {
   private readonly uploadService = inject(UploadService);
   private readonly moderacion = inject(ModeracionImagenService);
+  private readonly deteccion = inject(DeteccionMascotaService);
 
   @Input() urls: string[] = [];
   @Input() maximo = 5;
@@ -41,6 +43,8 @@ export class FotosAdicionalesEditor {
   protected readonly avisos = signal<string[]>([]);
   /** Nombres de los archivos rechazados por contenido inapropiado. */
   protected readonly rechazadas = signal<string[]>([]);
+  /** Fotos en las que no se detectó un perro o gato; esperan a que el usuario decida. */
+  protected readonly sinMascota = signal<File[]>([]);
   protected readonly subidaNoConfigurada = signal(false);
 
   protected quitar(url: string): void {
@@ -57,8 +61,25 @@ export class FotosAdicionalesEditor {
     }
   }
 
-  /** Revisa, procesa y sube los archivos uno por uno; los que fallan o se rechazan se omiten con un aviso. */
-  private async agregar(archivos: File[]): Promise<void> {
+  /** Nombres de los archivos sin mascota detectada, separados por coma (para el aviso). */
+  protected nombresSinMascota(): string {
+    return this.sinMascota()
+      .map((archivo) => archivo.name)
+      .join(', ');
+  }
+
+  /** El usuario decidió subir las fotos en las que no se detectó un perro o gato. */
+  protected subirSinMascota(): void {
+    const archivos = this.sinMascota();
+    this.sinMascota.set([]);
+    this.agregar(archivos, true);
+  }
+
+  /**
+   * Revisa, procesa y sube los archivos uno por uno; los que fallan o se rechazan se omiten con un aviso.
+   * `confirmadas`: ya pasaron las revisiones y el usuario confirmó que quiere subirlas.
+   */
+  private async agregar(archivos: File[], confirmadas = false): Promise<void> {
     const lista = [...this.urls];
     const espacio = this.maximo - lista.length;
     const avisos: string[] = [];
@@ -68,6 +89,7 @@ export class FotosAdicionalesEditor {
     const seleccion = archivos.slice(0, Math.max(espacio, 0));
     this.avisos.set(avisos);
     this.rechazadas.set([]);
+    this.sinMascota.set([]);
     this.subidaNoConfigurada.set(false);
     if (seleccion.length === 0) {
       return;
@@ -77,12 +99,19 @@ export class FotosAdicionalesEditor {
     for (let i = 0; i < seleccion.length; i++) {
       const archivo = seleccion[i];
 
-      // 1) Revisar la foto ANTES de achicarla o subirla. Si se rechaza, se salta y se sigue con las demás.
-      this.avance.set({ actual: i + 1, total: seleccion.length, etapa: 'revisando' });
-      const revision = await this.moderacion.validar(archivo);
-      if (!revision.aceptada) {
-        this.rechazadas.update((nombres) => [...nombres, archivo.name]);
-        continue;
+      if (!confirmadas) {
+        // 1) Revisar la foto ANTES de achicarla o subirla. Si se rechaza, se salta y se sigue con las demás.
+        this.avance.set({ actual: i + 1, total: seleccion.length, etapa: 'revisando' });
+        const revision = await this.moderacion.validar(archivo);
+        if (!revision.aceptada) {
+          this.rechazadas.update((nombres) => [...nombres, archivo.name]);
+          continue;
+        }
+        // Si no parece haber un perro o gato, se aparta para preguntarle al usuario al final.
+        if (!(await this.deteccion.contieneMascota(archivo))) {
+          this.sinMascota.update((pendientes) => [...pendientes, archivo]);
+          continue;
+        }
       }
 
       // 2) Achicarla y subirla.
