@@ -43,8 +43,8 @@ export class FotosAdicionalesEditor {
   protected readonly avisos = signal<string[]>([]);
   /** Nombres de los archivos rechazados por contenido inapropiado. */
   protected readonly rechazadas = signal<string[]>([]);
-  /** Fotos en las que no se detectó un perro o gato; esperan a que el usuario decida. */
-  protected readonly sinMascota = signal<File[]>([]);
+  /** Nombres de las fotos bloqueadas porque no se detectó un perro o gato. */
+  protected readonly sinMascota = signal<string[]>([]);
   protected readonly subidaNoConfigurada = signal(false);
 
   protected quitar(url: string): void {
@@ -61,25 +61,8 @@ export class FotosAdicionalesEditor {
     }
   }
 
-  /** Nombres de los archivos sin mascota detectada, separados por coma (para el aviso). */
-  protected nombresSinMascota(): string {
-    return this.sinMascota()
-      .map((archivo) => archivo.name)
-      .join(', ');
-  }
-
-  /** El usuario decidió subir las fotos en las que no se detectó un perro o gato. */
-  protected subirSinMascota(): void {
-    const archivos = this.sinMascota();
-    this.sinMascota.set([]);
-    this.agregar(archivos, true);
-  }
-
-  /**
-   * Revisa, procesa y sube los archivos uno por uno; los que fallan o se rechazan se omiten con un aviso.
-   * `confirmadas`: ya pasaron las revisiones y el usuario confirmó que quiere subirlas.
-   */
-  private async agregar(archivos: File[], confirmadas = false): Promise<void> {
+  /** Revisa, procesa y sube los archivos uno por uno; los que fallan o se bloquean se omiten con un aviso. */
+  private async agregar(archivos: File[]): Promise<void> {
     const lista = [...this.urls];
     const espacio = this.maximo - lista.length;
     const avisos: string[] = [];
@@ -99,19 +82,16 @@ export class FotosAdicionalesEditor {
     for (let i = 0; i < seleccion.length; i++) {
       const archivo = seleccion[i];
 
-      if (!confirmadas) {
-        // 1) Revisar la foto ANTES de achicarla o subirla. Si se rechaza, se salta y se sigue con las demás.
-        this.avance.set({ actual: i + 1, total: seleccion.length, etapa: 'revisando' });
-        const revision = await this.moderacion.validar(archivo);
-        if (!revision.aceptada) {
-          this.rechazadas.update((nombres) => [...nombres, archivo.name]);
-          continue;
-        }
-        // Si no parece haber un perro o gato, se aparta para preguntarle al usuario al final.
-        if (!(await this.deteccion.contieneMascota(archivo))) {
-          this.sinMascota.update((pendientes) => [...pendientes, archivo]);
-          continue;
-        }
+      // 1) Revisar la foto ANTES de achicarla o subirla. Si se rechaza o se bloquea, se salta y se sigue con las demás.
+      this.avance.set({ actual: i + 1, total: seleccion.length, etapa: 'revisando' });
+      const revision = await this.moderacion.validar(archivo);
+      if (!revision.aceptada) {
+        this.rechazadas.update((nombres) => [...nombres, archivo.name]);
+        continue;
+      }
+      if (!(await this.deteccion.contieneMascota(archivo))) {
+        this.sinMascota.update((nombres) => [...nombres, archivo.name]);
+        continue;
       }
 
       // 2) Achicarla y subirla.

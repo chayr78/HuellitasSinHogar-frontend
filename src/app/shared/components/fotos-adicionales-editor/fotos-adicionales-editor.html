@@ -79,19 +79,21 @@
 }
 
 @if (sinMascota().length > 0) {
-  <div class="alert alert-warning small py-2 mt-2 mb-0" role="alert">
+  <div class="alert alert-danger small py-2 mt-2 mb-0" role="alert">
     <p class="mb-2">
-      <i class="bi bi-question-circle me-1" aria-hidden="true"></i>
+      <i class="bi bi-camera me-1" aria-hidden="true"></i>
       No detectamos un perro o gato en
-      {{ sinMascota().length === 1 ? 'esta foto' : 'estas fotos' }}:
-      <strong>{{ nombresSinMascota() }}</strong>. ¿Seguro que quieres usarlas?
+      {{ sinMascota().length === 1 ? 'esta foto, así que no se agregó' : 'estas fotos, así que no se agregaron' }}:
+      <strong>{{ sinMascota().join(', ') }}</strong>. Elige fotos donde se vea bien a la mascota, con buena luz.
     </p>
-    <div class="d-flex flex-wrap gap-2">
-      <button type="button" class="btn btn-primary btn-sm px-3" (click)="subirSinMascota()">
-        {{ sinMascota().length === 1 ? 'Usarla de todos modos' : 'Usarlas de todos modos' }}
-      </button>
-      <button type="button" class="btn btn-hs-outline btn-sm px-3" (click)="sinMascota.set([])">Descartar</button>
-    </div>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm px-3"
+      [disabled]="urls.length >= maximo || avance() !== null"
+      (click)="inputArchivos.click()"
+    >
+      <i class="bi bi-image me-1" aria-hidden="true"></i>Elegir otras fotos
+    </button>
   </div>
 }
 
