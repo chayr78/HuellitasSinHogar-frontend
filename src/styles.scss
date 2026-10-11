@@ -407,6 +407,207 @@ textarea.form-control {
   background-color: var(--hs-card-bg);
 }
 
+// Login y registro: pantalla dividida con foto a la izquierda y formulario a la derecha
+.hs-auth {
+  display: grid;
+  max-width: 1120px;
+  min-height: 640px;
+  margin-inline: auto;
+  overflow: hidden;
+  background-color: var(--hs-card-bg);
+  border: 1px solid var(--hs-border);
+  border-radius: 28px;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+.hs-auth-visual {
+  position: relative;
+  display: none;
+  overflow: hidden;
+  color: #fff;
+  background-color: var(--hs-ink);
+
+  @media (min-width: 992px) {
+    display: block;
+  }
+}
+
+.hs-auth-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: hs-auth-acercar 2.4s var(--hs-ease-out) both;
+}
+
+@keyframes hs-auth-acercar {
+  from {
+    transform: scale(1.08);
+  }
+}
+
+.hs-auth-velo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(31, 24, 19, 0.92) 5%, rgba(31, 24, 19, 0.45) 45%, rgba(31, 24, 19, 0.05) 75%);
+}
+
+.hs-auth-mensaje {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 2.5rem;
+}
+
+.hs-auth-huella {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+  color: #f6b48e;
+  transform: rotate(-12deg);
+}
+
+.hs-auth-cita {
+  margin-bottom: 0.75rem;
+  font-family: var(--hs-font-display);
+  font-size: 2.1rem;
+  font-variation-settings: SOFT 100;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+
+  em {
+    font-weight: 500;
+    color: #f6b48e;
+  }
+}
+
+.hs-auth-nota {
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.hs-auth-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(255, 255, 255, 0.85);
+
+  .bi {
+    margin-right: 0.6rem;
+    color: #f6b48e;
+  }
+}
+
+.hs-auth-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+
+  @media (min-width: 576px) {
+    padding: 3rem 2.5rem;
+  }
+
+  @media (min-width: 1200px) {
+    padding: 3.5rem 4.5rem;
+  }
+}
+
+.hs-auth-contenido {
+  width: 100%;
+  max-width: 520px;
+  animation: hs-auth-entrar 0.8s var(--hs-ease-out) both;
+}
+
+@keyframes hs-auth-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.hs-auth-titulo {
+  margin-bottom: 0.4rem;
+  font-size: clamp(2.1rem, 1.6rem + 1.6vw, 2.9rem);
+  font-variation-settings: SOFT 100;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+
+  em {
+    font-weight: 500;
+    color: var(--bs-primary);
+  }
+}
+
+.hs-auth-cambio {
+  margin: 1.75rem 0 0;
+  padding-top: 1.5rem;
+  text-align: center;
+  color: var(--hs-muted);
+  border-top: 1px solid var(--hs-border);
+}
+
+// Campo con ícono a la izquierda (y opcionalmente un botón a la derecha)
+.hs-campo {
+  position: relative;
+
+  .form-control {
+    padding-left: 2.75rem;
+
+    &.con-boton {
+      padding-right: 3rem;
+    }
+
+    // El ícono de error de Bootstrap chocaría con el botón de ver contraseña
+    &.con-boton.is-invalid {
+      background-image: none;
+    }
+  }
+}
+
+.hs-campo-icono {
+  position: absolute;
+  top: 23px;
+  left: 1rem;
+  color: var(--hs-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: color 0.2s ease;
+
+  .hs-campo:focus-within & {
+    color: var(--bs-primary);
+  }
+}
+
+.hs-campo-boton {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  color: var(--hs-muted);
+  background: none;
+  border: 0;
+  border-radius: 10px;
+
+  &:hover {
+    color: var(--bs-body-color);
+    background-color: var(--hs-cream-deep);
+  }
+}
+
 // Autenticación (login, registro, recuperación)
 .hs-auth-card {
   max-width: 460px;

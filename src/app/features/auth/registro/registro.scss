@@ -1,0 +1,130 @@
+// Tarjetas para elegir el tipo de cuenta
+.roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.rol {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  padding: 1rem;
+  color: inherit;
+  text-align: left;
+  background-color: var(--hs-card-bg);
+  border: 1.5px solid var(--hs-border);
+  border-radius: var(--hs-radius);
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    transform 0.3s var(--hs-ease-out);
+
+  &:hover {
+    border-color: #d6c8b4;
+    transform: translateY(-2px);
+  }
+
+  &.activo {
+    background-color: #fff8f3;
+    border-color: var(--bs-primary);
+  }
+}
+
+.rol-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.35rem;
+  font-size: 1.1rem;
+  color: var(--hs-muted);
+  background-color: var(--hs-cream-deep);
+  border-radius: 12px;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease;
+
+  .activo & {
+    color: #fff;
+    background-color: var(--bs-primary);
+  }
+}
+
+.rol-titulo {
+  font-weight: 800;
+}
+
+.rol-texto {
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: var(--hs-muted);
+}
+
+// Palomita en la esquina de la opción elegida
+.rol-check {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 0.8rem;
+  color: #fff;
+  background-color: var(--bs-primary);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.2s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  .activo & {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// Datos extra del publicador en un bloque aparte que se despliega
+.datos-publicador {
+  margin-bottom: 1.25rem;
+  padding: 1.1rem;
+  background-color: var(--hs-sage-soft);
+  border-radius: var(--hs-radius);
+  animation: desplegar 0.45s var(--hs-ease-out);
+}
+
+@keyframes desplegar {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+// Barra que avanza hasta la longitud mínima de la contraseña
+.avance {
+  height: 4px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  background-color: var(--hs-cream-deep);
+  border-radius: 4px;
+}
+
+.avance-barra {
+  display: block;
+  height: 100%;
+  background-color: var(--hs-accent);
+  border-radius: inherit;
+  transition:
+    width 0.3s var(--hs-ease-out),
+    background-color 0.3s ease;
+
+  &.completo {
+    background-color: var(--hs-sage);
+  }
+}

@@ -1,70 +1,89 @@
-<section class="hs-auth-card hs-card p-4 p-md-5">
-  <div class="text-center mb-4">
-    <span class="hs-auth-icono"><app-icono-huella /></span>
-    <h1 class="h3 fw-extrabold mt-3 mb-1">Iniciar sesión</h1>
-    <p class="text-hs-muted mb-0">Qué gusto verte de nuevo.</p>
+<section class="hs-auth">
+  <!-- Panel con foto (solo en pantallas grandes) -->
+  <div class="hs-auth-visual" aria-hidden="true">
+    <img [src]="imagen" alt="" class="hs-auth-foto" style="object-position: 32% center" />
+    <div class="hs-auth-velo"></div>
+    <div class="hs-auth-mensaje">
+      <app-icono-huella class="hs-auth-huella" />
+      <p class="hs-auth-cita">Tu nuevo mejor amigo <em>te está esperando.</em></p>
+      <p class="hs-auth-nota">Entra para enviar solicitudes y seguir en qué va cada una.</p>
+    </div>
   </div>
 
-  @if (error(); as mensaje) {
-    <div class="alert alert-warning" role="alert">{{ mensaje }}</div>
-  }
+  <div class="hs-auth-panel">
+    <div class="hs-auth-contenido">
+      <h1 class="hs-auth-titulo">Qué gusto verte <em>de nuevo</em></h1>
+      <p class="text-hs-muted mb-4">Inicia sesión con tu correo y contraseña.</p>
 
-  <form [formGroup]="formulario" (ngSubmit)="entrar()" novalidate>
-    <div class="mb-3">
-      <label for="correo" class="form-label">Correo electrónico</label>
-      <input
-        id="correo"
-        type="email"
-        class="form-control"
-        formControlName="correo"
-        autocomplete="email"
-        [class.is-invalid]="invalido(formulario.controls.correo)"
-      />
-      <div class="invalid-feedback">Escribe un correo válido.</div>
-    </div>
-
-    <div class="mb-2">
-      <label for="password" class="form-label">Contraseña</label>
-      <div class="input-group has-validation">
-        <input
-          id="password"
-          class="form-control"
-          formControlName="password"
-          autocomplete="current-password"
-          [type]="verPassword() ? 'text' : 'password'"
-          [class.is-invalid]="invalido(formulario.controls.password)"
-        />
-        <button
-          type="button"
-          class="btn btn-ver-password"
-          [attr.aria-label]="verPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-          [attr.aria-pressed]="verPassword()"
-          (click)="verPassword.set(!verPassword())"
-        >
-          <i class="bi" [class.bi-eye]="!verPassword()" [class.bi-eye-slash]="verPassword()" aria-hidden="true"></i>
-        </button>
-        <div class="invalid-feedback">Escribe tu contraseña.</div>
-      </div>
-    </div>
-
-    <div class="text-end mb-4">
-      <a routerLink="/olvide-password" class="small fw-bold text-decoration-none">¿Olvidaste tu contraseña?</a>
-    </div>
-
-    <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="enviando()">
-      @if (enviando()) {
-        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-        Entrando...
-      } @else {
-        Iniciar sesión
+      @if (error(); as mensaje) {
+        <div class="hs-alert-warn d-flex gap-2 mb-3" role="alert">
+          <i class="bi bi-exclamation-circle" aria-hidden="true"></i>{{ mensaje }}
+        </div>
       }
-    </button>
-  </form>
 
-  <p class="text-center text-hs-muted mt-4 mb-0">
-    ¿Aún no tienes cuenta?
-    <a routerLink="/registro" [queryParams]="returnUrl() ? { returnUrl: returnUrl() } : {}" class="fw-bold text-decoration-none">
-      Regístrate
-    </a>
-  </p>
+      <form [formGroup]="formulario" (ngSubmit)="entrar()" novalidate>
+        <div class="mb-3">
+          <label for="correo" class="form-label">Correo electrónico</label>
+          <div class="hs-campo">
+            <i class="bi bi-envelope hs-campo-icono" aria-hidden="true"></i>
+            <input
+              id="correo"
+              type="email"
+              class="form-control"
+              formControlName="correo"
+              autocomplete="email"
+              placeholder="tu@correo.com"
+              [class.is-invalid]="invalido(formulario.controls.correo)"
+            />
+            <div class="invalid-feedback">Escribe un correo válido.</div>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="hs-campo">
+            <i class="bi bi-lock hs-campo-icono" aria-hidden="true"></i>
+            <input
+              id="password"
+              class="form-control con-boton"
+              formControlName="password"
+              autocomplete="current-password"
+              [type]="verPassword() ? 'text' : 'password'"
+              [class.is-invalid]="invalido(formulario.controls.password)"
+            />
+            <button
+              type="button"
+              class="hs-campo-boton"
+              [attr.aria-label]="verPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              [attr.aria-pressed]="verPassword()"
+              (click)="verPassword.set(!verPassword())"
+            >
+              <i class="bi" [class.bi-eye]="!verPassword()" [class.bi-eye-slash]="verPassword()" aria-hidden="true"></i>
+            </button>
+            <div class="invalid-feedback">Escribe tu contraseña.</div>
+          </div>
+        </div>
+
+        <div class="text-end mb-4">
+          <a routerLink="/olvide-password" class="small fw-bold text-decoration-none">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="enviando()">
+          @if (enviando()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            Entrando...
+          } @else {
+            Iniciar sesión
+          }
+        </button>
+      </form>
+
+      <p class="hs-auth-cambio">
+        ¿Aún no tienes cuenta?
+        <a routerLink="/registro" [queryParams]="returnUrl() ? { returnUrl: returnUrl() } : {}" class="fw-bold text-decoration-none">
+          Regístrate
+        </a>
+      </p>
+    </div>
+  </div>
 </section>

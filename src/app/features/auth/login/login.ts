@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 
 import { AuthService } from '../../../core/auth/auth.service';
+import { HERO_IMAGEN } from '../../../core/config/imagenes.config';
 import { mensajeError } from '../../../core/http/api.util';
 
 /** Inicio de sesión (/login). Al entrar lleva a cada rol a su pantalla de inicio o a returnUrl. */
@@ -25,6 +26,7 @@ export class Login {
     password: ['', [Validators.required]],
   });
 
+  protected readonly imagen = HERO_IMAGEN;
   protected readonly verPassword = signal(false);
   protected readonly enviando = signal(false);
   protected readonly error = signal<string | null>(null);

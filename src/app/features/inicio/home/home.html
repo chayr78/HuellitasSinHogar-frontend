@@ -1,8 +1,4 @@
-<app-hero-inicio
-  [disponibles]="disponibles()?.length ?? null"
-  [adoptados]="totalAdoptados()"
-  [mascotas]="abanico()"
-/>
+<app-hero-inicio [disponibles]="disponibles()?.length ?? null" [adoptados]="totalAdoptados()" />
 
 <!-- Qué buscamos: el texto se "lee" solo, palabra por palabra, conforme se hace scroll -->
 <section id="que-buscamos" class="seccion mision" aria-labelledby="titulo-mision">
@@ -46,54 +42,41 @@
   </div>
 </section>
 
-<!-- Mascotas destacadas: carrusel horizontal; se oculta si falla la carga o no hay mascotas -->
+<!-- Mascotas destacadas (máximo 4): se oculta si falla la carga o no hay mascotas -->
 @if (cargandoDisponibles()) {
   <section class="seccion pt-0" aria-label="Cargando mascotas">
     <div class="container">
       <span class="hs-esqueleto mb-4" style="width: 280px; height: 2.4rem"></span>
-      <div class="d-flex gap-4 overflow-hidden" aria-hidden="true">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4" aria-hidden="true">
         @for (n of [1, 2, 3, 4]; track n) {
-          <span class="hs-esqueleto flex-shrink-0" style="width: 300px; height: 420px; border-radius: 16px"></span>
+          <div class="col">
+            <span class="hs-esqueleto" style="aspect-ratio: 4 / 5.4; border-radius: 16px"></span>
+          </div>
         }
       </div>
       <span class="visually-hidden" role="status">Cargando mascotas...</span>
     </div>
   </section>
 } @else if (destacadas().length > 0) {
-  <section class="seccion pt-0 destacadas" aria-labelledby="titulo-destacadas">
+  <section class="seccion pt-0" aria-labelledby="titulo-destacadas">
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
         <div>
           <h2 id="titulo-destacadas" class="titulo-seccion mb-2">Conoce a algunas mascotas</h2>
-          <p class="text-hs-muted mb-0">Desliza para ver más. Cada una tiene su historia.</p>
+          <p class="text-hs-muted mb-0">Cada una tiene su historia.</p>
         </div>
-        <div class="d-flex gap-2">
-          <button type="button" class="btn-carril" aria-label="Mascotas anteriores" (click)="moverCarril(carril, -1)">
-            <i class="bi bi-arrow-left" aria-hidden="true"></i>
-          </button>
-          <button type="button" class="btn-carril" aria-label="Más mascotas" (click)="moverCarril(carril, 1)">
-            <i class="bi bi-arrow-right" aria-hidden="true"></i>
-          </button>
-        </div>
+        <a routerLink="/catalogo" class="hs-enlace-flecha">
+          Ver las {{ disponibles()?.length }} disponibles <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+        @for (mascota of destacadas(); track mascota.id) {
+          <div class="col">
+            <app-mascota-card [mascota]="mascota" />
+          </div>
+        }
       </div>
     </div>
-
-    <ul #carril class="carril list-unstyled mb-0" aria-labelledby="titulo-destacadas">
-      @for (mascota of destacadas(); track mascota.id) {
-        <li class="carril-item">
-          <app-mascota-card [mascota]="mascota" />
-        </li>
-      }
-      <li class="carril-item">
-        <a routerLink="/catalogo" class="ver-todas">
-          <span class="ver-todas-numero hs-numeros">{{ disponibles()?.length }}</span>
-          <span class="ver-todas-texto">
-            {{ disponibles()?.length === 1 ? 'mascota espera' : 'mascotas esperan' }} una familia
-          </span>
-          <span class="ver-todas-accion">Ver todas <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
-        </a>
-      </li>
-    </ul>
   </section>
 }
 

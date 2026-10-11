@@ -3,15 +3,17 @@ import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { esNoEncontrado } from '../../../core/http/api.util';
-import { ETIQUETA_ENERGIA, ETIQUETA_TAMANO, ETIQUETA_TIPO_PUBLICADOR } from '../../../models/etiquetas';
-import { MascotaResponse } from '../../../models/mascota.model';
+import { ETIQUETA_ENERGIA, ETIQUETA_ESPECIE, ETIQUETA_TAMANO, ETIQUETA_TIPO_PUBLICADOR } from '../../../models/etiquetas';
+import { MascotaResponse, NivelEnergia, Tamano } from '../../../models/mascota.model';
 import { MascotaService } from '../../../services/mascota.service';
 import { Avatar } from '../../../shared/components/avatar/avatar';
+import { BadgeEstado } from '../../../shared/components/badge-estado/badge-estado';
 import { CarruselFotos } from '../../../shared/components/carrusel-fotos/carrusel-fotos';
+import { FotoMascota } from '../../../shared/components/foto-mascota/foto-mascota';
 import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 /** Detalle de una mascota (/mascotas/:id) con los botones para enviar solicitud o hacer la encuesta. */
 @Component({
-  imports: [RouterLink, CarruselFotos, Avatar, IconoHuella],
+  imports: [RouterLink, CarruselFotos, Avatar, IconoHuella, BadgeEstado, FotoMascota],
   selector: 'app-mascota-detail',
   styleUrl: './mascota-detail.scss',
   templateUrl: './mascota-detail.html',
@@ -41,6 +43,11 @@ export class MascotaDetail {
   protected readonly etiquetaTamano = ETIQUETA_TAMANO;
   protected readonly etiquetaEnergia = ETIQUETA_ENERGIA;
   protected readonly etiquetaTipoPublicador = ETIQUETA_TIPO_PUBLICADOR;
+  protected readonly etiquetaEspecie = ETIQUETA_ESPECIE;
+  /** Posición de cada valor en los medidores visuales (1 a 3). */
+  protected readonly nivelTamano: Record<Tamano, number> = { CHICO: 1, MEDIANO: 2, GRANDE: 3 };
+  protected readonly nivelEnergia: Record<NivelEnergia, number> = { BAJA: 1, MEDIA: 2, ALTA: 3 };
+
   private cargarMascota(id: number): void {
     this.cargando.set(true);
     this.errorCarga.set(false);

@@ -10,69 +10,271 @@
   }
 }
 
-// En escritorio la galería acompaña el scroll mientras se lee la ficha
-.galeria {
-  @media (min-width: 992px) {
-    position: sticky;
-    top: 96px;
+// En el teléfono deja lugar para la barra fija de "Adoptar"
+.ficha.con-barra {
+  @media (max-width: 991.98px) {
+    padding-bottom: 5.5rem;
   }
 }
 
-.nombre {
-  font-size: clamp(2.6rem, 1.8rem + 3vw, 4.25rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
+// ---- Galería sobre una lámina de color ----
+.galeria {
+  position: relative;
+  padding: 0 0.75rem 0.75rem 0;
+
+  @media (min-width: 992px) {
+    position: sticky;
+    top: 96px;
+    padding: 0 1.25rem 1.25rem 0;
+  }
+
+  app-carrusel-fotos {
+    position: relative;
+  }
 }
 
-// Tres datos clave en una fila
-.datos {
+.lamina {
+  position: absolute;
+  inset: 1.5rem 0 0 1.5rem;
+  background-color: var(--hs-peach-soft);
+  border-radius: 28px;
+  transform: rotate(2.5deg);
+  animation: lamina 1s var(--hs-ease-out) both;
+}
+
+@keyframes lamina {
+  from {
+    opacity: 0;
+    transform: rotate(0deg) translate(-12px, -12px);
+  }
+}
+
+// ---- Encabezado ----
+.nombre {
+  margin-bottom: 0.75rem;
+  font-size: clamp(3rem, 2rem + 4vw, 5rem);
+  font-variation-settings: 'SOFT' 100;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.saludo {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.42em;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--bs-primary);
+}
+
+.ubicacion {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.75rem;
+  font-weight: 700;
+  color: var(--hs-muted);
+
+  .bi {
+    color: var(--bs-primary);
+  }
+}
+
+// ---- Rasgos con medidores ----
+.rasgos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-bottom: 0;
-  background-color: var(--hs-card-bg);
+  margin-bottom: 2rem;
+  overflow: hidden;
   border: 1px solid var(--hs-border);
   border-radius: var(--hs-radius);
 }
 
-.dato {
-  padding: 1rem;
+.rasgo {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0.9rem;
+  background-color: var(--hs-card-bg);
 
   & + & {
     border-left: 1px solid var(--hs-border);
   }
 
   dt {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.6rem;
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--hs-muted);
-
-    .bi {
-      color: var(--hs-sage);
-    }
   }
 
   dd {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
     margin-bottom: 0;
     font-size: 1.05rem;
     font-weight: 800;
+    line-height: 1.2;
   }
 }
 
+.rasgo-icono {
+  display: inline-flex;
+  align-items: flex-end;
+  height: 1.5rem;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--bs-primary);
+}
+
+// Tres huellas de tamaño creciente; se resalta la que corresponde
+.medidor-tamano {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.3rem;
+  height: 1.5rem;
+
+  app-icono-huella {
+    color: #e3d7c6;
+    transition: color 0.3s ease;
+
+    &:nth-child(1) { width: 0.8rem; height: 0.8rem; }
+    &:nth-child(2) { width: 1.1rem; height: 1.1rem; }
+    &:nth-child(3) { width: 1.45rem; height: 1.45rem; }
+
+    &.activa {
+      color: var(--bs-primary);
+    }
+  }
+}
+
+// Barras de energía que se llenan al entrar
+.medidor-energia {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.25rem;
+  height: 1.5rem;
+
+  .barra {
+    width: 0.5rem;
+    height: calc(var(--n) * 33%);
+    background-color: #e3d7c6;
+    border-radius: 3px;
+
+    &.llena {
+      background-color: var(--hs-sage);
+      transform-origin: bottom;
+      animation: llenar 0.7s var(--hs-ease-out) both;
+      animation-delay: calc(500ms + var(--n) * 120ms);
+    }
+  }
+}
+
+@keyframes llenar {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+// ---- Historia ----
+.historia {
+  margin-bottom: 2rem;
+}
+
 .descripcion {
-  max-width: 65ch;
-  font-size: 1.05rem;
-  line-height: 1.7;
+  max-width: 62ch;
+  font-size: 1.1rem;
+  line-height: 1.75;
   white-space: pre-line;
+
+  // Letra capital al estilo de una revista
+  &.capitular::first-letter {
+    float: left;
+    margin: 0.35rem 0.6rem 0 0;
+    font-family: var(--hs-font-display);
+    font-size: 3.6em;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 0.8;
+    color: var(--bs-primary);
+  }
+}
+
+// ---- Quién lo cuida ----
+.cuidador {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.1rem;
+  background-color: var(--hs-sage-soft);
+  border-radius: var(--hs-radius);
 }
 
 .acciones {
   padding: 1.25rem;
+  background-color: var(--hs-card-bg);
+  border: 1px solid var(--hs-border);
+  border-radius: var(--hs-radius);
 
   @media (min-width: 768px) {
     padding: 1.5rem;
+  }
+}
+
+// La columna de información entra por bloques, uno tras otro
+.entrada {
+  animation: entrar 0.8s var(--hs-ease-out) both;
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{80 + $i * 70}ms;
+    }
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+// ---- Barra fija en el teléfono ----
+.barra-adoptar {
+  position: fixed;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  z-index: 1020;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.6rem 0.6rem 0.6rem;
+  background-color: rgba(255, 253, 249, 0.94);
+  border: 1px solid var(--hs-border);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px -12px rgba(46, 38, 32, 0.35);
+  backdrop-filter: saturate(1.4) blur(12px);
+  animation: subir 0.6s var(--hs-ease-out) 0.4s both;
+
+  .btn {
+    padding-inline: 1.5rem;
+  }
+}
+
+.barra-foto {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(120%);
   }
 }

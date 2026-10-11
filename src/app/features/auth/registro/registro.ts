@@ -1,4 +1,5 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   NonNullableFormBuilder,
@@ -11,6 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 
 import { AuthService } from '../../../core/auth/auth.service';
+import { REGISTRO_IMAGEN } from '../../../core/config/imagenes.config';
 import { RegistroRequest } from '../../../models/auth.model';
 import { TipoPublicador } from '../../../models/mascota.model';
 import { MUNICIPIOS_EDOMEX } from '../../../models/municipios-edomex';
@@ -38,6 +40,7 @@ const datosPublicadorCompletos: ValidatorFn = (grupo: AbstractControl): Validati
 @Component({
   imports: [RouterLink, ReactiveFormsModule, IconoHuella],
   selector: 'app-registro',
+  styleUrl: './registro.scss',
   templateUrl: './registro.html',
 })
 export class Registro {
@@ -63,6 +66,14 @@ export class Registro {
       confirmacion: ['', [Validators.required]],
     },
     { validators: [passwordsCoinciden('password', 'confirmacion'), datosPublicadorCompletos] },
+  );
+
+  protected readonly imagen = REGISTRO_IMAGEN;
+
+  private readonly password = toSignal(this.formulario.controls.password.valueChanges, { initialValue: '' });
+  /** Qué tanto se acerca la contraseña a la longitud mínima (0 a 100), para la barra de avance. */
+  protected readonly avancePassword = computed(() =>
+    Math.min(100, Math.round((this.password().length / LONGITUD_MINIMA_PASSWORD) * 100)),
   );
 
   protected readonly verPassword = signal(false);

@@ -4,12 +4,12 @@
 
 @if (cargando()) {
   <div class="row g-4 g-lg-5" aria-hidden="true">
-    <div class="col-lg-6"><span class="hs-esqueleto" style="aspect-ratio: 1 / 1; border-radius: 16px"></span></div>
-    <div class="col-lg-6">
+    <div class="col-lg-7"><span class="hs-esqueleto" style="aspect-ratio: 1 / 1; border-radius: 24px"></span></div>
+    <div class="col-lg-5">
       <span class="hs-esqueleto mb-3" style="width: 40%; height: 1.6rem"></span>
-      <span class="hs-esqueleto mb-3" style="width: 65%; height: 3.5rem"></span>
+      <span class="hs-esqueleto mb-3" style="width: 75%; height: 4rem"></span>
       <span class="hs-esqueleto mb-4" style="width: 35%; height: 1rem"></span>
-      <span class="hs-esqueleto" style="height: 110px; border-radius: 16px"></span>
+      <span class="hs-esqueleto" style="height: 140px; border-radius: 16px"></span>
     </div>
   </div>
   <span class="visually-hidden" role="status">Cargando mascota...</span>
@@ -28,46 +28,81 @@
 } @else if (mascota(); as m) {
   @let disponible = m.estado === 'DISPONIBLE';
 
-  <div class="row g-4 g-lg-5">
-    <div class="col-lg-6">
+  <div class="ficha row g-4 g-lg-5" [class.con-barra]="disponible">
+    <!-- Galería sobre una lámina de color inclinada -->
+    <div class="col-lg-7">
       <div class="galeria">
+        <span class="lamina" aria-hidden="true"></span>
         <app-carrusel-fotos [fotos]="fotos()" [nombre]="m.nombre" proporcion="1 / 1" />
       </div>
     </div>
 
-    <div class="col-lg-6">
-      <div class="publicador d-flex align-items-center gap-2">
-        <app-avatar [fotoUrl]="m.publicadorFotoUrl" [nombre]="m.publicadorNombre" [tamano]="36" />
-        <div class="lh-sm">
-          <div class="fw-bold">{{ m.publicadorNombre }}</div>
-          <div class="small text-hs-muted">{{ etiquetaTipoPublicador[m.tipoPublicador] }}</div>
-        </div>
+    <div class="col-lg-5">
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-3 entrada">
+        <span class="hs-badge-neutral">{{ etiquetaEspecie[m.especie] }}</span>
+        <span appBadgeEstado [estado]="m.estado"></span>
       </div>
 
-      <h1 class="nombre mt-4 mb-2">{{ m.nombre }}</h1>
-      <p class="text-hs-muted fw-semibold mb-4">
-        <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ m.ubicacionPublicador }}
+      <h1 class="nombre entrada">
+        <span class="saludo">Hola, soy</span>
+        {{ m.nombre }}
+      </h1>
+      <p class="ubicacion entrada">
+        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>{{ m.ubicacionPublicador }}
       </p>
 
-      <dl class="datos">
-        <div class="dato">
-          <dt><i class="bi bi-calendar-heart" aria-hidden="true"></i>Edad</dt>
-          <dd>{{ m.edadAproximada }}</dd>
+      <!-- Rasgos con medidores visuales -->
+      <dl class="rasgos entrada">
+        <div class="rasgo">
+          <dt>Edad</dt>
+          <dd>
+            <span class="rasgo-icono" aria-hidden="true"><i class="bi bi-cake2"></i></span>
+            {{ m.edadAproximada }}
+          </dd>
         </div>
-        <div class="dato">
-          <dt><i class="bi bi-rulers" aria-hidden="true"></i>Tamaño</dt>
-          <dd>{{ etiquetaTamano[m.tamano] }}</dd>
+        <div class="rasgo">
+          <dt>Tamaño</dt>
+          <dd>
+            <span class="medidor-tamano" aria-hidden="true">
+              @for (n of [1, 2, 3]; track n) {
+                <app-icono-huella [class.activa]="n === nivelTamano[m.tamano]" />
+              }
+            </span>
+            {{ etiquetaTamano[m.tamano] }}
+          </dd>
         </div>
-        <div class="dato">
-          <dt><i class="bi bi-lightning-charge" aria-hidden="true"></i>Energía</dt>
-          <dd>{{ etiquetaEnergia[m.nivelEnergia] }}</dd>
+        <div class="rasgo">
+          <dt>Energía</dt>
+          <dd>
+            <span class="medidor-energia" aria-hidden="true">
+              @for (n of [1, 2, 3]; track n) {
+                <span class="barra" [class.llena]="n <= nivelEnergia[m.nivelEnergia]" [style.--n]="n"></span>
+              }
+            </span>
+            {{ etiquetaEnergia[m.nivelEnergia] }}
+          </dd>
         </div>
       </dl>
 
-      <h2 class="h4 fw-bold mt-4 mb-2">Sobre {{ m.nombre }}</h2>
-      <p class="descripcion mb-4">{{ m.descripcion }}</p>
+      @if (m.descripcion?.trim()) {
+        <section class="historia entrada" aria-labelledby="titulo-historia">
+          <h2 id="titulo-historia" class="h4 fw-bold mb-3">Mi historia</h2>
+          <!-- La letra capital solo luce en textos largos -->
+          <p class="descripcion mb-0" [class.capitular]="(m.descripcion?.length ?? 0) >= 160">{{ m.descripcion }}</p>
+        </section>
+      }
 
-      <div class="acciones hs-card">
+      <!-- Quién lo cuida -->
+      <div class="cuidador entrada">
+        <app-avatar [fotoUrl]="m.publicadorFotoUrl" [nombre]="m.publicadorNombre" [tamano]="48" />
+        <div class="lh-sm">
+          <div class="small text-hs-muted mb-1">Me cuida</div>
+          <div class="fw-bold">{{ m.publicadorNombre }}</div>
+          <div class="small text-hs-muted">{{ etiquetaTipoPublicador[m.tipoPublicador] }} · {{ m.ubicacionPublicador }}</div>
+        </div>
+      </div>
+
+      <div class="acciones entrada">
         @if (!disponible) {
           <div class="hs-alert-warn d-flex align-items-center gap-2 mb-3" role="status">
             <i class="bi bi-info-circle" aria-hidden="true"></i>
@@ -79,15 +114,15 @@
           @if (disponible) {
             @if (!auth.estaAutenticado()) {
               <a routerLink="/login" [queryParams]="{ returnUrl: '/mascotas/' + m.id + '/solicitud' }" class="btn btn-primary btn-lg">
-                Enviar solicitud de adopción
+                Quiero adoptar a {{ m.nombre }}
               </a>
             } @else if (auth.rol() === 'ADOPTANTE') {
-              <a [routerLink]="['/mascotas', m.id, 'solicitud']" class="btn btn-primary btn-lg">Enviar solicitud de adopción</a>
+              <a [routerLink]="['/mascotas', m.id, 'solicitud']" class="btn btn-primary btn-lg">Quiero adoptar a {{ m.nombre }}</a>
             } @else {
               <button type="button" class="btn btn-primary btn-lg" disabled>Inicia sesión como adoptante para solicitar</button>
             }
             <a [routerLink]="['/mascotas', m.id, 'encuesta']" class="btn btn-hs-outline btn-lg">
-              <i class="bi bi-clipboard2-check me-1" aria-hidden="true"></i>Hacer encuesta de compatibilidad
+              <i class="bi bi-clipboard2-check me-1" aria-hidden="true"></i>¿Somos compatibles?
             </a>
           } @else {
             <button type="button" class="btn btn-primary btn-lg" disabled>Enviar solicitud de adopción</button>
@@ -103,4 +138,22 @@
       </div>
     </div>
   </div>
+
+  <!-- Teléfono: el botón para adoptar siempre a la mano -->
+  @if (disponible && auth.rol() !== 'PUBLICADOR' && auth.rol() !== 'ADMINISTRADOR') {
+    <div class="barra-adoptar d-lg-none">
+      <app-foto-mascota class="barra-foto" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [alt]="''" [altura]="null" recortar />
+      <div class="flex-grow-1 lh-sm overflow-hidden">
+        <div class="fw-bold text-truncate">{{ m.nombre }}</div>
+        <div class="small text-hs-muted text-truncate">{{ etiquetaTamano[m.tamano] }} · {{ m.edadAproximada }}</div>
+      </div>
+      <a
+        [routerLink]="auth.estaAutenticado() ? ['/mascotas', m.id, 'solicitud'] : ['/login']"
+        [queryParams]="auth.estaAutenticado() ? {} : { returnUrl: '/mascotas/' + m.id + '/solicitud' }"
+        class="btn btn-primary flex-shrink-0"
+      >
+        Adoptar
+      </a>
+    </div>
+  }
 }

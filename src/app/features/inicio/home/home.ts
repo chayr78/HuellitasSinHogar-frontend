@@ -79,20 +79,9 @@ export class Home implements OnInit, OnDestroy {
     'en alguna familia que aún no lo ha encontrado.'
   ).split(' ');
 
-  /** Las primeras 3 disponibles para el abanico de fotos del banner. */
-  protected abanico(): MascotaResponse[] {
-    return (this.disponibles() ?? []).slice(0, 3);
-  }
-
-  /** Hasta 8 disponibles para el carrusel "Conoce a algunas mascotas". */
+  /** Hasta 4 disponibles para "Conoce a algunas mascotas". */
   protected destacadas(): MascotaResponse[] {
-    return (this.disponibles() ?? []).slice(0, 8);
-  }
-
-  /** Desplaza el carrusel casi una pantalla hacia un lado (sin animación si se prefiere menos movimiento). */
-  protected moverCarril(carril: HTMLElement, direccion: 1 | -1): void {
-    const sinAnimacion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    carril.scrollBy({ left: direccion * carril.clientWidth * 0.8, behavior: sinAnimacion ? 'auto' : 'smooth' });
+    return (this.disponibles() ?? []).slice(0, 4);
   }
 
   /** La invitación a publicar es para visitantes sin sesión y publicadores. */

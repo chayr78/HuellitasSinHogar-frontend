@@ -1,37 +1,78 @@
-// Banner oscuro y cálido: el título a la izquierda y un abanico de fotos de mascotas reales a la derecha
 .hero {
   position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 600px;
+  min-height: 92svh;
   overflow: hidden;
   color: #fff;
-  background:
-    radial-gradient(60% 70% at 78% 55%, rgba(232, 122, 69, 0.28), transparent 70%),
-    radial-gradient(40% 50% at 10% 100%, rgba(74, 107, 79, 0.35), transparent 70%),
-    #1f1813;
+  // Respaldo cálido si la foto no existe o no carga
+  background: linear-gradient(135deg, #5a3f2e, #2e2620);
 
   @media (min-width: 992px) {
-    display: flex;
     align-items: center;
-    min-height: clamp(640px, 96vh, 900px);
+    min-height: clamp(600px, 94vh, 860px);
+  }
+}
+
+// La capa es más alta que el banner (top -40%, alto 140%) para que el parallax no deje huecos
+.capa-imagen {
+  position: absolute;
+  top: -40%;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  will-change: transform;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    // En móvil se centra en la cara del perro (a la izquierda de la foto)
+    object-position: 32% center;
+    animation: acercar 2.4s var(--hs-ease-out) both;
+  }
+}
+
+// Oscurece abajo (móvil) o la derecha (escritorio) para que el texto se lea; la cara del perro queda libre
+.capa-oscura {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(30, 22, 17, 0.55), rgba(30, 22, 17, 0) 22%),
+    linear-gradient(to top, rgba(30, 22, 17, 0.92) 8%, rgba(30, 22, 17, 0.55) 48%, rgba(30, 22, 17, 0.05) 75%);
+
+  @media (min-width: 992px) {
+    background:
+      linear-gradient(to bottom, rgba(30, 22, 17, 0.5), rgba(30, 22, 17, 0) 20%),
+      linear-gradient(to left, rgba(30, 22, 17, 0.9) 18%, rgba(30, 22, 17, 0.5) 50%, rgba(30, 22, 17, 0) 72%);
   }
 }
 
 .contenido {
   position: relative;
-  padding-top: 7.5rem;
-  padding-bottom: 4.5rem;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 7rem;
+  padding-bottom: 5.5rem;
 
   @media (min-width: 992px) {
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
   }
 }
 
+.texto {
+  width: 100%;
+  max-width: 560px;
+}
+
 .titulo {
-  margin-bottom: 1.25rem;
-  font-size: clamp(2.8rem, 1.6rem + 4.6vw, 5.6rem);
+  margin-bottom: 1.1rem;
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.6rem);
   font-weight: 600;
-  font-variation-settings: 'SOFT' 100;
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  font-variation-settings: 'SOFT' 80;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
 
   em {
     display: block;
@@ -41,65 +82,29 @@
 }
 
 .subtitulo {
-  max-width: 40ch;
-  margin-bottom: 2rem;
-  font-size: 1.2rem;
+  max-width: 44ch;
+  margin-bottom: 1.75rem;
+  font-size: 1.15rem;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.86);
 }
 
-.acciones {
+.botones {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 1.25rem 1.75rem;
-}
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
 
-// Botón principal: la flecha vive en un círculo que se desliza al pasar el cursor
-.cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0.55rem 0.5rem 1.75rem;
-  font-size: 1.15rem;
+  .opcion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-inline: 1.6rem;
+  }
 
-  &:focus-visible {
+  .btn:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 3px;
-  }
-}
-
-.cta-flecha {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  overflow: hidden;
-  color: var(--bs-primary);
-  background-color: #fff;
-  border-radius: 50%;
-
-  .bi {
-    transition: transform 0.45s var(--hs-ease-out);
-  }
-
-  .cta:hover & .bi {
-    animation: flecha-pasa 0.55s var(--hs-ease-out);
-  }
-}
-
-@keyframes flecha-pasa {
-  45% {
-    opacity: 0;
-    transform: translateX(140%);
-  }
-  46% {
-    transform: translateX(-140%);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -107,8 +112,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
+  margin-bottom: 0;
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.86);
 
   strong {
     color: #fff;
@@ -134,125 +140,11 @@
   }
 }
 
-// ---- Abanico de fotos ----
-.abanico {
-  position: relative;
-  height: 400px;
-  will-change: transform;
-
-  @media (min-width: 576px) {
-    height: 480px;
-  }
-
-  @media (min-width: 992px) {
-    height: 560px;
-  }
-}
-
-.polaroid {
-  // --d: distancia al centro del abanico (-1, 0, 1); la calcula el template
-  --d: 0;
-  --abrir: 1;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(54%, 290px);
-
-  @media (min-width: 576px) {
-    width: min(62%, 290px);
-  }
-  padding: 10px 10px 0;
-  color: var(--hs-ink);
-  text-decoration: none;
-  background-color: #fffdf9;
-  border-radius: 6px;
-  box-shadow:
-    0 30px 60px -20px rgba(0, 0, 0, 0.6),
-    0 8px 18px -8px rgba(0, 0, 0, 0.4);
-  transform: translate(-50%, -50%) translateX(calc(var(--d) * 46% * var(--abrir)))
-    translateY(calc(var(--d) * var(--d) * 6% * var(--abrir))) rotate(calc(var(--d) * 9deg * var(--abrir)));
-  transition:
-    transform 0.7s var(--hs-ease-out),
-    box-shadow 0.4s ease;
-  animation:
-    repartir 1s var(--hs-ease-out) both,
-    flotar 7s ease-in-out infinite;
-  animation-delay:
-    calc(300ms + var(--i, 0) * 140ms),
-    calc(var(--i, 0) * -2.3s);
-
-  app-foto-mascota {
-    border-radius: 3px;
-  }
-
-  &.unica {
-    padding-bottom: 10px;
-    transform: translate(-50%, -50%) rotate(-3deg);
-
-    img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 4 / 5;
-      object-fit: cover;
-      object-position: 32% center;
-      border-radius: 3px;
-    }
-
-    app-mascota-placeholder {
-      aspect-ratio: 4 / 5;
-    }
-  }
-}
-
-// Las fotos de atrás esconden su nombre (quedaría cortado); aparece al levantarlas
-.lateral .polaroid-nombre {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.lateral:hover .polaroid-nombre,
-.lateral:focus-visible .polaroid-nombre {
-  opacity: 1;
-}
-
-.polaroid-nombre {
-  display: block;
-  padding: 0.7rem 0.25rem 0.8rem;
-  overflow: hidden;
-  font-family: var(--hs-font-display);
-  font-size: 1.35rem;
-  font-style: italic;
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-// Al pasar el cursor el abanico se abre y la foto elegida se levanta
-@media (hover: hover) {
-  .abanico.lleno:hover .polaroid {
-    --abrir: 1.3;
-  }
-
-  .polaroid:hover,
-  .polaroid:focus-visible {
-    z-index: 10 !important;
-    box-shadow:
-      0 40px 70px -20px rgba(0, 0, 0, 0.7),
-      0 0 0 3px #f6b48e;
-    transform: translate(-50%, -54%) translateX(calc(var(--d) * 46% * var(--abrir))) rotate(0deg) scale(1.05);
-  }
-}
-
-.polaroid:focus-visible {
-  outline: none;
-}
-
 .flecha {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 1.25rem;
   left: 50%;
-  display: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
@@ -260,14 +152,15 @@
   margin-left: -22px;
   font-size: 1.1rem;
   color: #fff;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
+  backdrop-filter: blur(6px);
   transition: background-color 0.2s ease;
   animation: rebote 2.4s ease-in-out 1.6s infinite;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.22);
   }
 
   &:focus-visible {
@@ -275,39 +168,32 @@
     outline-offset: 2px;
   }
 
-  @media (min-width: 992px) {
-    display: inline-flex;
+  @media (max-width: 991.98px) {
+    display: none;
   }
 }
 
-// Entrada del texto: cada bloque sube y se enfoca un poco después del anterior
+// Entrada escalonada: cada bloque sube y se enfoca un poco después del anterior
 .aparecer {
   animation: aparecer 900ms var(--hs-ease-out) both;
 
   &:nth-child(2) { animation-delay: 120ms; }
   &:nth-child(3) { animation-delay: 240ms; }
+  &:nth-child(4) { animation-delay: 360ms; }
 }
 
 @keyframes aparecer {
   from {
     opacity: 0;
     filter: blur(6px);
-    translate: 0 24px;
+    transform: translateY(24px);
   }
 }
 
-// Las fotos se "reparten" desde abajo como cartas
-@keyframes repartir {
+@keyframes acercar {
   from {
-    opacity: 0;
-    scale: 0.7;
+    transform: scale(1.08);
   }
-}
-
-// Flotan muy suave, cada una a su ritmo (usa `translate` para no pisar el `transform` del abanico)
-@keyframes flotar {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -10px; }
 }
 
 @keyframes latido {
@@ -330,8 +216,7 @@
   .aparecer,
   .flecha,
   .punto::after,
-  .polaroid,
-  .cta-flecha .bi {
-    animation: none !important;
+  .capa-imagen img {
+    animation: none;
   }
 }

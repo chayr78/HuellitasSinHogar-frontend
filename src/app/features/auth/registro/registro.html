@@ -1,188 +1,232 @@
-<section class="hs-auth-card hs-card p-4 p-md-5">
-  <div class="text-center mb-4">
-    <span class="hs-auth-icono"><app-icono-huella /></span>
-    <h1 class="h3 fw-extrabold mt-3 mb-1">Crear cuenta</h1>
-    <p class="text-hs-muted mb-0">Únete a la comunidad que ayuda a perros y gatos de Tecámac.</p>
+<section class="hs-auth">
+  <!-- Panel con foto (solo en pantallas grandes) -->
+  <div class="hs-auth-visual" aria-hidden="true">
+    <img [src]="imagen" alt="" class="hs-auth-foto" />
+    <div class="hs-auth-velo"></div>
+    <div class="hs-auth-mensaje">
+      <app-icono-huella class="hs-auth-huella" />
+      <p class="hs-auth-cita">Únete a la comunidad que ayuda a <em>perros y gatos de Tecámac.</em></p>
+      <ul class="hs-auth-lista">
+        <li><i class="bi bi-search-heart" aria-hidden="true"></i>Envía solicitudes y sigue su estado</li>
+        <li><i class="bi bi-megaphone" aria-hidden="true"></i>Publica mascotas de tu refugio o rescate</li>
+      </ul>
+    </div>
   </div>
 
-  @if (error(); as mensaje) {
-    <div class="alert alert-warning" role="alert">{{ mensaje }}</div>
-  }
+  <div class="hs-auth-panel">
+    <div class="hs-auth-contenido">
+      <h1 class="hs-auth-titulo">Crea tu <em>cuenta</em></h1>
+      <p class="text-hs-muted mb-4">Elige cómo quieres participar y completa tus datos.</p>
 
-  <form [formGroup]="formulario" (ngSubmit)="registrarse()" novalidate>
-    <fieldset class="mb-3">
-      <legend class="form-label fs-6">¿Qué quieres hacer?</legend>
-      <div class="d-flex flex-wrap gap-2">
-        <button
-          type="button"
-          class="hs-chip"
-          [class.active]="formulario.controls.rol.value === 'ADOPTANTE'"
-          [attr.aria-pressed]="formulario.controls.rol.value === 'ADOPTANTE'"
-          (click)="elegirRol('ADOPTANTE')"
-        >
-          Quiero adoptar
-        </button>
-        <button
-          type="button"
-          class="hs-chip"
-          [class.active]="esPublicador"
-          [attr.aria-pressed]="esPublicador"
-          (click)="elegirRol('PUBLICADOR')"
-        >
-          Quiero publicar mascotas
-        </button>
-      </div>
-    </fieldset>
-
-    @if (esPublicador) {
-      <fieldset class="mb-3">
-        <legend class="form-label fs-6">¿Cómo publicarás?</legend>
-        <div class="d-flex flex-wrap gap-2">
-          <button
-            type="button"
-            class="hs-chip"
-            [class.active]="formulario.controls.tipoPublicador.value === 'REFUGIO'"
-            [attr.aria-pressed]="formulario.controls.tipoPublicador.value === 'REFUGIO'"
-            (click)="elegirTipo('REFUGIO')"
-          >
-            Refugio o perrera
-          </button>
-          <button
-            type="button"
-            class="hs-chip"
-            [class.active]="formulario.controls.tipoPublicador.value === 'PARTICULAR'"
-            [attr.aria-pressed]="formulario.controls.tipoPublicador.value === 'PARTICULAR'"
-            (click)="elegirTipo('PARTICULAR')"
-          >
-            Particular
-          </button>
+      @if (error(); as mensaje) {
+        <div class="hs-alert-warn d-flex gap-2 mb-3" role="alert">
+          <i class="bi bi-exclamation-circle" aria-hidden="true"></i>{{ mensaje }}
         </div>
-        @if (errorDeGrupo('tipoPublicadorRequerido', formulario.controls.tipoPublicador)) {
-          <div class="invalid-feedback d-block">Elige si eres refugio o particular.</div>
-        }
-      </fieldset>
-    }
-
-    <div class="mb-3">
-      <label for="nombre" class="form-label">
-        {{ esPublicador && formulario.controls.tipoPublicador.value === 'REFUGIO' ? 'Nombre del refugio' : 'Tu nombre' }}
-      </label>
-      <input
-        id="nombre"
-        type="text"
-        class="form-control"
-        formControlName="nombre"
-        autocomplete="name"
-        [class.is-invalid]="invalido(formulario.controls.nombre)"
-      />
-      <div class="invalid-feedback">Este campo es obligatorio.</div>
-    </div>
-
-    @if (esPublicador) {
-      <div class="mb-3">
-        <label for="ubicacion" class="form-label">Municipio <span class="fw-normal text-hs-muted">(Estado de México)</span></label>
-        <select
-          id="ubicacion"
-          class="form-select"
-          formControlName="ubicacion"
-          [class.is-invalid]="errorDeGrupo('ubicacionRequerida', formulario.controls.ubicacion)"
-        >
-          <option value="" disabled>Elige un municipio</option>
-          @for (municipio of municipios; track municipio) {
-            <option [value]="municipio">{{ municipio }}</option>
-          }
-        </select>
-        <div class="invalid-feedback">Indica dónde se encuentran las mascotas.</div>
-      </div>
-    }
-
-    <div class="mb-3">
-      <label for="correo" class="form-label">Correo electrónico</label>
-      <input
-        id="correo"
-        type="email"
-        class="form-control"
-        formControlName="correo"
-        autocomplete="email"
-        [class.is-invalid]="invalido(formulario.controls.correo)"
-      />
-      <div class="invalid-feedback">Escribe un correo válido.</div>
-    </div>
-
-    <div class="mb-3">
-      <label for="telefono" class="form-label">Teléfono</label>
-      <input
-        id="telefono"
-        type="tel"
-        class="form-control"
-        formControlName="telefono"
-        autocomplete="tel"
-        [class.is-invalid]="invalido(formulario.controls.telefono)"
-      />
-      <div class="invalid-feedback">Escribe un teléfono de contacto.</div>
-    </div>
-
-    <div class="mb-3">
-      <label for="password" class="form-label">Contraseña</label>
-      <div class="input-group has-validation">
-        <input
-          id="password"
-          class="form-control"
-          formControlName="password"
-          autocomplete="new-password"
-          aria-describedby="ayuda-password"
-          [type]="verPassword() ? 'text' : 'password'"
-          [class.is-invalid]="invalido(formulario.controls.password)"
-        />
-        <button
-          type="button"
-          class="btn btn-ver-password"
-          [attr.aria-label]="verPassword() ? 'Ocultar contraseñas' : 'Mostrar contraseñas'"
-          [attr.aria-pressed]="verPassword()"
-          (click)="verPassword.set(!verPassword())"
-        >
-          <i class="bi" [class.bi-eye]="!verPassword()" [class.bi-eye-slash]="verPassword()" aria-hidden="true"></i>
-        </button>
-        <div class="invalid-feedback">La contraseña debe tener al menos {{ longitudMinima }} caracteres.</div>
-      </div>
-      <div id="ayuda-password" class="form-text">Mínimo {{ longitudMinima }} caracteres.</div>
-    </div>
-
-    <div class="mb-4">
-      <label for="confirmacion" class="form-label">Confirma tu contraseña</label>
-      <input
-        id="confirmacion"
-        class="form-control"
-        formControlName="confirmacion"
-        autocomplete="new-password"
-        [type]="verPassword() ? 'text' : 'password'"
-        [class.is-invalid]="
-          invalido(formulario.controls.confirmacion) || errorDeGrupo('passwordsDistintas', formulario.controls.confirmacion)
-        "
-      />
-      <div class="invalid-feedback">
-        @if (formulario.controls.confirmacion.hasError('required')) {
-          Repite tu contraseña.
-        } @else {
-          Las contraseñas no coinciden.
-        }
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="enviando()">
-      @if (enviando()) {
-        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-        Creando tu cuenta...
-      } @else {
-        Crear cuenta
       }
-    </button>
-  </form>
 
-  <p class="text-center text-hs-muted mt-4 mb-0">
-    ¿Ya tienes cuenta?
-    <a routerLink="/login" [queryParams]="returnUrl() ? { returnUrl: returnUrl() } : {}" class="fw-bold text-decoration-none">
-      Inicia sesión
-    </a>
-  </p>
+      <form [formGroup]="formulario" (ngSubmit)="registrarse()" novalidate>
+        <fieldset class="mb-4">
+          <legend class="form-label fs-6">¿Qué quieres hacer?</legend>
+          <div class="roles">
+            <button
+              type="button"
+              class="rol"
+              [class.activo]="formulario.controls.rol.value === 'ADOPTANTE'"
+              [attr.aria-pressed]="formulario.controls.rol.value === 'ADOPTANTE'"
+              (click)="elegirRol('ADOPTANTE')"
+            >
+              <span class="rol-icono" aria-hidden="true"><i class="bi bi-heart"></i></span>
+              <span class="rol-titulo">Quiero adoptar</span>
+              <span class="rol-texto">Encuentra a tu compañero y envía solicitudes.</span>
+              <span class="rol-check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+            </button>
+            <button
+              type="button"
+              class="rol"
+              [class.activo]="esPublicador"
+              [attr.aria-pressed]="esPublicador"
+              (click)="elegirRol('PUBLICADOR')"
+            >
+              <span class="rol-icono" aria-hidden="true"><i class="bi bi-house-heart"></i></span>
+              <span class="rol-titulo">Quiero publicar</span>
+              <span class="rol-texto">Comparte a los perros y gatos que cuidas.</span>
+              <span class="rol-check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+            </button>
+          </div>
+        </fieldset>
+
+        @if (esPublicador) {
+          <div class="datos-publicador">
+            <fieldset class="mb-3">
+              <legend class="form-label fs-6">¿Cómo publicarás?</legend>
+              <div class="d-flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="formulario.controls.tipoPublicador.value === 'REFUGIO'"
+                  [attr.aria-pressed]="formulario.controls.tipoPublicador.value === 'REFUGIO'"
+                  (click)="elegirTipo('REFUGIO')"
+                >
+                  Refugio o perrera
+                </button>
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="formulario.controls.tipoPublicador.value === 'PARTICULAR'"
+                  [attr.aria-pressed]="formulario.controls.tipoPublicador.value === 'PARTICULAR'"
+                  (click)="elegirTipo('PARTICULAR')"
+                >
+                  Particular
+                </button>
+              </div>
+              @if (errorDeGrupo('tipoPublicadorRequerido', formulario.controls.tipoPublicador)) {
+                <div class="invalid-feedback d-block">Elige si eres refugio o particular.</div>
+              }
+            </fieldset>
+
+            <div>
+              <label for="ubicacion" class="form-label">Municipio <span class="fw-normal text-hs-muted">(Estado de México)</span></label>
+              <select
+                id="ubicacion"
+                class="form-select"
+                formControlName="ubicacion"
+                [class.is-invalid]="errorDeGrupo('ubicacionRequerida', formulario.controls.ubicacion)"
+              >
+                <option value="" disabled>Elige un municipio</option>
+                @for (municipio of municipios; track municipio) {
+                  <option [value]="municipio">{{ municipio }}</option>
+                }
+              </select>
+              <div class="invalid-feedback">Indica dónde se encuentran las mascotas.</div>
+            </div>
+          </div>
+        }
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label">
+            {{ esPublicador && formulario.controls.tipoPublicador.value === 'REFUGIO' ? 'Nombre del refugio' : 'Tu nombre' }}
+          </label>
+          <div class="hs-campo">
+            <i class="bi bi-person hs-campo-icono" aria-hidden="true"></i>
+            <input
+              id="nombre"
+              type="text"
+              class="form-control"
+              formControlName="nombre"
+              autocomplete="name"
+              [class.is-invalid]="invalido(formulario.controls.nombre)"
+            />
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <div class="hs-campo">
+              <i class="bi bi-envelope hs-campo-icono" aria-hidden="true"></i>
+              <input
+                id="correo"
+                type="email"
+                class="form-control"
+                formControlName="correo"
+                autocomplete="email"
+                placeholder="tu@correo.com"
+                [class.is-invalid]="invalido(formulario.controls.correo)"
+              />
+              <div class="invalid-feedback">Escribe un correo válido.</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <div class="hs-campo">
+              <i class="bi bi-telephone hs-campo-icono" aria-hidden="true"></i>
+              <input
+                id="telefono"
+                type="tel"
+                class="form-control"
+                formControlName="telefono"
+                autocomplete="tel"
+                [class.is-invalid]="invalido(formulario.controls.telefono)"
+              />
+              <div class="invalid-feedback">Escribe un teléfono de contacto.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label for="password" class="form-label">Contraseña</label>
+            <div class="hs-campo">
+              <i class="bi bi-lock hs-campo-icono" aria-hidden="true"></i>
+              <input
+                id="password"
+                class="form-control con-boton"
+                formControlName="password"
+                autocomplete="new-password"
+                aria-describedby="ayuda-password"
+                [type]="verPassword() ? 'text' : 'password'"
+                [class.is-invalid]="invalido(formulario.controls.password)"
+              />
+              <button
+                type="button"
+                class="hs-campo-boton"
+                [attr.aria-label]="verPassword() ? 'Ocultar contraseñas' : 'Mostrar contraseñas'"
+                [attr.aria-pressed]="verPassword()"
+                (click)="verPassword.set(!verPassword())"
+              >
+                <i class="bi" [class.bi-eye]="!verPassword()" [class.bi-eye-slash]="verPassword()" aria-hidden="true"></i>
+              </button>
+              <div class="invalid-feedback">Usa al menos {{ longitudMinima }} caracteres.</div>
+            </div>
+            <!-- Avance hacia la longitud mínima -->
+            <div class="avance" aria-hidden="true">
+              <span class="avance-barra" [style.width.%]="avancePassword()" [class.completo]="avancePassword() === 100"></span>
+            </div>
+            <div id="ayuda-password" class="form-text">Mínimo {{ longitudMinima }} caracteres.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="confirmacion" class="form-label">Confírmala</label>
+            <div class="hs-campo">
+              <i class="bi bi-shield-lock hs-campo-icono" aria-hidden="true"></i>
+              <input
+                id="confirmacion"
+                class="form-control"
+                formControlName="confirmacion"
+                autocomplete="new-password"
+                [type]="verPassword() ? 'text' : 'password'"
+                [class.is-invalid]="
+                  invalido(formulario.controls.confirmacion) ||
+                  errorDeGrupo('passwordsDistintas', formulario.controls.confirmacion)
+                "
+              />
+              <div class="invalid-feedback">
+                @if (formulario.controls.confirmacion.hasError('required')) {
+                  Repite tu contraseña.
+                } @else {
+                  Las contraseñas no coinciden.
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="enviando()">
+          @if (enviando()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            Creando tu cuenta...
+          } @else {
+            Crear cuenta
+          }
+        </button>
+      </form>
+
+      <p class="hs-auth-cambio">
+        ¿Ya tienes cuenta?
+        <a routerLink="/login" [queryParams]="returnUrl() ? { returnUrl: returnUrl() } : {}" class="fw-bold text-decoration-none">
+          Inicia sesión
+        </a>
+      </p>
+    </div>
+  </div>
 </section>

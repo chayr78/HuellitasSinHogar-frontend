@@ -2,18 +2,15 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild, sign
 import { RouterLink } from '@angular/router';
 
 import { HERO_IMAGEN } from '../../../core/config/imagenes.config';
-import { MascotaResponse } from '../../../models/mascota.model';
-import { FotoMascota } from '../../../shared/components/foto-mascota/foto-mascota';
-import { MascotaPlaceholder } from '../../../shared/components/mascota-placeholder/mascota-placeholder';
 
-const VELOCIDAD_PARALLAX = 0.12;
+const VELOCIDAD_PARALLAX = 0.4;
 
 /**
- * Banner de Inicio a todo el ancho: título, conteos, botón al catálogo y un abanico con fotos de mascotas reales.
- * Parallax: al hacer scroll el abanico baja más lento que la página.
+ * Banner de Inicio a todo el ancho: foto con capa oscura, título, conteos y botones.
+ * Parallax: al hacer scroll la foto baja más lento que la página.
  */
 @Component({
-  imports: [RouterLink, FotoMascota, MascotaPlaceholder],
+  imports: [RouterLink],
   selector: 'app-hero-inicio',
   styleUrl: './hero-inicio.scss',
   templateUrl: './hero-inicio.html',
@@ -22,8 +19,6 @@ export class HeroInicio implements AfterViewInit, OnDestroy {
   /** Mascotas disponibles y adoptadas; null mientras cargan o si fallan (no se muestra la insignia). */
   @Input() disponibles: number | null = null;
   @Input() adoptados: number | null = null;
-  /** Hasta 3 mascotas para el abanico de fotos; vacío mientras cargan (se ve la foto del banner). */
-  @Input() mascotas: MascotaResponse[] = [];
 
   @ViewChild('banner') private banner!: ElementRef<HTMLElement>;
   @ViewChild('capa') private capa!: ElementRef<HTMLElement>;
