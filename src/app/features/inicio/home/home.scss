@@ -28,10 +28,10 @@
 }
 
 .mision-texto {
-  max-width: 30ch;
+  max-width: 34ch;
   margin-bottom: 0;
   font-family: var(--hs-font-display);
-  font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3.4rem);
+  font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem);
   font-weight: 500;
   font-variation-settings: 'SOFT' 100;
   line-height: 1.18;
@@ -39,7 +39,7 @@
   text-wrap: pretty;
 
   @media (min-width: 992px) {
-    max-width: 26ch;
+    max-width: 32ch;
   }
 }
 
