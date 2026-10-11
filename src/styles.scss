@@ -97,25 +97,11 @@ table,
   font-variant-numeric: tabular-nums;
 }
 
-// Tarjetas: un solo nivel de elevación (borde en reposo, sombra solo al pasar el cursor)
+// Tarjetas: un solo nivel de elevación (solo borde; las tarjetas de mascota agregan su propia sombra al pasar el cursor)
 .hs-card {
   background-color: var(--hs-card-bg);
   border: 1px solid var(--hs-border);
   border-radius: var(--hs-radius);
-}
-
-.hs-card-hover {
-  transition:
-    transform 0.35s $hs-ease-out,
-    box-shadow 0.35s $hs-ease-out,
-    border-color 0.35s $hs-ease-out;
-
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-4px);
-    border-color: transparent;
-    box-shadow: var(--hs-shadow-hover);
-  }
 }
 
 // Chips (filtros y opciones de selección única)
@@ -211,18 +197,6 @@ table,
 :is(h1, h2, h3, .h1, .h2, .h3, [class*='display-']).fw-extrabold,
 :is(h1, h2, h3, .h1, .h2, .h3, [class*='display-']).fw-bold {
   font-weight: 650;
-}
-
-.hs-icon-circle {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: var(--hs-sage);
-  background-color: var(--hs-sage-soft);
 }
 
 // Ícono grande para estados vacíos, de error y de éxito

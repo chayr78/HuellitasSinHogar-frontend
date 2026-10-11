@@ -13,10 +13,6 @@ export class MascotaService {
   private readonly http = inject(HttpClient);
   private readonly url = `${API_URL}/mascotas`;
 
-  obtenerTodas(): Observable<MascotaResponse[]> {
-    return extraerDatos(this.http.get<ApiResponse<MascotaResponse[]>>(this.url));
-  }
-
   obtenerDisponibles(): Observable<MascotaResponse[]> {
     return extraerDatos(this.http.get<ApiResponse<MascotaResponse[]>>(`${this.url}/disponibles`));
   }
