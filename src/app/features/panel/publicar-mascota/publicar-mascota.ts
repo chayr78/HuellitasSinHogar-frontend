@@ -8,11 +8,14 @@ import {
   ESPECIES,
   ETIQUETA_ENERGIA,
   ETIQUETA_ESPECIE,
+  ETIQUETA_SEXO,
   ETIQUETA_TAMANO,
+  ICONO_SEXO,
   NIVELES_ENERGIA,
+  SEXOS,
   TAMANOS,
 } from '../../../models/etiquetas';
-import { Especie, MascotaResponse, NivelEnergia, Tamano } from '../../../models/mascota.model';
+import { Especie, MascotaResponse, NivelEnergia, Sexo, Tamano } from '../../../models/mascota.model';
 import { MascotaService } from '../../../services/mascota.service';
 import { ToastService } from '../../../services/toast.service';
 import { FotoUploader } from '../../../shared/components/foto-uploader/foto-uploader';
@@ -53,6 +56,7 @@ export class PublicarMascota {
     fotosAdicionales: this.fb.control<string[]>([]),
     nombre: ['', [Validators.required]],
     especie: this.fb.control<Especie | null>(null, Validators.required),
+    sexo: this.fb.control<Sexo | null>(null, Validators.required),
     edadAproximada: [''],
     tamano: this.fb.control<Tamano | null>(null, Validators.required),
     nivelEnergia: this.fb.control<NivelEnergia | null>(null, Validators.required),
@@ -60,6 +64,9 @@ export class PublicarMascota {
   });
 
   protected readonly especies = ESPECIES;
+  protected readonly sexos = SEXOS;
+  protected readonly etiquetaSexo = ETIQUETA_SEXO;
+  protected readonly iconoSexo = ICONO_SEXO;
   protected readonly tamanos = TAMANOS;
   protected readonly energias = NIVELES_ENERGIA;
   protected readonly etiquetaEspecie = ETIQUETA_ESPECIE;
@@ -96,9 +103,9 @@ export class PublicarMascota {
   }
 
   protected guardar(): void {
-    const { fotoUrl, fotosAdicionales, nombre, especie, edadAproximada, tamano, nivelEnergia, descripcion } =
+    const { fotoUrl, fotosAdicionales, nombre, especie, sexo, edadAproximada, tamano, nivelEnergia, descripcion } =
       this.formulario.getRawValue();
-    if (this.formulario.invalid || !especie || !tamano || !nivelEnergia) {
+    if (this.formulario.invalid || !especie || !sexo || !tamano || !nivelEnergia) {
       this.formulario.markAllAsTouched();
       return;
     }
@@ -115,6 +122,7 @@ export class PublicarMascota {
     const datos = {
       nombre: nombre.trim(),
       especie,
+      sexo,
       edadAproximada: edadAproximada.trim(),
       fotoUrl: portada,
       tamano,
@@ -172,6 +180,8 @@ export class PublicarMascota {
       fotosAdicionales: mascota.fotosAdicionales ?? [],
       nombre: mascota.nombre,
       especie: mascota.especie,
+      // Las mascotas publicadas antes de este campo no lo tienen: el publicador lo elige al editar.
+      sexo: mascota.sexo ?? null,
       edadAproximada: mascota.edadAproximada ?? '',
       tamano: mascota.tamano,
       nivelEnergia: mascota.nivelEnergia,

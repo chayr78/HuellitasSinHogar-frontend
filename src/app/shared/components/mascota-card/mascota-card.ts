@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ETIQUETA_ENERGIA, ETIQUETA_TAMANO } from '../../../models/etiquetas';
+import { ETIQUETA_ENERGIA, ETIQUETA_SEXO, ETIQUETA_TAMANO, ICONO_SEXO } from '../../../models/etiquetas';
 import { MascotaResponse } from '../../../models/mascota.model';
 import { BadgeEstado } from '../badge-estado/badge-estado';
 import { FotoMascota } from '../foto-mascota/foto-mascota';
@@ -20,4 +20,6 @@ export class MascotaCard {
 
   protected readonly etiquetaTamano = ETIQUETA_TAMANO;
   protected readonly etiquetaEnergia = ETIQUETA_ENERGIA;
+  protected readonly etiquetaSexo = ETIQUETA_SEXO;
+  protected readonly iconoSexo = ICONO_SEXO;
 }

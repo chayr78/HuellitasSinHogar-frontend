@@ -40,6 +40,11 @@
     <div class="col-lg-5">
       <div class="d-flex flex-wrap align-items-center gap-2 mb-3 entrada">
         <span class="hs-badge-neutral">{{ etiquetaEspecie[m.especie] }}</span>
+        @if (m.sexo) {
+          <span class="hs-badge-neutral sexo-{{ m.sexo.toLowerCase() }}">
+            <i class="bi {{ iconoSexo[m.sexo] }} me-1" aria-hidden="true"></i>{{ etiquetaSexo[m.sexo] }}
+          </span>
+        }
         <span appBadgeEstado [estado]="m.estado"></span>
       </div>
 
@@ -145,7 +150,7 @@
       <app-foto-mascota class="barra-foto" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [alt]="''" [altura]="null" recortar />
       <div class="flex-grow-1 lh-sm overflow-hidden">
         <div class="fw-bold text-truncate">{{ m.nombre }}</div>
-        <div class="small text-hs-muted text-truncate">{{ etiquetaTamano[m.tamano] }} · {{ m.edadAproximada }}</div>
+        <div class="small text-hs-muted text-truncate">@if (m.sexo) {{{ etiquetaSexo[m.sexo] }} · }{{ etiquetaTamano[m.tamano] }} · {{ m.edadAproximada }}</div>
       </div>
       <a
         [routerLink]="auth.estaAutenticado() ? ['/mascotas', m.id, 'solicitud'] : ['/login']"

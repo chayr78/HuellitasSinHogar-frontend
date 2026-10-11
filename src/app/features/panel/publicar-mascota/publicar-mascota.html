@@ -89,6 +89,26 @@
           </div>
 
           <div class="col-md-6">
+            <span class="form-label d-block" id="label-sexo">Sexo</span>
+            <div class="d-flex flex-wrap gap-2" role="group" aria-labelledby="label-sexo">
+              @for (sexo of sexos; track sexo) {
+                <button
+                  type="button"
+                  class="hs-chip"
+                  [class.active]="formulario.controls.sexo.value === sexo"
+                  [attr.aria-pressed]="formulario.controls.sexo.value === sexo"
+                  (click)="elegir(formulario.controls.sexo, sexo)"
+                >
+                  <i class="bi {{ iconoSexo[sexo] }}" aria-hidden="true"></i>{{ etiquetaSexo[sexo] }}
+                </button>
+              }
+            </div>
+            @if (invalido(formulario.controls.sexo)) {
+              <div class="invalid-feedback d-block">Elige si es macho o hembra.</div>
+            }
+          </div>
+
+          <div class="col-md-6">
             <label for="edadAproximada" class="form-label">Edad aproximada</label>
             <input
               id="edadAproximada"

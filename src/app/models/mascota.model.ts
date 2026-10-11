@@ -3,6 +3,7 @@ export type Tamano = 'CHICO' | 'MEDIANO' | 'GRANDE';
 export type NivelEnergia = 'BAJA' | 'MEDIA' | 'ALTA';
 export type EstadoMascota = 'DISPONIBLE' | 'EN_PROCESO' | 'ADOPTADO';
 export type TipoPublicador = 'REFUGIO' | 'PARTICULAR';
+export type Sexo = 'MACHO' | 'HEMBRA';
 
 export interface MascotaResponse {
   id: number;
@@ -12,6 +13,8 @@ export interface MascotaResponse {
   tipoPublicador: TipoPublicador;
   ubicacionPublicador: string;
   especie: Especie;
+  /** Puede venir null en mascotas publicadas antes de que existiera el campo. */
+  sexo?: Sexo | null;
   edadAproximada: string;
   fotoUrl: string | null;
   tamano: Tamano;
@@ -28,6 +31,7 @@ export interface MascotaResponse {
 export interface MascotaRequest {
   nombre: string;
   especie: Especie;
+  sexo: Sexo;
   edadAproximada: string;
   fotoUrl: string | null;
   tamano: Tamano;

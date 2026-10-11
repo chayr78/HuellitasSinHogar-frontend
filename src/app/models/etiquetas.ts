@@ -1,11 +1,22 @@
 // Textos que se muestran en pantalla para cada valor del backend, y las listas de opciones. Un solo lugar para cambiarlos.
 import { Rol } from './auth.model';
-import { Especie, EstadoMascota, NivelEnergia, Tamano, TipoPublicador } from './mascota.model';
+import { Especie, EstadoMascota, NivelEnergia, Sexo, Tamano, TipoPublicador } from './mascota.model';
 import { EstadoSolicitud } from './solicitud.model';
 
 export const ETIQUETA_ESPECIE: Record<Especie, string> = {
   PERRO: 'Perro',
   GATO: 'Gato',
+};
+
+export const ETIQUETA_SEXO: Record<Sexo, string> = {
+  MACHO: 'Macho',
+  HEMBRA: 'Hembra',
+};
+
+/** Ícono de Bootstrap Icons para cada sexo. */
+export const ICONO_SEXO: Record<Sexo, string> = {
+  MACHO: 'bi-gender-male',
+  HEMBRA: 'bi-gender-female',
 };
 
 export const ETIQUETA_TAMANO: Record<Tamano, string> = {
@@ -76,6 +87,7 @@ export const ETIQUETA_ESPECIE_PLURAL: Record<Especie, string> = {
 
 // Listas de valores en el orden en que se muestran como opciones.
 export const ESPECIES: Especie[] = ['PERRO', 'GATO'];
+export const SEXOS: Sexo[] = ['MACHO', 'HEMBRA'];
 export const TAMANOS: Tamano[] = ['CHICO', 'MEDIANO', 'GRANDE'];
 export const NIVELES_ENERGIA: NivelEnergia[] = ['BAJA', 'MEDIA', 'ALTA'];
 export const ESTADOS_MASCOTA: EstadoMascota[] = ['DISPONIBLE', 'EN_PROCESO', 'ADOPTADO'];

@@ -3,7 +3,14 @@ import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { esNoEncontrado } from '../../../core/http/api.util';
-import { ETIQUETA_ENERGIA, ETIQUETA_ESPECIE, ETIQUETA_TAMANO, ETIQUETA_TIPO_PUBLICADOR } from '../../../models/etiquetas';
+import {
+  ETIQUETA_ENERGIA,
+  ETIQUETA_ESPECIE,
+  ETIQUETA_SEXO,
+  ETIQUETA_TAMANO,
+  ETIQUETA_TIPO_PUBLICADOR,
+  ICONO_SEXO,
+} from '../../../models/etiquetas';
 import { MascotaResponse, NivelEnergia, Tamano } from '../../../models/mascota.model';
 import { MascotaService } from '../../../services/mascota.service';
 import { Avatar } from '../../../shared/components/avatar/avatar';
@@ -44,6 +51,8 @@ export class MascotaDetail {
   protected readonly etiquetaEnergia = ETIQUETA_ENERGIA;
   protected readonly etiquetaTipoPublicador = ETIQUETA_TIPO_PUBLICADOR;
   protected readonly etiquetaEspecie = ETIQUETA_ESPECIE;
+  protected readonly etiquetaSexo = ETIQUETA_SEXO;
+  protected readonly iconoSexo = ICONO_SEXO;
   /** Posición de cada valor en los medidores visuales (1 a 3). */
   protected readonly nivelTamano: Record<Tamano, number> = { CHICO: 1, MEDIANO: 2, GRANDE: 3 };
   protected readonly nivelEnergia: Record<NivelEnergia, number> = { BAJA: 1, MEDIA: 2, ALTA: 3 };

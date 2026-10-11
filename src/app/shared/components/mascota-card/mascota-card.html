@@ -24,6 +24,9 @@
   </div>
 
   <ul class="rasgos list-unstyled mb-0">
+    @if (m.sexo) {
+      <li><i class="bi {{ iconoSexo[m.sexo] }}" aria-hidden="true"></i>{{ etiquetaSexo[m.sexo] }}</li>
+    }
     <li><i class="bi bi-rulers" aria-hidden="true"></i>{{ etiquetaTamano[m.tamano] }}</li>
     <li><i class="bi bi-lightning-charge" aria-hidden="true"></i>Energía {{ etiquetaEnergia[m.nivelEnergia].toLowerCase() }}</li>
   </ul>
