@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { RegistroRequest } from '../../../models/auth.model';
@@ -35,7 +36,7 @@ const datosPublicadorCompletos: ValidatorFn = (grupo: AbstractControl): Validati
 
 /** Registro de cuenta nueva (/registro), como adoptante o como publicador (refugio o particular). */
 @Component({
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, IconoHuella],
   selector: 'app-registro',
   templateUrl: './registro.html',
 })

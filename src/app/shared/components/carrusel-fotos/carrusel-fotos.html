@@ -3,7 +3,7 @@
 
 <div class="caja" [style.aspect-ratio]="proporcion">
   @if (fotos.length === 0) {
-    <!-- Sin fotos: el placeholder 🐾, igual que antes -->
+    <!-- Sin fotos: el placeholder con la huella -->
     <app-foto-mascota class="h-100" [fotoUrl]="null" [nombre]="nombre" [altura]="null" />
   } @else {
     <div

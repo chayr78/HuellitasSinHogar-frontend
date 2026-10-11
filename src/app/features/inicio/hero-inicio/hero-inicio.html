@@ -9,26 +9,37 @@
 
   <div class="container contenido">
     <div class="texto">
-      <p class="eyebrow aparecer">Adopta cerca de ti</p>
-      <h1 id="titulo-inicio" class="titulo aparecer">Tu nuevo mejor amigo te está esperando</h1>
+      <h1 id="titulo-inicio" class="titulo aparecer">
+        Tu nuevo mejor amigo <em>te está esperando</em>
+      </h1>
       <p class="subtitulo aparecer">
         Perros y gatos de refugios y rescatistas de Tecámac esperan una familia responsable.
       </p>
 
+      <div class="botones aparecer">
+        <a routerLink="/catalogo" [queryParams]="{ especie: 'PERRO' }" class="btn btn-primary btn-lg opcion">
+          <i class="bi bi-search" aria-hidden="true"></i>Busco un perro
+        </a>
+        <a routerLink="/catalogo" [queryParams]="{ especie: 'GATO' }" class="btn btn-claro btn-lg opcion">
+          Busco un gato
+        </a>
+      </div>
+
       @if (disponibles !== null && adoptados !== null) {
         <p class="insignia aparecer">
-          🐾 {{ disponibles }} {{ disponibles === 1 ? 'mascota esperando' : 'mascotas esperando' }} hogar ·
-          {{ adoptados }} ya {{ adoptados === 1 ? 'encontró' : 'encontraron' }} familia
+          <span class="punto" aria-hidden="true"></span>
+          <span>
+            <strong class="hs-numeros">{{ disponibles }}</strong>
+            {{ disponibles === 1 ? 'mascota espera' : 'mascotas esperan' }} hogar ·
+            <strong class="hs-numeros">{{ adoptados }}</strong>
+            ya {{ adoptados === 1 ? 'encontró' : 'encontraron' }} familia
+          </span>
         </p>
       }
-
-      <div class="botones aparecer">
-        <a routerLink="/catalogo" class="btn btn-primary btn-lg px-4">Ver mascotas</a>
-      </div>
     </div>
   </div>
 
   <button type="button" class="flecha" aria-label="Ir a la siguiente sección" (click)="irASiguiente()">
-    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+    <i class="bi bi-arrow-down" aria-hidden="true"></i>
   </button>
 </section>

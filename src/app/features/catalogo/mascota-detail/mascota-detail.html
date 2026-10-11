@@ -1,18 +1,27 @@
-<a routerLink="/catalogo" class="btn btn-link text-decoration-none text-hs-muted fw-bold px-0 mb-3">← Volver al catálogo</a>
+<a routerLink="/catalogo" class="volver hs-enlace-flecha mb-4">
+  <i class="bi bi-arrow-left" aria-hidden="true"></i>Volver al catálogo
+</a>
 
 @if (cargando()) {
-  <div class="d-flex justify-content-center py-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando mascota...</span>
+  <div class="row g-4 g-lg-5" aria-hidden="true">
+    <div class="col-lg-6"><span class="hs-esqueleto" style="aspect-ratio: 1 / 1; border-radius: 16px"></span></div>
+    <div class="col-lg-6">
+      <span class="hs-esqueleto mb-3" style="width: 40%; height: 1.6rem"></span>
+      <span class="hs-esqueleto mb-3" style="width: 65%; height: 3.5rem"></span>
+      <span class="hs-esqueleto mb-4" style="width: 35%; height: 1rem"></span>
+      <span class="hs-esqueleto" style="height: 110px; border-radius: 16px"></span>
     </div>
   </div>
+  <span class="visually-hidden" role="status">Cargando mascota...</span>
 } @else if (errorCarga()) {
   <div class="text-center py-5">
-    <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+    <span class="hs-estado-icono"><app-icono-huella /></span>
     @if (noEncontrada()) {
-      <p class="fs-5 fw-bold mb-3">No encontramos esta mascota</p>
+      <h1 class="h3 fw-bold mb-2">No encontramos esta mascota</h1>
+      <p class="text-hs-muted mb-4">Quizá ya fue adoptada o su publicación se retiró.</p>
     } @else {
-      <p class="fs-5 fw-bold mb-3">No pudimos cargar la información. Inténtalo de nuevo en unos minutos.</p>
+      <h1 class="h3 fw-bold mb-2">No pudimos cargar la información</h1>
+      <p class="text-hs-muted mb-4">Inténtalo de nuevo en unos minutos.</p>
     }
     <a routerLink="/catalogo" class="btn btn-primary px-4">Ver otras mascotas</a>
   </div>
@@ -21,68 +30,75 @@
 
   <div class="row g-4 g-lg-5">
     <div class="col-lg-6">
-      <app-carrusel-fotos [fotos]="fotos()" [nombre]="m.nombre" proporcion="1 / 1" />
+      <div class="galeria">
+        <app-carrusel-fotos [fotos]="fotos()" [nombre]="m.nombre" proporcion="1 / 1" />
+      </div>
     </div>
 
     <div class="col-lg-6">
-      <div class="d-flex align-items-center gap-2">
-        <app-avatar [fotoUrl]="m.publicadorFotoUrl" [nombre]="m.publicadorNombre" [tamano]="32" />
-        <span class="hs-badge-warn">{{ etiquetaTipoPublicador[m.tipoPublicador] }} · {{ m.publicadorNombre }}</span>
-      </div>
-      <h1 class="display-4 fw-bold mt-3 mb-1">{{ m.nombre }}</h1>
-      <p class="text-hs-muted mb-4"><i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ m.ubicacionPublicador }}</p>
-
-      <div class="hs-card p-3 p-md-4 mb-4">
-        <div class="d-flex flex-column gap-3">
-          <div class="d-flex align-items-center gap-3">
-            <span class="hs-icon-circle"><i class="bi bi-calendar-heart" aria-hidden="true"></i></span>
-            <div>
-              <div class="small text-hs-muted">Edad aproximada</div>
-              <div class="fw-bold">{{ m.edadAproximada }}</div>
-            </div>
-          </div>
-          <div class="d-flex align-items-center gap-3">
-            <span class="hs-icon-circle"><i class="bi bi-rulers" aria-hidden="true"></i></span>
-            <div>
-              <div class="small text-hs-muted">Tamaño</div>
-              <div class="fw-bold">{{ etiquetaTamano[m.tamano] }}</div>
-            </div>
-          </div>
-          <div class="d-flex align-items-center gap-3">
-            <span class="hs-icon-circle"><i class="bi bi-lightning-charge" aria-hidden="true"></i></span>
-            <div>
-              <div class="small text-hs-muted">Nivel de energía</div>
-              <div class="fw-bold">{{ etiquetaEnergia[m.nivelEnergia] }}</div>
-            </div>
-          </div>
+      <div class="publicador d-flex align-items-center gap-2">
+        <app-avatar [fotoUrl]="m.publicadorFotoUrl" [nombre]="m.publicadorNombre" [tamano]="36" />
+        <div class="lh-sm">
+          <div class="fw-bold">{{ m.publicadorNombre }}</div>
+          <div class="small text-hs-muted">{{ etiquetaTipoPublicador[m.tipoPublicador] }}</div>
         </div>
       </div>
 
-      <h2 class="h4 fw-bold">Sobre {{ m.nombre }}</h2>
+      <h1 class="nombre mt-4 mb-2">{{ m.nombre }}</h1>
+      <p class="text-hs-muted fw-semibold mb-4">
+        <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ m.ubicacionPublicador }}
+      </p>
+
+      <dl class="datos">
+        <div class="dato">
+          <dt><i class="bi bi-calendar-heart" aria-hidden="true"></i>Edad</dt>
+          <dd>{{ m.edadAproximada }}</dd>
+        </div>
+        <div class="dato">
+          <dt><i class="bi bi-rulers" aria-hidden="true"></i>Tamaño</dt>
+          <dd>{{ etiquetaTamano[m.tamano] }}</dd>
+        </div>
+        <div class="dato">
+          <dt><i class="bi bi-lightning-charge" aria-hidden="true"></i>Energía</dt>
+          <dd>{{ etiquetaEnergia[m.nivelEnergia] }}</dd>
+        </div>
+      </dl>
+
+      <h2 class="h4 fw-bold mt-4 mb-2">Sobre {{ m.nombre }}</h2>
       <p class="descripcion mb-4">{{ m.descripcion }}</p>
 
-      @if (!disponible) {
-        <div class="hs-badge-warn aviso d-flex align-items-center gap-2 mb-3" role="status">
-          <i class="bi bi-info-circle" aria-hidden="true"></i>
-          Esta mascota ya no está disponible
-        </div>
-      }
+      <div class="acciones hs-card">
+        @if (!disponible) {
+          <div class="hs-alert-warn d-flex align-items-center gap-2 mb-3" role="status">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            Esta mascota ya no está disponible
+          </div>
+        }
 
-      <div class="d-grid gap-2">
-        @if (disponible) {
-          @if (!auth.estaAutenticado()) {
-            <a routerLink="/login" [queryParams]="{ returnUrl: '/mascotas/' + m.id + '/solicitud' }" class="btn btn-primary btn-lg">
-              Enviar solicitud de adopción
+        <div class="d-grid gap-2">
+          @if (disponible) {
+            @if (!auth.estaAutenticado()) {
+              <a routerLink="/login" [queryParams]="{ returnUrl: '/mascotas/' + m.id + '/solicitud' }" class="btn btn-primary btn-lg">
+                Enviar solicitud de adopción
+              </a>
+            } @else if (auth.rol() === 'ADOPTANTE') {
+              <a [routerLink]="['/mascotas', m.id, 'solicitud']" class="btn btn-primary btn-lg">Enviar solicitud de adopción</a>
+            } @else {
+              <button type="button" class="btn btn-primary btn-lg" disabled>Inicia sesión como adoptante para solicitar</button>
+            }
+            <a [routerLink]="['/mascotas', m.id, 'encuesta']" class="btn btn-hs-outline btn-lg">
+              <i class="bi bi-clipboard2-check me-1" aria-hidden="true"></i>Hacer encuesta de compatibilidad
             </a>
-          } @else if (auth.rol() === 'ADOPTANTE') {
-            <a [routerLink]="['/mascotas', m.id, 'solicitud']" class="btn btn-primary btn-lg">Enviar solicitud de adopción</a>
           } @else {
-            <button type="button" class="btn btn-primary btn-lg" disabled>Inicia sesión como adoptante para solicitar</button>
+            <button type="button" class="btn btn-primary btn-lg" disabled>Enviar solicitud de adopción</button>
+            <button type="button" class="btn btn-hs-outline btn-lg" disabled>Hacer encuesta de compatibilidad</button>
           }
-          <a [routerLink]="['/mascotas', m.id, 'encuesta']" class="btn btn-hs-outline btn-lg">Hacer encuesta de compatibilidad</a>
-        } @else {
-          <button type="button" class="btn btn-primary btn-lg" disabled>Enviar solicitud de adopción</button>
-          <button type="button" class="btn btn-hs-outline btn-lg" disabled>Hacer encuesta de compatibilidad</button>
+        </div>
+
+        @if (disponible) {
+          <p class="small text-hs-muted text-center mt-3 mb-0">
+            {{ m.publicadorNombre }} revisará tu solicitud y te contactará.
+          </p>
         }
       </div>
     </div>

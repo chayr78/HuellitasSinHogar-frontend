@@ -8,9 +8,10 @@ import { MascotaResponse } from '../../../models/mascota.model';
 import { MascotaService } from '../../../services/mascota.service';
 import { Avatar } from '../../../shared/components/avatar/avatar';
 import { CarruselFotos } from '../../../shared/components/carrusel-fotos/carrusel-fotos';
+import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 /** Detalle de una mascota (/mascotas/:id) con los botones para enviar solicitud o hacer la encuesta. */
 @Component({
-  imports: [RouterLink, CarruselFotos, Avatar],
+  imports: [RouterLink, CarruselFotos, Avatar, IconoHuella],
   selector: 'app-mascota-detail',
   styleUrl: './mascota-detail.scss',
   templateUrl: './mascota-detail.html',

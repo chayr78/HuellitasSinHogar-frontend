@@ -1,21 +1,26 @@
 @let m = mascota();
 @let adoptado = variante() === 'adoptado';
 <a [routerLink]="['/mascotas', m.id]" class="tarjeta hs-card hs-card-hover d-flex flex-column h-100 overflow-hidden">
-  <app-foto-mascota class="foto" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [altura]="220" />
-
-  <div class="p-3 flex-grow-1" [class.pie-adoptado]="adoptado">
-    <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
-      <h2 class="h5 fw-bold mb-0 text-truncate">{{ m.nombre }}</h2>
+  <div class="marco">
+    <app-foto-mascota class="foto" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [altura]="240" />
+    <span class="estado">
       @if (adoptado) {
-        <span class="hs-badge-ok">¡Adoptado!</span>
+        <span class="hs-badge-ok"><i class="bi bi-heart-fill me-1" aria-hidden="true"></i>¡Adoptado!</span>
       } @else {
         <span appBadgeEstado [estado]="m.estado"></span>
       }
-    </div>
+    </span>
+  </div>
+
+  <div class="cuerpo d-flex flex-column flex-grow-1" [class.pie-adoptado]="adoptado">
+    <h2 class="nombre text-truncate">{{ m.nombre }}</h2>
     <p class="small text-hs-muted mb-3">{{ m.edadAproximada }} aprox.</p>
-    <div class="d-flex flex-wrap gap-2">
-      <span class="hs-badge-neutral">{{ etiquetaTamano[m.tamano] }}</span>
-      <span class="hs-badge-neutral">Energía {{ etiquetaEnergia[m.nivelEnergia].toLowerCase() }}</span>
-    </div>
+    <ul class="rasgos list-unstyled mb-0">
+      <li><i class="bi bi-rulers" aria-hidden="true"></i>{{ etiquetaTamano[m.tamano] }}</li>
+      <li><i class="bi bi-lightning-charge" aria-hidden="true"></i>Energía {{ etiquetaEnergia[m.nivelEnergia].toLowerCase() }}</li>
+    </ul>
+    @if (!adoptado) {
+      <span class="conocer mt-auto" aria-hidden="true">Conocer a {{ m.nombre }} <i class="bi bi-arrow-right"></i></span>
+    }
   </div>
 </a>

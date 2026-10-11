@@ -1,22 +1,31 @@
-<header class="mb-4">
-  <p class="hs-eyebrow mb-2">Historias felices</p>
-  <h1 class="display-5 fw-extrabold mb-0">Ya encontraron un hogar 🎉</h1>
+<header class="mb-4 mb-lg-5">
+  <h1 class="titulo-pagina mb-2">Ya encontraron un hogar</h1>
+  <p class="text-hs-muted fs-5 mb-0">Historias felices de mascotas que hoy tienen familia.</p>
 </header>
 
 @if (cargando()) {
-  <div class="d-flex justify-content-center py-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando historias...</span>
-    </div>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" aria-hidden="true">
+    @for (n of [1, 2, 3]; track n) {
+      <div class="col">
+        <div class="hs-card overflow-hidden">
+          <span class="hs-esqueleto rounded-0" style="height: 240px"></span>
+          <div class="p-3">
+            <span class="hs-esqueleto mb-2" style="width: 50%; height: 1.5rem"></span>
+            <span class="hs-esqueleto" style="width: 70%; height: 0.9rem"></span>
+          </div>
+        </div>
+      </div>
+    }
   </div>
+  <span class="visually-hidden" role="status">Cargando historias...</span>
 } @else if (errorCarga()) {
-  <div class="alert alert-warning d-flex flex-column flex-sm-row align-items-sm-center gap-3" role="alert">
-    <i class="bi bi-emoji-frown fs-3" aria-hidden="true"></i>
-    <div class="flex-grow-1">
-      <strong>No pudimos cargar las historias.</strong>
-      <div>Revisa tu conexión o inténtalo de nuevo en unos minutos.</div>
-    </div>
-    <button type="button" class="btn btn-hs-outline" (click)="cargar()">Reintentar</button>
+  <div class="estado-vacio text-center" role="alert">
+    <span class="hs-estado-icono"><i class="bi bi-wifi-off" aria-hidden="true"></i></span>
+    <h2 class="h4 fw-bold mb-2">No pudimos cargar las historias</h2>
+    <p class="text-hs-muted mb-4">Revisa tu conexión o inténtalo de nuevo en unos minutos.</p>
+    <button type="button" class="btn btn-primary px-4" (click)="cargar()">
+      <i class="bi bi-arrow-clockwise me-1" aria-hidden="true"></i>Reintentar
+    </button>
   </div>
 } @else {
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -25,9 +34,13 @@
         <app-mascota-card [mascota]="mascota" variante="adoptado" />
       </div>
     } @empty {
-      <div class="col-12 text-center py-5">
-        <div class="display-4 mb-3" aria-hidden="true">🏡</div>
-        <p class="fs-5 text-hs-muted mb-0">Pronto verás aquí a las mascotas que encuentren familia.</p>
+      <div class="col-12">
+        <div class="estado-vacio text-center">
+          <span class="hs-estado-icono"><i class="bi bi-house-heart" aria-hidden="true"></i></span>
+          <h2 class="h4 fw-bold mb-2">Pronto habrá historias aquí</h2>
+          <p class="text-hs-muted mb-4">Verás a las mascotas que encuentren familia. ¿Quieres que la próxima sea gracias a ti?</p>
+          <a routerLink="/catalogo" class="btn btn-primary px-4">Ver mascotas en adopción</a>
+        </div>
       </div>
     }
   </div>

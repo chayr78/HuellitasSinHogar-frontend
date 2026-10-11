@@ -8,8 +8,91 @@
   text-decoration: none;
 }
 
-.foto {
+.marco {
+  position: relative;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+// La foto se acerca un poco al pasar el cursor
+.foto {
+  transition: transform 0.7s var(--hs-ease-out);
+
+  .tarjeta:hover &,
+  .tarjeta:focus-visible & {
+    transform: scale(1.05);
+  }
+}
+
+.estado {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+
+  > span {
+    box-shadow: 0 4px 12px -4px rgba(46, 38, 32, 0.3);
+  }
+}
+
+.cuerpo {
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.nombre {
+  margin-bottom: 0.15rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.rasgos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .bi {
+    color: var(--hs-sage);
+  }
+}
+
+// "Conocer a ..." aparece al pasar el cursor; en pantallas táctiles siempre se ve
+.conocer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--bs-primary);
+
+  .bi {
+    transition: transform 0.3s var(--hs-ease-out);
+  }
+
+  @media (hover: hover) {
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s var(--hs-ease-out);
+
+    .tarjeta:hover &,
+    .tarjeta:focus-visible & {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .tarjeta:hover & .bi {
+    transform: translateX(4px);
+  }
 }
 
 .pie-adoptado {

@@ -6,7 +6,7 @@
   </div>
 } @else if (errorCarga()) {
   <div class="text-center py-5">
-    <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+    <span class="hs-estado-icono" aria-hidden="true"><i class="bi bi-search"></i></span>
     <p class="fs-5 fw-bold mb-3">
       {{ noEncontrada() ? 'No encontramos esta mascota' : 'No pudimos cargar la información. Inténtalo de nuevo en unos minutos.' }}
     </p>
@@ -20,9 +20,8 @@
 
   <div class="row g-4">
     <div class="col-lg-8">
-      <p class="hs-eyebrow mb-2">Compatibilidad con {{ m.nombre.toUpperCase() }}</p>
       <h1 class="display-6 fw-extrabold mb-2">Conozcamos un poco de tu hogar</h1>
-      <p class="text-hs-muted mb-4">Cinco preguntas rápidas para ayudarte a tomar una decisión responsable.</p>
+      <p class="text-hs-muted mb-4">Cinco preguntas rápidas para saber qué tan bien encajas con {{ m.nombre }} y tomar una decisión responsable.</p>
 
       <div class="d-flex flex-column gap-3">
         @for (pregunta of preguntas; track pregunta.clave; let i = $index) {
@@ -65,7 +64,7 @@
     <div class="col-lg-4">
       <aside class="resultado hs-card p-4 sticky-lg-top" aria-live="polite">
         @if (resultado(); as r) {
-          <p class="hs-eyebrow text-center mb-3">Tu resultado</p>
+          <h2 class="h5 fw-bold text-center mb-3">Tu resultado</h2>
 
           <div class="anillo mx-auto mb-3">
             <svg viewBox="0 0 160 160" aria-hidden="true">
@@ -106,7 +105,7 @@
           <a [routerLink]="['/mascotas', m.id, 'solicitud']" class="btn btn-primary w-100">Continuar con la solicitud</a>
         } @else {
           <div class="text-center py-4">
-            <div class="display-5 mb-3" aria-hidden="true">🐾</div>
+            <span class="hs-estado-icono" aria-hidden="true"><i class="bi bi-clipboard2-heart"></i></span>
             <p class="text-hs-muted mb-0">Responde las preguntas para ver tu compatibilidad</p>
           </div>
         }

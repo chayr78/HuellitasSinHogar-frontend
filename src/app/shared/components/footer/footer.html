@@ -1,28 +1,43 @@
 <footer class="footer-hs">
-  <div class="container py-5">
-    <!-- Marca a la izquierda y adopción responsable a la derecha; apiladas en móvil -->
-    <div class="row g-4 justify-content-between">
-      <div class="col-md-5">
+  <div class="container pt-5 pb-4">
+    <div class="row g-5">
+      <div class="col-lg-5">
         <a routerLink="/" class="marca d-inline-flex align-items-center gap-2 mb-3">
-          <span class="marca-circulo" aria-hidden="true">🐾</span>
-          <span class="fw-bold">Huellitas sin Hogar</span>
+          <span class="marca-circulo"><app-icono-huella /></span>
+          <span class="marca-texto">Huellitas <em>sin Hogar</em></span>
         </a>
-        <p class="texto-suave small mb-0">Conectamos a perros y gatos de Tecámac con familias responsables.</p>
+        <p class="lema mb-0">Conectamos a perros y gatos de Tecámac con familias responsables.</p>
       </div>
 
-      <div class="col-md-6">
+      <nav class="col-6 col-lg-2" aria-labelledby="titulo-explora">
+        <h2 id="titulo-explora" class="titulo-columna">Explora</h2>
+        <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+          <li><a routerLink="/catalogo">Mascotas en adopción</a></li>
+          <li><a routerLink="/adoptados">Historias felices</a></li>
+          @if (!auth.usuario()) {
+            <li><a routerLink="/registro">Crear cuenta</a></li>
+          }
+        </ul>
+      </nav>
+
+      <div class="col-lg-5">
         <h2 class="titulo-columna">Adopción responsable</h2>
-        <ul class="consejos small texto-suave d-flex flex-column gap-2 mb-0">
-          <li>Adoptar es un compromiso para toda la vida del animal.</li>
-          <li>Mantén al día sus vacunas y considera esterilizarlo.</li>
-          <li>Nunca lo abandones: si no puedes cuidarlo, busca un hogar responsable.</li>
+        <ul class="consejos list-unstyled d-flex flex-column gap-2 mb-0">
+          <li><i class="bi bi-heart" aria-hidden="true"></i>Adoptar es un compromiso para toda la vida del animal.</li>
+          <li><i class="bi bi-shield-plus" aria-hidden="true"></i>Mantén al día sus vacunas y considera esterilizarlo.</li>
+          <li>
+            <i class="bi bi-house-heart" aria-hidden="true"></i>Nunca lo abandones: si no puedes cuidarlo, busca un hogar
+            responsable.
+          </li>
         </ul>
       </div>
     </div>
 
     <div class="barra-inferior d-flex flex-column flex-md-row justify-content-between gap-2 small mt-5 pt-4">
       <p class="texto-suave mb-0">&copy; {{ anio }} Huellitas sin Hogar</p>
-      <button type="button" class="btn-arriba" (click)="volverArriba()">Volver arriba ↑</button>
+      <button type="button" class="btn-arriba" (click)="volverArriba()">
+        Volver arriba <i class="bi bi-arrow-up" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </footer>

@@ -1,8 +1,7 @@
 <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4 mb-lg-5">
   <div>
-    <p class="hs-eyebrow mb-2">{{ nombrePublicador().toUpperCase() }}</p>
     <h1 class="display-6 fw-extrabold mb-1">Tu panel de publicaciones</h1>
-    <p class="text-hs-muted mb-0">Administra mascotas y da seguimiento a posibles familias.</p>
+    <p class="text-hs-muted mb-0">Hola, {{ nombrePublicador() }}. Administra mascotas y da seguimiento a posibles familias.</p>
   </div>
   <a routerLink="/panel/nueva" class="btn btn-primary px-4 align-self-start align-self-md-end">+ Publicar nueva mascota</a>
 </header>
@@ -71,7 +70,7 @@
         </div>
       } @empty {
         <div class="col-12 text-center py-5">
-          <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+          <span class="hs-estado-icono" aria-hidden="true"><i class="bi bi-house-add"></i></span>
           <p class="fs-5 text-hs-muted mb-3">Aún no has publicado mascotas</p>
           <a routerLink="/panel/nueva" class="btn btn-primary px-4">Publicar mi primera mascota</a>
         </div>

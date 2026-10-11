@@ -6,8 +6,8 @@
 >
   <div class="container gap-2 gap-lg-3">
     <a routerLink="/" class="navbar-brand d-flex align-items-center gap-2 me-0 order-0">
-      <span class="marca-circulo" aria-hidden="true">🐾</span>
-      <span class="fw-bold">Huellitas sin Hogar</span>
+      <span class="marca-circulo"><app-icono-huella /></span>
+      <span class="marca-texto">Huellitas <em>sin Hogar</em></span>
     </a>
 
     <!-- Acciones: siempre visibles (a la derecha en escritorio, en la primera fila en móvil) -->
@@ -97,10 +97,10 @@
     <div id="menu-principal" class="collapse navbar-collapse flex-grow-0 order-4 order-lg-1" [ngbCollapse]="colapsado()">
       <ul class="navbar-nav gap-lg-1 pt-2 pt-lg-0">
         <li class="nav-item">
-          <a class="nav-link fw-bold" routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+          <a class="nav-link" routerLink="/catalogo" routerLinkActive="active" ariaCurrentWhenActive="page">Catálogo</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-bold" routerLink="/adoptados" routerLinkActive="active">Adoptados</a>
+          <a class="nav-link" routerLink="/adoptados" routerLinkActive="active" ariaCurrentWhenActive="page">Adoptados</a>
         </li>
       </ul>
       @if (!auth.usuario()) {

@@ -1,13 +1,14 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { mensajeError } from '../../../core/http/api.util';
 
 /** Inicio de sesión (/login). Al entrar lleva a cada rol a su pantalla de inicio o a returnUrl. */
 @Component({
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, IconoHuella],
   selector: 'app-login',
   templateUrl: './login.html',
 })

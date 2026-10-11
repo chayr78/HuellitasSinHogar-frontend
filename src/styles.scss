@@ -1,55 +1,119 @@
 // Huellitas sin Hogar — tema global.
 // Bootstrap e iconos se cargan como CSS ya compilado; el tema se aplica sobreescribiendo sus variables CSS.
+// Las fuentes (Fraunces para títulos, Nunito Sans para texto) se cargan desde index.html.
 @use 'bootstrap/dist/css/bootstrap.min';
 @use 'bootstrap-icons/font/bootstrap-icons.min';
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-
-$hs-primary: #e87a45;
-$hs-primary-hover: #d4692f;
+// Terracota para acciones (blanco encima pasa AA, 5:1); el naranja de marca queda para acentos.
+$hs-primary: #b94f24;
+$hs-primary-hover: #9e411b;
+$hs-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
 :root {
   --bs-body-bg: #fbf6ee;
   --bs-body-color: #2e2620;
   --bs-primary: #{$hs-primary};
-  --bs-primary-rgb: 232, 122, 69;
-  --bs-font-sans-serif: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bs-primary-rgb: 185, 79, 36;
+  --bs-font-sans-serif: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-link-color: #{$hs-primary};
-  --bs-link-color-rgb: 232, 122, 69;
+  --bs-link-color-rgb: 185, 79, 36;
   --bs-link-hover-color: #{$hs-primary-hover};
-  --bs-link-hover-color-rgb: 212, 105, 47;
+  --bs-link-hover-color-rgb: 158, 65, 27;
+  --bs-border-radius: 12px;
 
+  --hs-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --hs-accent: #e87a45;
+  --hs-ink: #2e2620;
   --hs-card-bg: #fffdf9;
-  --hs-sage: #557a5a;
+  --hs-cream-deep: #f4ecdf;
+  --hs-sage: #4a6b4f;
   --hs-sage-soft: #e0ebdd;
   --hs-peach-soft: #fce3d6;
-  --hs-border: #efe6d8;
-  --hs-muted: #8a7f76;
-  --hs-shadow: 0 4px 16px rgba(46, 38, 32, 0.06);
-  --hs-shadow-hover: 0 12px 28px rgba(46, 38, 32, 0.12);
+  --hs-border: #ebe1d2;
+  --hs-muted: #6b6058;
+  --hs-radius: 16px;
+  --hs-shadow-hover: 0 18px 40px -16px rgba(46, 38, 32, 0.28);
+  --hs-ease-out: #{$hs-ease-out};
 }
 
 body {
   font-family: var(--bs-font-sans-serif);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  caret-color: $hs-primary;
+  accent-color: $hs-primary;
+  scrollbar-color: #cdbfac var(--bs-body-bg);
 }
 
-// Tarjetas
+// Superficies del navegador con la paleta
+::selection {
+  color: var(--hs-ink);
+  background-color: var(--hs-peach-soft);
+}
+
+:focus-visible {
+  outline: 2px solid $hs-primary;
+  outline-offset: 3px;
+}
+
+// Títulos con la voz editorial de Fraunces
+h1,
+h2,
+h3,
+.h1,
+.h2,
+.h3,
+.display-1,
+.display-2,
+.display-3,
+.display-4,
+.display-5,
+.display-6 {
+  font-family: var(--hs-font-display);
+  font-variation-settings: 'SOFT' 60;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h4,
+h5,
+h6,
+.h4,
+.h5,
+.h6 {
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+table,
+.hs-numeros {
+  font-variant-numeric: tabular-nums;
+}
+
+// Tarjetas: un solo nivel de elevación (borde en reposo, sombra solo al pasar el cursor)
 .hs-card {
   background-color: var(--hs-card-bg);
   border: 1px solid var(--hs-border);
-  border-radius: 20px;
-  box-shadow: var(--hs-shadow);
+  border-radius: var(--hs-radius);
 }
 
 .hs-card-hover {
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.35s $hs-ease-out,
+    box-shadow 0.35s $hs-ease-out,
+    border-color 0.35s $hs-ease-out;
 
   &:hover,
   &:focus-visible {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    border-color: transparent;
     box-shadow: var(--hs-shadow-hover);
   }
 }
@@ -58,28 +122,24 @@ body {
 .hs-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.9rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 1.5;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.4;
   color: var(--bs-body-color);
-  background-color: #fff;
+  background-color: var(--hs-card-bg);
   border: 1px solid var(--hs-border);
   border-radius: 999px;
   cursor: pointer;
   transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 
   &:hover {
     border-color: var(--hs-sage);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--hs-sage);
-    outline-offset: 2px;
   }
 
   &.active {
@@ -101,7 +161,7 @@ body {
   display: inline-block;
   padding: 0.3rem 0.75rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.2;
   border-radius: 999px;
   white-space: nowrap;
@@ -113,22 +173,19 @@ body {
 }
 
 .hs-badge-warn {
-  color: #b4532a;
+  color: #9a4522;
   background-color: var(--hs-peach-soft);
 }
 
 .hs-badge-neutral {
   color: var(--hs-muted);
-  background-color: #f6f0e6;
+  background-color: var(--hs-cream-deep);
 }
 
-// Tipografía y utilidades
-.hs-eyebrow {
-  font-size: 0.75rem;
+// Línea de contexto bajo un título de página (p. ej. "Nueva publicación", el tipo de cuenta)
+.hs-contexto {
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--hs-sage);
+  color: var(--hs-muted);
 }
 
 .text-hs-muted {
@@ -137,6 +194,12 @@ body {
 
 .fw-extrabold {
   font-weight: 800;
+}
+
+// En títulos Fraunces, 800 se ve pesado: se queda en 650
+:is(h1, h2, h3, .h1, .h2, .h3, [class*='display-']).fw-extrabold,
+:is(h1, h2, h3, .h1, .h2, .h3, [class*='display-']).fw-bold {
+  font-weight: 650;
 }
 
 .hs-icon-circle {
@@ -151,7 +214,45 @@ body {
   background-color: var(--hs-sage-soft);
 }
 
+// Ícono grande para estados vacíos, de error y de éxito
+.hs-estado-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.25rem;
+  font-size: 2rem;
+  color: #9a4522;
+  background-color: var(--hs-peach-soft);
+  border-radius: 50%;
+
+  app-icono-huella {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  &.exito {
+    color: var(--hs-sage);
+    background-color: var(--hs-sage-soft);
+  }
+}
+
 // Botones
+.btn {
+  --bs-btn-font-weight: 700;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s $hs-ease-out;
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
 .btn-primary {
   --bs-btn-color: #fff;
   --bs-btn-bg: #{$hs-primary};
@@ -159,52 +260,70 @@ body {
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #{$hs-primary-hover};
   --bs-btn-hover-border-color: #{$hs-primary-hover};
-  --bs-btn-focus-shadow-rgb: 232, 122, 69;
+  --bs-btn-focus-shadow-rgb: 185, 79, 36;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #{$hs-primary-hover};
   --bs-btn-active-border-color: #{$hs-primary-hover};
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #{$hs-primary};
   --bs-btn-disabled-border-color: #{$hs-primary};
-  --bs-btn-font-weight: 700;
   border-radius: 999px;
+
+  &:hover {
+    box-shadow: 0 10px 22px -10px rgba(158, 65, 27, 0.6);
+  }
 }
 
 .btn-hs-outline {
   --bs-btn-color: var(--bs-body-color);
-  --bs-btn-bg: #fff;
+  --bs-btn-bg: var(--hs-card-bg);
   --bs-btn-border-color: var(--hs-border);
   --bs-btn-hover-color: var(--bs-body-color);
   --bs-btn-hover-bg: #fff;
-  --bs-btn-hover-border-color: var(--hs-muted);
+  --bs-btn-hover-border-color: var(--hs-ink);
   --bs-btn-active-color: var(--bs-body-color);
-  --bs-btn-active-bg: #f6f0e6;
-  --bs-btn-active-border-color: var(--hs-muted);
+  --bs-btn-active-bg: var(--hs-cream-deep);
+  --bs-btn-active-border-color: var(--hs-ink);
   --bs-btn-disabled-color: var(--hs-muted);
-  --bs-btn-disabled-bg: #fff;
+  --bs-btn-disabled-bg: var(--hs-card-bg);
   --bs-btn-disabled-border-color: var(--hs-border);
-  --bs-btn-font-weight: 700;
   border-radius: 999px;
 }
 
 .btn-peligro {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #b4532a;
-  --bs-btn-border-color: #b4532a;
+  --bs-btn-bg: #a4441d;
+  --bs-btn-border-color: #a4441d;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #9a4522;
-  --bs-btn-hover-border-color: #9a4522;
+  --bs-btn-hover-bg: #873716;
+  --bs-btn-hover-border-color: #873716;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #9a4522;
-  --bs-btn-active-border-color: #9a4522;
-  --bs-btn-font-weight: 700;
+  --bs-btn-active-bg: #873716;
+  --bs-btn-active-border-color: #873716;
   border-radius: 999px;
 }
 
 // Texto rojizo para botones de borrar/dar de baja (va junto con .btn-hs-outline)
 .hs-texto-peligro {
-  --bs-btn-color: #b4532a;
-  --bs-btn-hover-color: #9a4522;
+  --bs-btn-color: #9a4522;
+  --bs-btn-hover-color: #873716;
+}
+
+// Enlace con flecha que avanza al pasar el cursor ("Ver todas →")
+.hs-enlace-flecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 800;
+  text-decoration: none;
+
+  .bi {
+    transition: transform 0.3s $hs-ease-out;
+  }
+
+  &:hover .bi {
+    transform: translateX(4px);
+  }
 }
 
 // Enlace con el nombre de una mascota en listas y tablas
@@ -225,18 +344,44 @@ body {
 // Formularios
 .form-control,
 .form-select {
-  border-radius: 14px;
+  min-height: 46px;
+  border-radius: 12px;
   border-color: var(--hs-border);
   background-color: var(--hs-card-bg);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: #8c8076;
+  }
+
+  &:hover:not(:focus):not(:disabled) {
+    border-color: #d6c8b4;
+  }
 
   &:focus {
     border-color: $hs-primary;
-    box-shadow: 0 0 0 0.2rem rgba(232, 122, 69, 0.2);
+    box-shadow: 0 0 0 0.2rem rgba(185, 79, 36, 0.16);
   }
+}
+
+textarea.form-control {
+  min-height: 0;
 }
 
 .form-label {
   font-weight: 700;
+}
+
+.form-check-input:checked {
+  background-color: $hs-primary;
+  border-color: $hs-primary;
+}
+
+.form-check-input:focus {
+  border-color: $hs-primary;
+  box-shadow: 0 0 0 0.2rem rgba(185, 79, 36, 0.16);
 }
 
 // Dropdowns y modales de ng-bootstrap
@@ -244,7 +389,16 @@ body {
   --bs-dropdown-border-color: var(--hs-border);
   --bs-dropdown-border-radius: 14px;
   --bs-dropdown-link-active-bg: var(--hs-sage);
+  --bs-dropdown-link-hover-bg: var(--hs-cream-deep);
   box-shadow: var(--hs-shadow-hover);
+  animation: hs-menu-entrada 0.22s $hs-ease-out;
+}
+
+@keyframes hs-menu-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 .modal-content {
@@ -263,11 +417,17 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  font-size: 1.6rem;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  color: #9a4522;
   background-color: var(--hs-peach-soft);
   border-radius: 50%;
+
+  app-icono-huella {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
 }
 
 .btn-ver-password {
@@ -275,7 +435,7 @@ body {
   background-color: var(--hs-card-bg);
   border: 1px solid var(--hs-border);
   border-left: 0;
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 12px 12px 0;
 
   &:hover {
     color: var(--bs-body-color);
@@ -296,7 +456,32 @@ body {
 }
 
 .hs-alert-warn {
-  color: #b4532a;
+  color: #9a4522;
   background-color: var(--hs-peach-soft);
   border: 1px solid #f5c9b2;
+}
+
+// Esqueletos de carga: ocupan el lugar del contenido mientras llega
+.hs-esqueleto {
+  display: block;
+  background: linear-gradient(90deg, var(--hs-cream-deep) 0%, #faf3e8 45%, var(--hs-cream-deep) 90%) 0 0 / 200% 100%;
+  border-radius: 8px;
+  animation: hs-brillo 1.4s ease-in-out infinite;
+}
+
+@keyframes hs-brillo {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

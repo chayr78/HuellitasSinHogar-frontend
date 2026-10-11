@@ -1,5 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import {
@@ -11,6 +12,7 @@ import {
 import { Especie, MascotaResponse, Tamano } from '../../../models/mascota.model';
 import { BusquedaService } from '../../../services/busqueda.service';
 import { MascotaService } from '../../../services/mascota.service';
+import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 import { MascotaCard } from '../../../shared/components/mascota-card/mascota-card';
 import { coincideBusqueda } from '../../../shared/utils/texto';
 
@@ -22,15 +24,22 @@ interface Opcion<T> {
   etiqueta: string;
 }
 
-/** Catálogo público (página de inicio): lista de mascotas con filtros y el buscador del navbar. */
+/**
+ * Catálogo público: lista de mascotas con buscador y filtros.
+ * Los filtros viven en la URL (?especie=PERRO&tamano=CHICO) para poder compartir el enlace o llegar desde Inicio.
+ */
 @Component({
-  imports: [NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem, MascotaCard],
+  imports: [MascotaCard, IconoHuella],
   selector: 'app-catalogo-list',
+  styleUrl: './catalogo-list.scss',
   templateUrl: './catalogo-list.html',
 })
 export class CatalogoList implements OnInit {
   private readonly mascotaService = inject(MascotaService);
-  private readonly busqueda = inject(BusquedaService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  protected readonly busqueda = inject(BusquedaService);
 
   protected readonly mascotas = signal<MascotaResponse[]>([]);
   protected readonly cargando = signal(true);
@@ -42,7 +51,7 @@ export class CatalogoList implements OnInit {
   protected readonly filtroEspecie = signal<FiltroEspecie>('TODAS');
 
   protected readonly opcionesTamano: Opcion<FiltroTamano>[] = [
-    { valor: 'TODOS', etiqueta: 'Todos' },
+    { valor: 'TODOS', etiqueta: 'Todos los tamaños' },
     ...TAMANOS.map((tamano) => ({ valor: tamano, etiqueta: ETIQUETA_TAMANO[tamano] })),
   ];
   protected readonly opcionesEspecie: Opcion<FiltroEspecie>[] = [
@@ -51,6 +60,13 @@ export class CatalogoList implements OnInit {
   ];
 
   ngOnInit(): void {
+    // La URL manda: se leen los filtros al entrar y cada vez que cambian (p. ej. con atrás/adelante).
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const especie = params.get('especie') as Especie | null;
+      const tamano = params.get('tamano') as Tamano | null;
+      this.filtroEspecie.set(especie && ESPECIES.includes(especie) ? especie : 'TODAS');
+      this.filtroTamano.set(tamano && TAMANOS.includes(tamano) ? tamano : 'TODOS');
+    });
     this.cargar();
   }
 
@@ -68,8 +84,29 @@ export class CatalogoList implements OnInit {
     );
   }
 
-  protected etiquetaDe<T>(opciones: Opcion<T>[], valor: T): string {
-    return opciones.find((o) => o.valor === valor)?.etiqueta ?? '';
+  protected hayFiltros(): boolean {
+    return this.filtroTamano() !== 'TODOS' || this.filtroEspecie() !== 'TODAS' || this.busqueda.termino().trim() !== '';
+  }
+
+  /** Escribe los filtros en la URL; el cambio de la URL actualiza las señales. "Todos" se quita de la URL. */
+  protected cambiarFiltros(cambios: { especie?: FiltroEspecie; tamano?: FiltroTamano }): void {
+    const queryParams: Record<string, string | null> = {};
+    if (cambios.especie !== undefined) {
+      queryParams['especie'] = cambios.especie === 'TODAS' ? null : cambios.especie;
+    }
+    if (cambios.tamano !== undefined) {
+      queryParams['tamano'] = cambios.tamano === 'TODOS' ? null : cambios.tamano;
+    }
+    this.router.navigate([], { queryParams, queryParamsHandling: 'merge', replaceUrl: true });
+  }
+
+  protected limpiarFiltros(): void {
+    this.busqueda.termino.set('');
+    this.cambiarFiltros({ especie: 'TODAS', tamano: 'TODOS' });
+  }
+
+  protected leerTexto(evento: Event): string {
+    return (evento.target as HTMLInputElement).value;
   }
 
   /** El catálogo muestra solo las mascotas disponibles. */

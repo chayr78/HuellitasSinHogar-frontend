@@ -1,27 +1,30 @@
 :host {
   display: block;
-  margin-top: 64px;
+  margin-top: 72px;
 }
 
 .footer-hs {
   color: #fbf6ee;
-  background-color: #2e2620;
-  border-radius: 24px 24px 0 0;
+  background-color: var(--hs-ink);
 
   a,
   .btn-arriba {
-    color: #fbf6ee;
+    color: rgba(251, 246, 238, 0.8);
     text-decoration: none;
     border-radius: 6px;
+    transition: color 0.2s ease;
 
     &:hover {
-      color: var(--bs-primary);
+      color: #f6b48e;
     }
 
     &:focus-visible {
-      outline: 2px solid var(--bs-primary);
-      outline-offset: 2px;
+      outline-color: #f6b48e;
     }
+  }
+
+  .marca {
+    color: #fbf6ee;
   }
 }
 
@@ -29,36 +32,70 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-size: 1.1rem;
-  background-color: var(--hs-peach-soft);
-  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 1.15rem;
+  color: #fff;
+  background-color: var(--bs-primary);
+  border-radius: 12px;
+  transform: rotate(-8deg);
+}
+
+.marca-texto {
+  font-family: var(--hs-font-display);
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+
+  em {
+    font-weight: 500;
+  }
+}
+
+.lema {
+  max-width: 34ch;
+  font-family: var(--hs-font-display);
+  font-size: 1.35rem;
+  line-height: 1.35;
+  color: rgba(251, 246, 238, 0.9);
 }
 
 .titulo-columna {
-  margin-bottom: 0.75rem;
-  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  font-family: var(--bs-font-sans-serif);
+  font-size: 0.95rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #f3b48f;
+  letter-spacing: 0;
+  color: #f6b48e;
 }
 
 .texto-suave {
-  color: rgba(251, 246, 238, 0.75);
+  color: rgba(251, 246, 238, 0.7);
 }
 
 .consejos {
-  padding-left: 1.1rem;
+  font-size: 0.95rem;
+  color: rgba(251, 246, 238, 0.8);
+
+  li {
+    display: flex;
+    gap: 0.65rem;
+  }
+
+  .bi {
+    flex-shrink: 0;
+    color: #f6b48e;
+  }
 }
 
 .barra-inferior {
-  border-top: 1px solid rgba(251, 246, 238, 0.15);
+  border-top: 1px solid rgba(251, 246, 238, 0.14);
 }
 
 .btn-arriba {
+  display: inline-flex;
   align-self: flex-start;
+  gap: 0.35rem;
   padding: 0;
   font-weight: 700;
   background: none;

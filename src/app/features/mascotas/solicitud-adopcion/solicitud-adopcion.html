@@ -6,7 +6,7 @@
   </div>
 } @else if (errorCarga()) {
   <div class="text-center py-5">
-    <div class="display-4 mb-3" aria-hidden="true">🐾</div>
+    <span class="hs-estado-icono" aria-hidden="true"><i class="bi bi-search"></i></span>
     <p class="fs-5 fw-bold mb-3">
       {{ noEncontrada() ? 'No encontramos esta mascota' : 'No pudimos cargar la información. Inténtalo de nuevo en unos minutos.' }}
     </p>
@@ -22,9 +22,8 @@
     <header class="d-flex flex-column flex-md-row align-items-md-center gap-4 mb-4">
       <app-foto-mascota class="foto-solicitud" [fotoUrl]="m.fotoUrl" [nombre]="m.nombre" [altura]="140" />
       <div class="flex-grow-1">
-        <p class="hs-eyebrow mb-1">Solicitud para adoptar a</p>
         <h1 class="display-5 fw-extrabold mb-1">{{ m.nombre }}</h1>
-        <p class="text-hs-muted mb-0">{{ m.publicadorNombre }} · {{ m.ubicacionPublicador }}</p>
+        <p class="text-hs-muted mb-0">Solicitud de adopción · {{ m.publicadorNombre }} · {{ m.ubicacionPublicador }}</p>
       </div>
       @let porcentaje = porcentajeEncuesta();
       @if (porcentaje !== null) {
@@ -38,7 +37,7 @@
 
     @if (enviada(); as resultado) {
       <section class="hs-card p-4 p-md-5 text-center">
-        <div class="display-4 mb-3" aria-hidden="true">🎉</div>
+        <span class="hs-estado-icono exito" aria-hidden="true"><i class="bi bi-balloon-heart"></i></span>
         <h2 class="fw-extrabold mb-2">¡Solicitud enviada!</h2>
         <p class="text-hs-muted mb-3">
           Gracias por querer darle un hogar a {{ m.nombre }}. {{ m.publicadorNombre }} revisará tu información y se pondrá en

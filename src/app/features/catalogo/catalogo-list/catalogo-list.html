@@ -1,75 +1,107 @@
-<header class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-2 mb-4">
+<header class="encabezado d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
   <div>
-    <p class="hs-eyebrow mb-2">Catálogo</p>
-    <h1 class="display-5 fw-extrabold mb-0">Mascotas en adopción</h1>
+    <h1 class="titulo-pagina mb-2">Mascotas en adopción</h1>
+    <p class="text-hs-muted fs-5 mb-0">Perros y gatos de refugios y rescatistas de Tecámac.</p>
   </div>
   @if (!cargando() && !errorCarga()) {
-    <p class="text-hs-muted fw-semibold mb-1 text-nowrap">
-      {{ mascotasFiltradas().length }} {{ mascotasFiltradas().length === 1 ? 'mascota' : 'mascotas' }} en Tecámac
+    <p class="conteo mb-1 text-nowrap" aria-live="polite">
+      <strong class="hs-numeros">{{ mascotasFiltradas().length }}</strong>
+      {{ mascotasFiltradas().length === 1 ? 'mascota' : 'mascotas' }}
+      @if (hayFiltros()) {
+        de <span class="hs-numeros">{{ mascotas().length }}</span>
+      }
     </p>
   }
 </header>
 
-<section class="hs-card p-3 mb-4" aria-label="Filtros">
-  <div class="d-flex flex-wrap align-items-center gap-2">
-    <span class="small fw-bold text-hs-muted me-1"><i class="bi bi-sliders me-1" aria-hidden="true"></i>Filtrar</span>
+<section class="filtros hs-card mb-4 mb-lg-5" aria-label="Filtros">
+  <div class="buscador">
+    <i class="bi bi-search" aria-hidden="true"></i>
+    <input
+      type="search"
+      class="form-control"
+      placeholder="Buscar por nombre o refugio"
+      aria-label="Buscar por nombre o refugio"
+      [value]="busqueda.termino()"
+      (input)="busqueda.termino.set(leerTexto($event))"
+    />
+  </div>
 
-    <div ngbDropdown class="d-inline-block">
-      <button type="button" class="hs-chip" ngbDropdownToggle [class.active]="filtroTamano() !== 'TODOS'">
-        @if (filtroTamano() === 'TODOS') {
-          Tamaño
-        } @else {
-          Tamaño: {{ etiquetaDe(opcionesTamano, filtroTamano()).toLowerCase() }}
-        }
-      </button>
-      <div ngbDropdownMenu>
-        @for (opcion of opcionesTamano; track opcion.valor) {
-          <button type="button" ngbDropdownItem [class.active]="filtroTamano() === opcion.valor" (click)="filtroTamano.set(opcion.valor)">
-            {{ opcion.etiqueta }}
-          </button>
-        }
-      </div>
+  <div class="grupos">
+    <div class="grupo" role="group" aria-label="Especie">
+      @for (opcion of opcionesEspecie; track opcion.valor) {
+        <button
+          type="button"
+          class="hs-chip"
+          [class.active]="filtroEspecie() === opcion.valor"
+          [attr.aria-pressed]="filtroEspecie() === opcion.valor"
+          (click)="cambiarFiltros({ especie: opcion.valor })"
+        >
+          {{ opcion.etiqueta }}
+        </button>
+      }
     </div>
 
-    <div ngbDropdown class="d-inline-block">
-      <button type="button" class="hs-chip" ngbDropdownToggle [class.active]="filtroEspecie() !== 'TODAS'">
-        @if (filtroEspecie() === 'TODAS') {
-          Especie
-        } @else {
-          Especie: {{ etiquetaDe(opcionesEspecie, filtroEspecie()).toLowerCase() }}
-        }
-      </button>
-      <div ngbDropdownMenu>
-        @for (opcion of opcionesEspecie; track opcion.valor) {
-          <button type="button" ngbDropdownItem [class.active]="filtroEspecie() === opcion.valor" (click)="filtroEspecie.set(opcion.valor)">
-            {{ opcion.etiqueta }}
-          </button>
-        }
-      </div>
+    <span class="separador" aria-hidden="true"></span>
+
+    <div class="grupo" role="group" aria-label="Tamaño">
+      @for (opcion of opcionesTamano; track opcion.valor) {
+        <button
+          type="button"
+          class="hs-chip"
+          [class.active]="filtroTamano() === opcion.valor"
+          [attr.aria-pressed]="filtroTamano() === opcion.valor"
+          (click)="cambiarFiltros({ tamano: opcion.valor })"
+        >
+          {{ opcion.etiqueta }}
+        </button>
+      }
     </div>
+
+    @if (hayFiltros()) {
+      <button type="button" class="btn btn-link limpiar" (click)="limpiarFiltros()">
+        <i class="bi bi-x-lg me-1" aria-hidden="true"></i>Limpiar
+      </button>
+    }
   </div>
 </section>
 
 @if (cargando()) {
-  <div class="d-flex flex-column align-items-center py-5 gap-3">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando mascotas...</span>
-    </div>
-    <span class="text-hs-muted">Buscando huellitas...</span>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" aria-hidden="true">
+    @for (n of [1, 2, 3, 4, 5, 6]; track n) {
+      <div class="col">
+        <div class="hs-card overflow-hidden">
+          <span class="hs-esqueleto rounded-0" style="height: 240px"></span>
+          <div class="p-3">
+            <span class="hs-esqueleto mb-2" style="width: 50%; height: 1.5rem"></span>
+            <span class="hs-esqueleto mb-3" style="width: 30%; height: 0.9rem"></span>
+            <span class="hs-esqueleto" style="width: 70%; height: 0.9rem"></span>
+          </div>
+        </div>
+      </div>
+    }
   </div>
+  <span class="visually-hidden" role="status">Cargando mascotas...</span>
 } @else if (errorCarga()) {
-  <div class="alert alert-warning d-flex flex-column flex-sm-row align-items-sm-center gap-3" role="alert">
-    <i class="bi bi-emoji-frown fs-3" aria-hidden="true"></i>
-    <div class="flex-grow-1">
-      <strong>No pudimos cargar las mascotas.</strong>
-      <div>Revisa tu conexión o inténtalo de nuevo en unos minutos.</div>
-    </div>
-    <button type="button" class="btn btn-hs-outline" (click)="cargar()">Reintentar</button>
+  <div class="estado-vacio text-center" role="alert">
+    <span class="hs-estado-icono"><i class="bi bi-wifi-off" aria-hidden="true"></i></span>
+    <h2 class="h4 fw-bold mb-2">No pudimos cargar las mascotas</h2>
+    <p class="text-hs-muted mb-4">Revisa tu conexión o inténtalo de nuevo en unos minutos.</p>
+    <button type="button" class="btn btn-primary px-4" (click)="cargar()">
+      <i class="bi bi-arrow-clockwise me-1" aria-hidden="true"></i>Reintentar
+    </button>
   </div>
 } @else if (mascotasFiltradas().length === 0) {
-  <div class="text-center py-5">
-    <div class="display-4 mb-3" aria-hidden="true">🐾</div>
-    <p class="fs-5 text-hs-muted mb-0">Aún no hay mascotas con esos filtros</p>
+  <div class="estado-vacio text-center">
+    <span class="hs-estado-icono"><app-icono-huella /></span>
+    @if (mascotas().length === 0) {
+      <h2 class="h4 fw-bold mb-2">Por ahora no hay mascotas en adopción</h2>
+      <p class="text-hs-muted mb-0">Vuelve pronto: los refugios publican nuevas mascotas seguido.</p>
+    } @else {
+      <h2 class="h4 fw-bold mb-2">Ninguna mascota coincide con tu búsqueda</h2>
+      <p class="text-hs-muted mb-4">Prueba con otros filtros o quítalos para ver todas.</p>
+      <button type="button" class="btn btn-hs-outline px-4" (click)="limpiarFiltros()">Ver todas las mascotas</button>
+    }
   </div>
 } @else {
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">

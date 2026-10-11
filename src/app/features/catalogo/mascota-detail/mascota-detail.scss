@@ -1,10 +1,78 @@
+.volver {
+  color: var(--hs-muted);
+
+  &:hover {
+    color: var(--bs-body-color);
+  }
+
+  &:hover .bi {
+    transform: translateX(-4px);
+  }
+}
+
+// En escritorio la galería acompaña el scroll mientras se lee la ficha
+.galeria {
+  @media (min-width: 992px) {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+.nombre {
+  font-size: clamp(2.6rem, 1.8rem + 3vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+// Tres datos clave en una fila
+.datos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 0;
+  background-color: var(--hs-card-bg);
+  border: 1px solid var(--hs-border);
+  border-radius: var(--hs-radius);
+}
+
+.dato {
+  padding: 1rem;
+
+  & + & {
+    border-left: 1px solid var(--hs-border);
+  }
+
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--hs-muted);
+
+    .bi {
+      color: var(--hs-sage);
+    }
+  }
+
+  dd {
+    margin-bottom: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+}
+
 .descripcion {
+  max-width: 65ch;
+  font-size: 1.05rem;
+  line-height: 1.7;
   white-space: pre-line;
 }
 
-.aviso {
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  border-radius: 14px;
-  white-space: normal;
+.acciones {
+  padding: 1.25rem;
+
+  @media (min-width: 768px) {
+    padding: 1.5rem;
+  }
 }

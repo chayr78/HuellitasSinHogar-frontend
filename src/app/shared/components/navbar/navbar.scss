@@ -1,32 +1,75 @@
 .navbar-hs {
-  background-color: var(--hs-card-bg);
+  --bs-navbar-padding-y: 0.7rem;
+  background-color: rgba(255, 253, 249, 0.92);
   border-bottom: 1px solid var(--hs-border);
+  backdrop-filter: saturate(1.4) blur(12px);
 }
 
 .marca-circulo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-size: 1.1rem;
-  background-color: var(--hs-peach-soft);
-  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 1.15rem;
+  color: #fff;
+  background-color: var(--bs-primary);
+  border-radius: 12px;
+  transform: rotate(-8deg);
+  transition: transform 0.4s var(--hs-ease-out);
 }
 
 .navbar-brand {
-  font-size: 1.05rem;
+  color: inherit;
+
+  &:hover .marca-circulo {
+    transform: rotate(4deg) scale(1.05);
+  }
+}
+
+.marca-texto {
+  font-family: var(--hs-font-display);
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+
+  em {
+    font-style: italic;
+    font-weight: 500;
+  }
 }
 
 .nav-link {
   --bs-nav-link-color: var(--bs-body-color);
   --bs-navbar-active-color: var(--bs-primary);
-  --bs-nav-link-hover-color: var(--bs-primary);
+  --bs-nav-link-hover-color: var(--bs-body-color);
+  --bs-nav-link-font-weight: 700;
+  position: relative;
+
+  // Subrayado que crece desde el centro; fijo en la página activa
+  @media (min-width: 992px) {
+    &::after {
+      position: absolute;
+      right: var(--bs-navbar-nav-link-padding-x);
+      bottom: 0.2rem;
+      left: var(--bs-navbar-nav-link-padding-x);
+      height: 2px;
+      content: '';
+      background-color: currentColor;
+      border-radius: 2px;
+      transform: scaleX(0);
+      transition: transform 0.35s var(--hs-ease-out);
+    }
+
+    &:hover::after,
+    &.active::after {
+      transform: scaleX(1);
+    }
+  }
 }
 
-
 .navbar-toggler {
-  padding: 0.2rem 0.5rem;
+  padding: 0.25rem 0.55rem;
   border-color: var(--hs-border);
   border-radius: 12px;
 }
@@ -36,33 +79,37 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
   padding: 0.25rem;
   color: var(--bs-body-color);
   background: none;
   border: 0;
   border-radius: 50%;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(46, 38, 32, 0.06);
+  }
 
   &::after {
     display: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--hs-sage);
   }
 }
 
 .contador-notificaciones {
   position: absolute;
-  top: -2px;
-  right: -4px;
+  top: 2px;
+  right: 0;
   min-width: 1.15rem;
-  padding: 0.1rem 0.3rem;
+  padding: 0.15rem 0.3rem;
   font-size: 0.65rem;
   font-weight: 800;
   line-height: 1;
   color: #fff;
   text-align: center;
-  background-color: var(--bs-danger); // círculo rojo de avisos sin leer
+  background-color: var(--bs-primary);
+  border: 2px solid var(--hs-card-bg);
   border-radius: 999px;
 }
 
@@ -88,41 +135,47 @@
   right: 0;
   left: 0;
   transition:
-    background-color 250ms ease,
-    border-color 250ms ease,
-    box-shadow 250ms ease;
+    background-color 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    padding 300ms var(--hs-ease-out);
 
   // Sólido después de hacer scroll: con una sombra ligera
   &:not(.transparente) {
-    box-shadow: 0 4px 16px rgba(46, 38, 32, 0.08);
+    box-shadow: 0 8px 24px -12px rgba(46, 38, 32, 0.18);
   }
 }
 
 // Transparente arriba del banner: textos e iconos en blanco
 .navbar-hs.transparente {
+  --bs-navbar-padding-y: 1.1rem;
   background-color: transparent;
   border-bottom-color: transparent;
+  backdrop-filter: none;
 
   .navbar-brand,
   .btn-icono {
     color: #fff;
   }
 
+  .btn-icono:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .contador-notificaciones {
+    border-color: transparent;
+  }
+
   .nav-link {
     --bs-nav-link-color: #fff;
     --bs-navbar-active-color: #fff;
     --bs-nav-link-hover-color: #fff;
-
-    &.active {
-      text-decoration: underline;
-      text-underline-offset: 6px;
-    }
   }
 
   .btn-hs-outline {
     --bs-btn-color: #fff;
     --bs-btn-bg: transparent;
-    --bs-btn-border-color: #fff;
+    --bs-btn-border-color: rgba(255, 255, 255, 0.7);
     --bs-btn-hover-color: var(--bs-body-color);
     --bs-btn-hover-bg: #fff;
     --bs-btn-hover-border-color: #fff;
@@ -135,13 +188,8 @@
 
   .btn-icono:focus-visible,
   .navbar-brand:focus-visible,
-  .nav-link:focus-visible {
-    outline: 2px solid #fff;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .navbar-hs.sobre-banner {
-    transition: none;
+  .nav-link:focus-visible,
+  .btn:focus-visible {
+    outline-color: #fff;
   }
 }

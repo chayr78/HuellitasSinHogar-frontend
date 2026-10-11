@@ -6,7 +6,7 @@ import { MascotaPlaceholder } from '../mascota-placeholder/mascota-placeholder';
  * Foto de una mascota que se ve COMPLETA (object-fit: contain) sobre un fondo con la misma foto desenfocada.
  * La caja siempre mide lo mismo: `altura` en px, o `proporcion` (p. ej. '1 / 1') si se indica.
  * Con `altura` en null, el tamaño lo pone el contenedor. `recortar` llena la caja recortando (miniaturas).
- * Si no hay URL o la imagen no carga, muestra el placeholder 🐾.
+ * Si no hay URL o la imagen no carga, muestra el placeholder con la huella.
  */
 @Component({
   imports: [MascotaPlaceholder],

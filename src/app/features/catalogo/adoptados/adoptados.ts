@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { MascotaResponse } from '../../../models/mascota.model';
 import { MascotaService } from '../../../services/mascota.service';
@@ -6,8 +7,9 @@ import { MascotaCard } from '../../../shared/components/mascota-card/mascota-car
 
 /** "Historias felices" (/adoptados): mascotas que ya encontraron hogar. */
 @Component({
-  imports: [MascotaCard],
+  imports: [MascotaCard, RouterLink],
   selector: 'app-adoptados',
+  styleUrl: './adoptados.scss',
   templateUrl: './adoptados.html',
 })
 export class Adoptados implements OnInit {

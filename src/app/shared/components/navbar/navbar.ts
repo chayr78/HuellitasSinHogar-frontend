@@ -15,6 +15,7 @@ import { ETIQUETA_ROL } from '../../../models/etiquetas';
 import { NotificacionItem } from '../../../models/notificacion.model';
 import { NotificacionService } from '../../../services/notificacion.service';
 import { Avatar } from '../avatar/avatar';
+import { IconoHuella } from '../icono-huella/icono-huella';
 
 /** Desde cuántos px de scroll el navbar sobre el banner se vuelve sólido. */
 const UMBRAL_SCROLL_PX = 24;
@@ -31,6 +32,7 @@ const UMBRAL_SCROLL_PX = 24;
     NgbDropdownMenu,
     NgbDropdownItem,
     Avatar,
+    IconoHuella,
   ],
   selector: 'app-navbar',
   styleUrl: './navbar.scss',

@@ -5,18 +5,21 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { NavbarEstadoService } from '../../../core/services/navbar-estado.service';
 import { MascotaResponse } from '../../../models/mascota.model';
 import { MascotaService } from '../../../services/mascota.service';
+import { IconoHuella } from '../../../shared/components/icono-huella/icono-huella';
 import { MascotaCard } from '../../../shared/components/mascota-card/mascota-card';
+import { Revelar } from '../../../shared/directives/revelar';
 import { HeroInicio } from '../hero-inicio/hero-inicio';
 
 /** Un paso de "Así de fácil". */
 interface Paso {
   icono: string;
+  titulo: string;
   texto: string;
 }
 
 /** Página de inicio (/): banner, misión, cómo funciona, mascotas destacadas e invitación a publicar. */
 @Component({
-  imports: [RouterLink, HeroInicio, MascotaCard],
+  imports: [RouterLink, HeroInicio, MascotaCard, IconoHuella, Revelar],
   selector: 'app-home',
   styleUrl: './home.scss',
   templateUrl: './home.html',
@@ -33,10 +36,18 @@ export class Home implements OnInit, OnDestroy {
   protected readonly totalAdoptados = signal<number | null>(null);
 
   protected readonly pasos: Paso[] = [
-    { icono: 'bi-search', texto: 'Explora el catálogo' },
-    { icono: 'bi-clipboard2-check', texto: 'Descubre tu compatibilidad (opcional)' },
-    { icono: 'bi-send', texto: 'Envía tu solicitud' },
-    { icono: 'bi-chat-heart', texto: 'El refugio te contacta' },
+    { icono: 'bi-search', titulo: 'Explora el catálogo', texto: 'Filtra por especie y tamaño y conoce la historia de cada mascota.' },
+    {
+      icono: 'bi-clipboard2-check',
+      titulo: 'Descubre tu compatibilidad',
+      texto: 'Una encuesta breve y opcional te dice qué tan bien encaja con tu hogar.',
+    },
+    { icono: 'bi-send', titulo: 'Envía tu solicitud', texto: 'Llénala desde la ficha de la mascota que te robó el corazón.' },
+    {
+      icono: 'bi-chat-heart',
+      titulo: 'El refugio te contacta',
+      texto: 'Quien la publicó revisa tu solicitud y se comunica contigo para continuar.',
+    },
   ];
 
   ngOnInit(): void {

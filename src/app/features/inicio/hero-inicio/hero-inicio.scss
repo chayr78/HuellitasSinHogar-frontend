@@ -1,15 +1,17 @@
 .hero {
   position: relative;
   display: flex;
-  align-items: center;
-  min-height: 440px;
+  align-items: flex-end;
+  min-height: 600px;
+  min-height: 92svh;
   overflow: hidden;
   color: #fff;
   // Respaldo cálido si la foto no existe o no carga
-  background: linear-gradient(135deg, var(--hs-peach-soft), var(--hs-sage-soft));
+  background: linear-gradient(135deg, #5a3f2e, #2e2620);
 
-  @media (min-width: 768px) {
-    min-height: clamp(520px, 88vh, 760px);
+  @media (min-width: 992px) {
+    align-items: center;
+    min-height: clamp(600px, 94vh, 860px);
   }
 }
 
@@ -26,75 +28,130 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    // En móvil se centra en la cara del perro (a la izquierda de la foto)
+    object-position: 32% center;
+    animation: acercar 2.4s var(--hs-ease-out) both;
   }
 }
 
-// Oscurece la izquierda (texto) y la parte de arriba (navbar) para que se lean sobre cualquier foto
+// Oscurece abajo (móvil) o la derecha (escritorio) para que el texto se lea; la cara del perro queda libre
 .capa-oscura {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(46, 38, 32, 0.55), rgba(46, 38, 32, 0) 30%),
-    linear-gradient(to right, rgba(46, 38, 32, 0.78), rgba(46, 38, 32, 0.15));
+    linear-gradient(to bottom, rgba(30, 22, 17, 0.55), rgba(30, 22, 17, 0) 22%),
+    linear-gradient(to top, rgba(30, 22, 17, 0.92) 8%, rgba(30, 22, 17, 0.55) 48%, rgba(30, 22, 17, 0.05) 75%);
+
+  @media (min-width: 992px) {
+    background:
+      linear-gradient(to bottom, rgba(30, 22, 17, 0.5), rgba(30, 22, 17, 0) 20%),
+      linear-gradient(to left, rgba(30, 22, 17, 0.9) 18%, rgba(30, 22, 17, 0.5) 50%, rgba(30, 22, 17, 0) 72%);
+  }
 }
 
 .contenido {
   position: relative;
-  // Deja espacio para el navbar fijo
-  padding-top: 6rem;
-  padding-bottom: 4.5rem;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 7rem;
+  padding-bottom: 5.5rem;
+
+  @media (min-width: 992px) {
+    padding-bottom: 4rem;
+  }
 }
 
 .texto {
-  max-width: 640px;
-}
-
-.eyebrow {
-  margin-bottom: 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #f3b48f;
+  width: 100%;
+  max-width: 560px;
 }
 
 .titulo {
-  margin-bottom: 1rem;
-  font-size: 2.3rem;
-  font-weight: 800;
-  line-height: 1.1;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  margin-bottom: 1.1rem;
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.6rem);
+  font-weight: 600;
+  font-variation-settings: 'SOFT' 80;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
 
-  @media (min-width: 992px) {
-    font-size: 4rem; // tamaño de display-3 en escritorio
+  em {
+    display: block;
+    font-weight: 500;
+    color: #f6b48e;
   }
 }
 
 .subtitulo {
-  margin-bottom: 1.25rem;
+  max-width: 44ch;
+  margin-bottom: 1.75rem;
   font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.insignia {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  padding: 0.45rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  background-color: rgba(46, 38, 32, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .botones {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin-bottom: 1.75rem;
+
+  .opcion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-inline: 1.6rem;
+  }
 
   .btn:focus-visible {
     outline: 3px solid #fff;
-    outline-offset: 2px;
+    outline-offset: 3px;
+  }
+}
+
+// Botón secundario sobre la foto: vidrio claro con texto blanco
+.btn-claro {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: rgba(255, 255, 255, 0.12);
+  --bs-btn-border-color: rgba(255, 255, 255, 0.55);
+  --bs-btn-hover-color: var(--hs-ink);
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-hover-border-color: #fff;
+  --bs-btn-active-color: var(--hs-ink);
+  --bs-btn-active-bg: #fff;
+  --bs-btn-active-border-color: #fff;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+.insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.86);
+
+  strong {
+    color: #fff;
+  }
+}
+
+// Punto "en vivo": las cifras vienen del catálogo actual
+.punto {
+  position: relative;
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  background-color: #8fd19e;
+  border-radius: 50%;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background-color: inherit;
+    border-radius: inherit;
+    animation: latido 2.2s ease-out infinite;
   }
 }
 
@@ -102,40 +159,66 @@
   position: absolute;
   bottom: 1.25rem;
   left: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 44px;
   height: 44px;
   margin-left: -22px;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #fff;
-  background: rgba(46, 38, 32, 0.35);
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
-  animation: rebote 2s ease-in-out infinite;
+  backdrop-filter: blur(6px);
+  transition: background-color 0.2s ease;
+  animation: rebote 2.4s ease-in-out 1.6s infinite;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
 
   &:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 2px;
   }
+
+  @media (max-width: 991.98px) {
+    display: none;
+  }
 }
 
-// Entrada escalonada: cada línea sube y aparece un poco después de la anterior
+// Entrada escalonada: cada bloque sube y se enfoca un poco después del anterior
 .aparecer {
-  animation: aparecer 600ms ease-out both;
+  animation: aparecer 900ms var(--hs-ease-out) both;
 
-  &:nth-child(2) { animation-delay: 100ms; }
-  &:nth-child(3) { animation-delay: 200ms; }
-  &:nth-child(4) { animation-delay: 300ms; }
-  &:nth-child(5) { animation-delay: 400ms; }
+  &:nth-child(2) { animation-delay: 120ms; }
+  &:nth-child(3) { animation-delay: 240ms; }
+  &:nth-child(4) { animation-delay: 360ms; }
 }
 
 @keyframes aparecer {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    filter: blur(6px);
+    transform: translateY(24px);
+  }
+}
+
+@keyframes acercar {
+  from {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes latido {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
   }
   to {
-    opacity: 1;
-    transform: none;
+    opacity: 0;
+    transform: scale(2.8);
   }
 }
 
@@ -144,10 +227,11 @@
   50% { transform: translateY(6px); }
 }
 
-// Sin animaciones para quien prefiere menos movimiento
 @media (prefers-reduced-motion: reduce) {
   .aparecer,
-  .flecha {
+  .flecha,
+  .punto::after,
+  .capa-imagen img {
     animation: none;
   }
 }
