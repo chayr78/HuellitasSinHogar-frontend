@@ -182,6 +182,17 @@ table,
   background-color: var(--hs-cream-deep);
 }
 
+// Color del badge de sexo (va junto con .hs-badge-neutral)
+.sexo-macho {
+  color: #2f5d7c;
+  background-color: #dde9f1;
+}
+
+.sexo-hembra {
+  color: #8a3b5c;
+  background-color: #f6e0e9;
+}
+
 // Línea de contexto bajo un título de página (p. ej. "Nueva publicación", el tipo de cuenta)
 .hs-contexto {
   font-weight: 700;

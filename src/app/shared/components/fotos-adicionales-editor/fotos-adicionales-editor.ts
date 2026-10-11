@@ -3,13 +3,15 @@ import { Component, EventEmitter, Input, Output, inject, signal } from '@angular
 
 import { estadoHttp, mensajeError } from '../../../core/http/api.util';
 import { ErrorImagen, prepararImagen } from '../../../core/utils/preparar-imagen';
+import { ModeracionImagenService } from '../../../services/moderacion-imagen.service';
 import { UploadService } from '../../../services/upload.service';
 import { FotoMascota } from '../foto-mascota/foto-mascota';
 
-/** Avance de la subida: "Subiendo {actual} de {total}...". */
+/** Avance: "Revisando foto {actual} de {total}..." o "Subiendo {actual} de {total}...". */
 interface Avance {
   actual: number;
   total: number;
+  etapa: 'revisando' | 'subiendo';
 }
 
 /**
@@ -24,6 +26,7 @@ interface Avance {
 })
 export class FotosAdicionalesEditor {
   private readonly uploadService = inject(UploadService);
+  private readonly moderacion = inject(ModeracionImagenService);
 
   @Input() urls: string[] = [];
   @Input() maximo = 5;
@@ -36,6 +39,8 @@ export class FotosAdicionalesEditor {
   protected readonly avance = signal<Avance | null>(null);
   /** Mensajes breves de los archivos que no se pudieron agregar. */
   protected readonly avisos = signal<string[]>([]);
+  /** Nombres de los archivos rechazados por contenido inapropiado. */
+  protected readonly rechazadas = signal<string[]>([]);
   protected readonly subidaNoConfigurada = signal(false);
 
   protected quitar(url: string): void {
@@ -52,7 +57,7 @@ export class FotosAdicionalesEditor {
     }
   }
 
-  /** Procesa y sube los archivos uno por uno; los que fallan se omiten con un aviso. */
+  /** Revisa, procesa y sube los archivos uno por uno; los que fallan o se rechazan se omiten con un aviso. */
   private async agregar(archivos: File[]): Promise<void> {
     const lista = [...this.urls];
     const espacio = this.maximo - lista.length;
@@ -62,6 +67,7 @@ export class FotosAdicionalesEditor {
     }
     const seleccion = archivos.slice(0, Math.max(espacio, 0));
     this.avisos.set(avisos);
+    this.rechazadas.set([]);
     this.subidaNoConfigurada.set(false);
     if (seleccion.length === 0) {
       return;
@@ -70,7 +76,17 @@ export class FotosAdicionalesEditor {
     this.procesandoChange.emit(true);
     for (let i = 0; i < seleccion.length; i++) {
       const archivo = seleccion[i];
-      this.avance.set({ actual: i + 1, total: seleccion.length });
+
+      // 1) Revisar la foto ANTES de achicarla o subirla. Si se rechaza, se salta y se sigue con las demás.
+      this.avance.set({ actual: i + 1, total: seleccion.length, etapa: 'revisando' });
+      const revision = await this.moderacion.validar(archivo);
+      if (!revision.aceptada) {
+        this.rechazadas.update((nombres) => [...nombres, archivo.name]);
+        continue;
+      }
+
+      // 2) Achicarla y subirla.
+      this.avance.set({ actual: i + 1, total: seleccion.length, etapa: 'subiendo' });
       try {
         const foto = await prepararImagen(archivo);
         const url = await this.subir(foto);

@@ -3,12 +3,13 @@ import { Component, EventEmitter, Input, OnDestroy, Output, inject, signal } fro
 import { Subscription } from 'rxjs';
 
 import { estadoHttp, mensajeError } from '../../../core/http/api.util';
+import { ModeracionImagenService } from '../../../services/moderacion-imagen.service';
 import { UploadService } from '../../../services/upload.service';
 import { ErrorImagen, esFormatoPermitido, prepararImagen } from '../../../core/utils/preparar-imagen';
 import { FotoMascota } from '../foto-mascota/foto-mascota';
 
 /**
- * Elegir, achicar y subir una foto de mascota o de perfil (según `tipo`), mostrando el progreso.
+ * Elegir, revisar (contenido inapropiado), achicar y subir una foto de mascota o de perfil (según `tipo`), mostrando el progreso.
  * Recibe la URL actual con [url] y avisa la nueva con (urlChange). (procesandoChange) indica si hay una subida en curso.
  */
 @Component({
@@ -19,6 +20,7 @@ import { FotoMascota } from '../foto-mascota/foto-mascota';
 })
 export class FotoUploader implements OnDestroy {
   private readonly uploadService = inject(UploadService);
+  private readonly moderacion = inject(ModeracionImagenService);
 
   @Input() set url(valor: string | null) {
     this.urlActual.set(valor?.trim() ? valor : null);
@@ -38,6 +40,10 @@ export class FotoUploader implements OnDestroy {
   protected readonly procesando = signal(false);
   protected readonly progreso = signal<number | null>(null);
   protected readonly error = signal<string | null>(null);
+  /** True mientras se revisa si la foto tiene contenido inapropiado. */
+  protected readonly revisando = signal(false);
+  /** Mensaje cuando la foto se rechazó por contenido inapropiado. */
+  protected readonly rechazo = signal<string | null>(null);
   /** El backend respondió 503 (subida no configurada): se ofrece escribir la URL a mano. */
   protected readonly subidaNoConfigurada = signal(false);
   protected readonly arrastrando = signal(false);
@@ -85,6 +91,8 @@ export class FotoUploader implements OnDestroy {
 
   protected quitarFoto(): void {
     this.intento++;
+    this.revisando.set(false);
+    this.rechazo.set(null);
     this.subida?.unsubscribe();
     this.terminar(null);
     this.cambiarUrl(null);
@@ -92,6 +100,7 @@ export class FotoUploader implements OnDestroy {
 
   private async procesar(archivo: File): Promise<void> {
     this.error.set(null);
+    this.rechazo.set(null);
     // El formato se revisa antes de mostrar el spinner, como siempre.
     if (!esFormatoPermitido(archivo)) {
       this.error.set('Formato no permitido. Usa una foto JPEG, PNG o WebP.');
@@ -100,6 +109,21 @@ export class FotoUploader implements OnDestroy {
 
     const intento = ++this.intento;
     this.cambiarProcesando(true);
+
+    // 1) Revisar la foto ANTES de achicarla o subirla.
+    this.revisando.set(true);
+    const revision = await this.moderacion.validar(archivo);
+    this.revisando.set(false);
+    if (intento !== this.intento) {
+      return; // El usuario quitó la foto mientras se revisaba.
+    }
+    if (!revision.aceptada) {
+      this.terminar(null);
+      this.rechazo.set(revision.motivo ?? null);
+      return; // Rechazada: no se agrega ni se sube.
+    }
+
+    // 2) Achicarla y subirla.
     let reducida: Blob;
     try {
       reducida = await prepararImagen(archivo, this.ladoMaximo);

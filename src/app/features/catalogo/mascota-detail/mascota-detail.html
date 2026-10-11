@@ -38,7 +38,7 @@
     </div>
 
     <div class="col-lg-5">
-      <div class="d-flex flex-wrap align-items-center gap-2 mb-3 entrada">
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-3 entrada" style="--n: 1">
         <span class="hs-badge-neutral">{{ etiquetaEspecie[m.especie] }}</span>
         @if (m.sexo) {
           <span class="hs-badge-neutral sexo-{{ m.sexo.toLowerCase() }}">
@@ -48,16 +48,16 @@
         <span appBadgeEstado [estado]="m.estado"></span>
       </div>
 
-      <h1 class="nombre entrada">
+      <h1 class="nombre entrada" style="--n: 2">
         <span class="saludo">Hola, soy</span>
         {{ m.nombre }}
       </h1>
-      <p class="ubicacion entrada">
+      <p class="ubicacion entrada" style="--n: 3">
         <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>{{ m.ubicacionPublicador }}
       </p>
 
       <!-- Rasgos con medidores visuales -->
-      <dl class="rasgos entrada">
+      <dl class="rasgos entrada" style="--n: 4">
         <div class="rasgo">
           <dt>Edad</dt>
           <dd>
@@ -90,7 +90,7 @@
       </dl>
 
       @if (m.descripcion?.trim()) {
-        <section class="historia entrada" aria-labelledby="titulo-historia">
+        <section class="historia entrada" style="--n: 5" aria-labelledby="titulo-historia">
           <h2 id="titulo-historia" class="h4 fw-bold mb-3">Mi historia</h2>
           <!-- La letra capital solo luce en textos largos -->
           <p class="descripcion mb-0" [class.capitular]="(m.descripcion?.length ?? 0) >= 160">{{ m.descripcion }}</p>
@@ -98,7 +98,7 @@
       }
 
       <!-- Quién lo cuida -->
-      <div class="cuidador entrada">
+      <div class="cuidador entrada" style="--n: 6">
         <app-avatar [fotoUrl]="m.publicadorFotoUrl" [nombre]="m.publicadorNombre" [tamano]="48" />
         <div class="lh-sm">
           <div class="small text-hs-muted mb-1">Me cuida</div>
@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <div class="acciones entrada">
+      <div class="acciones entrada" style="--n: 7">
         @if (!disponible) {
           <div class="hs-alert-warn d-flex align-items-center gap-2 mb-3" role="status">
             <i class="bi bi-info-circle" aria-hidden="true"></i>

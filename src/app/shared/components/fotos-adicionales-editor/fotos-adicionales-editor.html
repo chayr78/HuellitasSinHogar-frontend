@@ -60,7 +60,22 @@
 }
 
 @if (avance(); as a) {
-  <p class="small mt-2 mb-1" role="status">Subiendo {{ a.actual }} de {{ a.total }}...</p>
+  <p class="small mt-2 mb-1 d-flex align-items-center gap-2" role="status">
+    <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+    @if (a.etapa === 'revisando') {
+      Revisando foto {{ a.actual }} de {{ a.total }}...
+    } @else {
+      Subiendo {{ a.actual }} de {{ a.total }}...
+    }
+  </p>
+}
+
+@if (rechazadas().length > 0) {
+  <div class="alert alert-danger small py-2 mt-2 mb-0" role="alert">
+    <i class="bi bi-shield-exclamation me-1" aria-hidden="true"></i>
+    {{ rechazadas().length === 1 ? 'Esta foto fue rechazada' : 'Estas fotos fueron rechazadas' }}
+    por contener contenido inapropiado: <strong>{{ rechazadas().join(', ') }}</strong>. Sube otra imagen.
+  </div>
 }
 
 @if (subidaNoConfigurada()) {

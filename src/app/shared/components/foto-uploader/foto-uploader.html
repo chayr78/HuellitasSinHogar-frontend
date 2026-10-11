@@ -32,7 +32,7 @@
     @if (procesando()) {
       <div class="capa-carga">
         <div class="spinner-border spinner-border-sm text-primary" role="status">
-          <span class="visually-hidden">Subiendo foto...</span>
+          <span class="visually-hidden">{{ revisando() ? 'Revisando foto...' : 'Subiendo foto...' }}</span>
         </div>
       </div>
     }
@@ -73,6 +73,19 @@
         </button>
       }
     </div>
+
+    @if (revisando()) {
+      <div class="d-flex align-items-center gap-2 small fw-bold text-hs-muted" role="status">
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+        Revisando foto...
+      </div>
+    }
+
+    @if (rechazo(); as mensaje) {
+      <div class="alert alert-danger small py-2 mb-0 d-flex gap-2" role="alert">
+        <i class="bi bi-shield-exclamation" aria-hidden="true"></i>{{ mensaje }}
+      </div>
+    }
 
     @if (progreso() !== null) {
       <div

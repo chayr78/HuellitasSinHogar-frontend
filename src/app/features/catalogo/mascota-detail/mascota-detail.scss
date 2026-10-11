@@ -227,12 +227,7 @@
 // La columna de información entra por bloques, uno tras otro
 .entrada {
   animation: entrar 0.8s var(--hs-ease-out) both;
-
-  @for $i from 1 through 8 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{80 + $i * 70}ms;
-    }
-  }
+  animation-delay: calc(80ms + var(--n, 0) * 70ms);
 }
 
 @keyframes entrar {
@@ -277,15 +272,4 @@
     opacity: 0;
     transform: translateY(120%);
   }
-}
-
-// Color del badge de sexo
-.sexo-macho {
-  color: #2f5d7c;
-  background-color: #dde9f1;
-}
-
-.sexo-hembra {
-  color: #8a3b5c;
-  background-color: #f6e0e9;
 }
