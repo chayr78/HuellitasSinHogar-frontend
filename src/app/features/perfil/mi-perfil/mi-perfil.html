@@ -36,7 +36,15 @@
             autocomplete="name"
             [class.is-invalid]="invalido(formulario.controls.nombre)"
           />
-          <div class="invalid-feedback">Escribe tu nombre.</div>
+          <div class="invalid-feedback">
+            @if (formulario.controls.nombre.hasError('required')) {
+              Escribe tu nombre.
+            } @else if (esRefugio()) {
+              Usa letras y números, sin símbolos.
+            } @else {
+              Usa solo letras, sin números ni símbolos.
+            }
+          </div>
         </div>
 
         <div class="row g-3 mb-3">
@@ -50,7 +58,13 @@
               autocomplete="tel"
               [class.is-invalid]="invalido(formulario.controls.telefono)"
             />
-            <div class="invalid-feedback">Escribe un teléfono de contacto.</div>
+            <div class="invalid-feedback">
+              @if (formulario.controls.telefono.hasError('required')) {
+                Escribe un teléfono de contacto.
+              } @else {
+                Escribe un teléfono válido de 10 dígitos, solo números.
+              }
+            </div>
           </div>
           <div class="col-md-6">
             <label for="perfil-correo" class="form-label">Correo electrónico</label>

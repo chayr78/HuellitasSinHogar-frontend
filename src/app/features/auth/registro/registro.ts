@@ -18,6 +18,7 @@ import { TipoPublicador } from '../../../models/mascota.model';
 import { MUNICIPIOS_EDOMEX } from '../../../models/municipios-edomex';
 import { mensajeError } from '../../../core/http/api.util';
 import { LONGITUD_MINIMA_PASSWORD, passwordsCoinciden } from '../../../shared/validators/password.validators';
+import { nombreRefugioValido, nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
 
 type RolRegistro = RegistroRequest['rol'];
 
@@ -35,6 +36,14 @@ const datosPublicadorCompletos: ValidatorFn = (grupo: AbstractControl): Validati
   }
   return Object.keys(errores).length ? errores : null;
 };
+
+/** El nombre de un refugio puede llevar números; el de una persona, no. */
+const nombreSegunCuenta: ValidatorFn = (control: AbstractControl): ValidationErrors | null =>
+  esRefugio(control.parent) ? nombreRefugioValido(control) : nombreValido(control);
+
+function esRefugio(grupo: AbstractControl | null): boolean {
+  return grupo?.get('rol')?.value === 'PUBLICADOR' && grupo.get('tipoPublicador')?.value === 'REFUGIO';
+}
 
 /** Registro de cuenta nueva (/registro), como adoptante o como publicador (refugio o particular). */
 @Component({
@@ -58,10 +67,10 @@ export class Registro {
     {
       rol: this.fb.control<RolRegistro>('ADOPTANTE'),
       tipoPublicador: this.fb.control<TipoPublicador | null>(null),
-      nombre: ['', [Validators.required]],
+      nombre: ['', [Validators.required, nombreSegunCuenta]],
       ubicacion: ['Tecámac'],
       correo: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required]],
+      telefono: ['', [Validators.required, telefonoValido]],
       password: ['', [Validators.required, Validators.minLength(LONGITUD_MINIMA_PASSWORD)]],
       confirmacion: ['', [Validators.required]],
     },
@@ -84,6 +93,10 @@ export class Registro {
     return this.formulario.controls.rol.value === 'PUBLICADOR';
   }
 
+  protected get esRefugio(): boolean {
+    return esRefugio(this.formulario);
+  }
+
   protected invalido(control: AbstractControl): boolean {
     return control.invalid && control.touched;
   }
@@ -94,11 +107,14 @@ export class Registro {
 
   protected elegirRol(rol: RolRegistro): void {
     this.formulario.controls.rol.setValue(rol);
+    // La regla del nombre depende del tipo de cuenta
+    this.formulario.controls.nombre.updateValueAndValidity();
   }
 
   protected elegirTipo(tipo: TipoPublicador): void {
     this.formulario.controls.tipoPublicador.setValue(tipo);
     this.formulario.controls.tipoPublicador.markAsTouched();
+    this.formulario.controls.nombre.updateValueAndValidity();
   }
 
   protected registrarse(): void {

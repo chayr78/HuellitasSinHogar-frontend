@@ -69,7 +69,13 @@
               autocomplete="name"
               [class.is-invalid]="invalido(formulario.controls.nombreContacto)"
             />
-            <div class="invalid-feedback">Escribe tu nombre completo.</div>
+            <div class="invalid-feedback">
+              @if (formulario.controls.nombreContacto.hasError('required')) {
+                Escribe tu nombre completo.
+              } @else {
+                Usa solo letras, sin números ni símbolos.
+              }
+            </div>
           </div>
 
           <div class="row g-3 mb-3">
@@ -83,7 +89,13 @@
                 autocomplete="tel"
                 [class.is-invalid]="invalido(formulario.controls.telefonoContacto)"
               />
-              <div class="invalid-feedback">Escribe un teléfono de contacto.</div>
+              <div class="invalid-feedback">
+                @if (formulario.controls.telefonoContacto.hasError('required')) {
+                  Escribe un teléfono de contacto.
+                } @else {
+                  Escribe un teléfono válido de 10 dígitos, solo números.
+                }
+              </div>
             </div>
             <div class="col-md-6">
               <label for="correoContacto" class="form-label">Correo electrónico</label>

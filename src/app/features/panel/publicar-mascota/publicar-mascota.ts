@@ -1,5 +1,12 @@
 import { Component, Input, inject, signal } from '@angular/core';
-import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -20,6 +27,41 @@ import { MascotaService } from '../../../services/mascota.service';
 import { ToastService } from '../../../services/toast.service';
 import { FotoUploader } from '../../../shared/components/foto-uploader/foto-uploader';
 import { FotosAdicionalesEditor } from '../../../shared/components/fotos-adicionales-editor/fotos-adicionales-editor';
+import { nombreValido } from '../../../shared/validators/texto.validators';
+
+type UnidadEdad = 'MESES' | 'ANIOS';
+
+/** Desde 12 meses la edad se escribe en años. */
+const EDAD_MAXIMA: Record<UnidadEdad, number> = { MESES: 11, ANIOS: 30 };
+
+/** Entero positivo y dentro del máximo de la unidad elegida. Vacío pasa: la edad es opcional. */
+const edadValida: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const valor = control.value as number | null;
+  if (valor === null) {
+    return null;
+  }
+  const unidad = (control.parent?.get('edadUnidad')?.value as UnidadEdad | undefined) ?? 'ANIOS';
+  return Number.isInteger(valor) && valor >= 1 && valor <= EDAD_MAXIMA[unidad] ? null : { edadInvalida: true };
+};
+
+/** "2 años", "1 mes"... El backend guarda la edad como texto. */
+function textoEdad(cantidad: number | null, unidad: UnidadEdad): string {
+  if (cantidad === null) {
+    return '';
+  }
+  const palabra = unidad === 'MESES' ? (cantidad === 1 ? 'mes' : 'meses') : cantidad === 1 ? 'año' : 'años';
+  return `${cantidad} ${palabra}`;
+}
+
+/** Lee una edad guardada como texto; si no tiene la forma "<número> mes(es)/año(s)", la deja vacía. */
+function leerEdad(texto: string | null | undefined): { cantidad: number | null; unidad: UnidadEdad } {
+  const coincidencia = texto?.trim().match(/^(\d+)\s*(mes|meses|año|años|anio|anios)$/i);
+  if (!coincidencia) {
+    return { cantidad: null, unidad: 'ANIOS' };
+  }
+  const unidad = coincidencia[2].toLowerCase().startsWith('mes') ? 'MESES' : 'ANIOS';
+  return { cantidad: Number(coincidencia[1]), unidad };
+}
 
 /**
  * Formulario para publicar una mascota (/panel/nueva) o editarla (/panel/editar/:id).
@@ -54,10 +96,11 @@ export class PublicarMascota {
   protected readonly formulario = this.fb.group({
     fotoUrl: this.fb.control<string | null>(null),
     fotosAdicionales: this.fb.control<string[]>([]),
-    nombre: ['', [Validators.required]],
+    nombre: ['', [Validators.required, nombreValido]],
     especie: this.fb.control<Especie | null>(null, Validators.required),
     sexo: this.fb.control<Sexo | null>(null, Validators.required),
-    edadAproximada: [''],
+    edadCantidad: this.fb.control<number | null>(null, edadValida),
+    edadUnidad: this.fb.control<UnidadEdad>('ANIOS'),
     tamano: this.fb.control<Tamano | null>(null, Validators.required),
     nivelEnergia: this.fb.control<NivelEnergia | null>(null, Validators.required),
     descripcion: [''],
@@ -72,6 +115,8 @@ export class PublicarMascota {
   protected readonly etiquetaEspecie = ETIQUETA_ESPECIE;
   protected readonly etiquetaTamano = ETIQUETA_TAMANO;
   protected readonly etiquetaEnergia = ETIQUETA_ENERGIA;
+
+  protected readonly edadMaxima = EDAD_MAXIMA;
 
   protected readonly guardando = signal(false);
   /** Mientras la foto se sube aún no tenemos su URL: guardar en ese momento la perdería. */
@@ -102,9 +147,31 @@ export class PublicarMascota {
     control.markAsTouched();
   }
 
+  /** El máximo de la edad depende de la unidad, así que se vuelve a validar al cambiarla. */
+  protected cambiarUnidadEdad(): void {
+    this.formulario.controls.edadCantidad.updateValueAndValidity();
+  }
+
+  /** Un input numérico acepta "e", signos y decimales; la edad es un entero positivo. */
+  protected soloDigitos(evento: KeyboardEvent): void {
+    if (['e', 'E', '+', '-', '.', ','].includes(evento.key)) {
+      evento.preventDefault();
+    }
+  }
+
   protected guardar(): void {
-    const { fotoUrl, fotosAdicionales, nombre, especie, sexo, edadAproximada, tamano, nivelEnergia, descripcion } =
-      this.formulario.getRawValue();
+    const {
+      fotoUrl,
+      fotosAdicionales,
+      nombre,
+      especie,
+      sexo,
+      edadCantidad,
+      edadUnidad,
+      tamano,
+      nivelEnergia,
+      descripcion,
+    } = this.formulario.getRawValue();
     if (this.formulario.invalid || !especie || !sexo || !tamano || !nivelEnergia) {
       this.formulario.markAllAsTouched();
       return;
@@ -123,7 +190,7 @@ export class PublicarMascota {
       nombre: nombre.trim(),
       especie,
       sexo,
-      edadAproximada: edadAproximada.trim(),
+      edadAproximada: textoEdad(edadCantidad, edadUnidad),
       fotoUrl: portada,
       tamano,
       nivelEnergia,
@@ -175,6 +242,7 @@ export class PublicarMascota {
   }
 
   private rellenarFormulario(mascota: MascotaResponse): void {
+    const edad = leerEdad(mascota.edadAproximada);
     this.formulario.reset({
       fotoUrl: mascota.fotoUrl,
       fotosAdicionales: mascota.fotosAdicionales ?? [],
@@ -182,7 +250,8 @@ export class PublicarMascota {
       especie: mascota.especie,
       // Las mascotas publicadas antes de este campo no lo tienen: el publicador lo elige al editar.
       sexo: mascota.sexo ?? null,
-      edadAproximada: mascota.edadAproximada ?? '',
+      edadCantidad: edad.cantidad,
+      edadUnidad: edad.unidad,
       tamano: mascota.tamano,
       nivelEnergia: mascota.nivelEnergia,
       descripcion: mascota.descripcion ?? '',

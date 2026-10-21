@@ -104,7 +104,7 @@
 
         <div class="mb-3">
           <label for="nombre" class="form-label">
-            {{ esPublicador && formulario.controls.tipoPublicador.value === 'REFUGIO' ? 'Nombre del refugio' : 'Tu nombre' }}
+            {{ esRefugio ? 'Nombre del refugio' : 'Tu nombre' }}
           </label>
           <div class="hs-campo">
             <i class="bi bi-person hs-campo-icono" aria-hidden="true"></i>
@@ -116,7 +116,15 @@
               autocomplete="name"
               [class.is-invalid]="invalido(formulario.controls.nombre)"
             />
-            <div class="invalid-feedback">Este campo es obligatorio.</div>
+            <div class="invalid-feedback">
+              @if (formulario.controls.nombre.hasError('required')) {
+                Este campo es obligatorio.
+              } @else if (esRefugio) {
+                Usa letras y números, sin símbolos.
+              } @else {
+                Usa solo letras, sin números ni símbolos.
+              }
+            </div>
           </div>
         </div>
 
@@ -149,7 +157,13 @@
                 autocomplete="tel"
                 [class.is-invalid]="invalido(formulario.controls.telefono)"
               />
-              <div class="invalid-feedback">Escribe un teléfono de contacto.</div>
+              <div class="invalid-feedback">
+                @if (formulario.controls.telefono.hasError('required')) {
+                  Escribe un teléfono de contacto.
+                } @else {
+                  Escribe un teléfono válido de 10 dígitos, solo números.
+                }
+              </div>
             </div>
           </div>
         </div>

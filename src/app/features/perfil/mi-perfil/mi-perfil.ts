@@ -8,6 +8,7 @@ import { MUNICIPIOS_EDOMEX } from '../../../models/municipios-edomex';
 import { ToastService } from '../../../services/toast.service';
 import { Avatar } from '../../../shared/components/avatar/avatar';
 import { FotoUploader } from '../../../shared/components/foto-uploader/foto-uploader';
+import { nombreRefugioValido, nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
 
 /** "Mi perfil" (/perfil): foto, nombre, teléfono y municipio del usuario con sesión iniciada. */
 @Component({
@@ -23,10 +24,15 @@ export class MiPerfil {
   /** La ruta tiene authGuard, así que siempre hay usuario. */
   protected readonly usuario = this.auth.usuario;
 
+  /** Los refugios pueden llevar números en el nombre. */
+  protected esRefugio(): boolean {
+    return this.usuario()?.tipoPublicador === 'REFUGIO';
+  }
+
   protected readonly formulario = this.fb.group({
     fotoPerfilUrl: this.fb.control<string | null>(this.usuario()?.fotoPerfilUrl ?? null),
-    nombre: [this.usuario()?.nombre ?? '', [Validators.required]],
-    telefono: [this.usuario()?.telefono ?? '', [Validators.required]],
+    nombre: [this.usuario()?.nombre ?? '', [Validators.required, this.esRefugio() ? nombreRefugioValido : nombreValido]],
+    telefono: [this.usuario()?.telefono ?? '', [Validators.required, telefonoValido]],
     ubicacion: [this.usuario()?.ubicacion ?? ''],
   });
 

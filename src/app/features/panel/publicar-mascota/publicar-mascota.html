@@ -64,7 +64,13 @@
             formControlName="nombre"
             [class.is-invalid]="invalido(formulario.controls.nombre)"
           />
-          <div class="invalid-feedback">Escribe el nombre de la mascota.</div>
+          <div class="invalid-feedback">
+            @if (formulario.controls.nombre.hasError('required')) {
+              Escribe el nombre de la mascota.
+            } @else {
+              Usa solo letras, sin números ni símbolos.
+            }
+          </div>
         </div>
 
         <div class="row g-3 mb-3">
@@ -109,14 +115,38 @@
           </div>
 
           <div class="col-md-6">
-            <label for="edadAproximada" class="form-label">Edad aproximada</label>
-            <input
-              id="edadAproximada"
-              type="text"
-              class="form-control"
-              formControlName="edadAproximada"
-              placeholder="Ej. 2 años"
-            />
+            <label for="edadCantidad" class="form-label">Edad aproximada</label>
+            <div class="input-group has-validation">
+              <input
+                id="edadCantidad"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                [max]="edadMaxima[formulario.controls.edadUnidad.value]"
+                step="1"
+                class="form-control"
+                formControlName="edadCantidad"
+                placeholder="Ej. 2"
+                (keydown)="soloDigitos($event)"
+                [class.is-invalid]="invalido(formulario.controls.edadCantidad)"
+              />
+              <select
+                class="form-select flex-grow-0 w-auto"
+                formControlName="edadUnidad"
+                aria-label="Unidad de la edad"
+                (change)="cambiarUnidadEdad()"
+              >
+                <option value="MESES">Meses</option>
+                <option value="ANIOS">Años</option>
+              </select>
+              <div class="invalid-feedback">
+                @if (formulario.controls.edadUnidad.value === 'MESES') {
+                  Escribe de 1 a 11 meses; desde 12, usa años.
+                } @else {
+                  Escribe un número entero de 1 a 30 años.
+                }
+              </div>
+            </div>
           </div>
         </div>
 
