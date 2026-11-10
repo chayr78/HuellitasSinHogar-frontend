@@ -48,6 +48,16 @@
             Tu compatibilidad con {{ m.nombre }}: <span class="hs-badge-ok fs-6">{{ resultado.porcentaje }}%</span>
           </p>
         }
+        @if (resultado.enlaceWhatsapp; as enlace) {
+          <!-- En celular ocupa todo el ancho (d-grid); desde sm, solo lo que necesita -->
+          <div class="d-grid d-sm-block mb-3">
+            <a class="btn btn-whatsapp px-4" [href]="enlace" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-whatsapp me-1" aria-hidden="true"></i>Enviar también por WhatsApp
+            </a>
+          </div>
+        } @else {
+          <p class="small text-hs-muted mb-3">El publicador recibirá tu solicitud en su panel.</p>
+        }
         <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
           <a routerLink="/mis-solicitudes" class="btn btn-hs-outline px-4">Ver mis solicitudes</a>
           <a routerLink="/catalogo" class="btn btn-primary px-5">Volver al catálogo</a>

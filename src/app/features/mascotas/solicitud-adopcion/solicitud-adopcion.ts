@@ -13,6 +13,7 @@ import { SolicitudService } from '../../../services/solicitud.service';
 import { ToastService } from '../../../services/toast.service';
 import { AdopcionResponsableModal } from '../../../shared/components/adopcion-responsable-modal/adopcion-responsable-modal';
 import { FotoMascota } from '../../../shared/components/foto-mascota/foto-mascota';
+import { enlaceWhatsapp } from '../../../shared/utils/whatsapp';
 import { correoValido, nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
 
 /**
@@ -71,8 +72,11 @@ export class SolicitudAdopcion implements OnDestroy {
   /** El backend respondió 409: ya hay una solicitud de este adoptante para esta mascota. */
   protected readonly errorDuplicada = signal(false);
   protected readonly avisoSolicitudActiva = signal(false);
-  /** Resultado del envío. Guarda el porcentaje porque la encuesta se borra al enviar. */
-  protected readonly enviada = signal<{ porcentaje: number | null } | null>(null);
+  /**
+   * Resultado del envío. Guarda el porcentaje porque la encuesta se borra al enviar, y el enlace de WhatsApp
+   * al publicador (null si no tiene un número válido).
+   */
+  protected readonly enviada = signal<{ porcentaje: number | null; enlaceWhatsapp: string | null } | null>(null);
 
   /** Porcentaje de la encuesta, si el usuario la hizo para esta mascota. */
   protected porcentajeEncuesta(): number | null {
@@ -139,9 +143,16 @@ export class SolicitudAdopcion implements OnDestroy {
       otrasMascotas: encuesta?.otrasMascotas ?? null,
     };
     this.solicitudService.crear(solicitud).subscribe({
-      next: () => {
+      next: (respuesta) => {
         this.encuestaState.limpiar();
-        this.enviada.set({ porcentaje });
+        let texto =
+          `Hola, soy ${solicitud.nombreContacto}. Acabo de enviar una solicitud para adoptar a ` +
+          `${respuesta.mascotaNombre ?? this.mascota()?.nombre} en Huellitas Sin Hogar. ` +
+          `Mi teléfono es ${solicitud.telefonoContacto}.`;
+        if (porcentaje !== null) {
+          texto += ` Compatibilidad: ${porcentaje} %`;
+        }
+        this.enviada.set({ porcentaje, enlaceWhatsapp: enlaceWhatsapp(respuesta.whatsappPublicador, texto) });
         this.enviando.set(false);
         this.toast.success('¡Tu solicitud fue enviada!');
         this.notificaciones.refrescar();

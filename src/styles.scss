@@ -284,6 +284,23 @@ table,
   border-radius: 999px;
 }
 
+// Verde para abrir chats de WhatsApp (más oscuro que el de la marca para que el blanco encima pase AA)
+.btn-whatsapp {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #15803d;
+  --bs-btn-border-color: #15803d;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #116932;
+  --bs-btn-hover-border-color: #116932;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #116932;
+  --bs-btn-active-border-color: #116932;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #15803d;
+  --bs-btn-disabled-border-color: #15803d;
+  border-radius: 999px;
+}
+
 // Texto rojizo para botones de borrar/dar de baja (va junto con .btn-hs-outline)
 .hs-texto-peligro {
   --bs-btn-color: #9a4522;

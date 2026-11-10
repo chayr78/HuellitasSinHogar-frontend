@@ -5,12 +5,14 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ESTADOS_MASCOTA, ESTADOS_SOLICITUD, ETIQUETA_ESTADO, ETIQUETA_ESTADO_SOLICITUD } from '../../../models/etiquetas';
 import { EstadoMascota, MascotaResponse } from '../../../models/mascota.model';
 import { EstadoSolicitud, SolicitudResponse } from '../../../models/solicitud.model';
+import { AuthService } from '../../../core/auth/auth.service';
 import { mensajeError } from '../../../core/http/api.util';
 import { ConfirmService } from '../../../services/confirm.service';
 import { MascotaService } from '../../../services/mascota.service';
 import { NotificacionService } from '../../../services/notificacion.service';
 import { SolicitudService } from '../../../services/solicitud.service';
 import { Avatar } from '../../../shared/components/avatar/avatar';
+import { enlaceWhatsapp } from '../../../shared/utils/whatsapp';
 
 /**
  * Modal del panel para cambiar el estado de una mascota y de sus solicitudes. Lo abre PanelPublicador con NgbModal;
@@ -29,6 +31,7 @@ export class GestionMascotaModal {
   private readonly notificaciones = inject(NotificacionService);
   private readonly injector = inject(Injector);
   private readonly confirm = inject(ConfirmService);
+  private readonly auth = inject(AuthService);
 
   readonly mascotaActualizada = output<MascotaResponse>();
   readonly solicitudesActualizadas = output<SolicitudResponse[]>();
@@ -50,6 +53,17 @@ export class GestionMascotaModal {
   protected readonly estadosSolicitud = ESTADOS_SOLICITUD;
   protected readonly etiquetaEstado = ETIQUETA_ESTADO;
   protected readonly etiquetaEstadoSolicitud = ETIQUETA_ESTADO_SOLICITUD;
+
+  /** Enlace de WhatsApp para responder a quien envió la solicitud, o null si su teléfono no es válido. */
+  protected enlaceRespuesta(solicitud: SolicitudResponse): string | null {
+    const publicador = this.auth.usuario()?.nombre ?? solicitud.publicadorNombre;
+    const mascota = solicitud.mascotaNombre ?? this.mascota()?.nombre;
+    return enlaceWhatsapp(
+      solicitud.telefonoContacto,
+      `Hola ${solicitud.nombreContacto}, soy ${publicador} de Huellitas Sin Hogar. ` +
+        `Recibí tu solicitud para adoptar a ${mascota}. ¿Podemos platicar para conocernos?`,
+    );
+  }
 
   /**
    * Carga los datos iniciales y marca como leídas las solicitudes pendientes de leer.

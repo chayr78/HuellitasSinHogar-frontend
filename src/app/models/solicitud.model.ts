@@ -25,6 +25,8 @@ export interface SolicitudResponse {
   leidaAdoptante: boolean;
   adoptanteNombre: string;
   adoptanteFotoUrl: string | null;
+  /** Teléfono del publicador para WhatsApp. Solo llega al crear la solicitud; en las demás respuestas es null. */
+  whatsappPublicador: string | null;
 }
 
 /** Cuerpo de POST /solicitudes. El adoptante se toma del token. */

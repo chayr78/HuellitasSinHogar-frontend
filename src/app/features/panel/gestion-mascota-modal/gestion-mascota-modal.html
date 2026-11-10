@@ -114,6 +114,20 @@
                 </span>
               }
             </div>
+
+            <!-- Solo abre el chat: el estado de la solicitud se cambia a mano con los botones de arriba -->
+            @let enlace = enlaceRespuesta(solicitud);
+            <div class="d-grid d-sm-block mt-3">
+              @if (enlace) {
+                <a class="btn btn-whatsapp btn-sm px-3" [href]="enlace" target="_blank" rel="noopener noreferrer">
+                  <i class="bi bi-whatsapp me-1" aria-hidden="true"></i>Responder por WhatsApp
+                </a>
+              } @else {
+                <button type="button" class="btn btn-whatsapp btn-sm px-3" disabled>
+                  <i class="bi bi-whatsapp me-1" aria-hidden="true"></i>Sin teléfono válido
+                </button>
+              }
+            </div>
           </article>
         } @empty {
           <p class="text-hs-muted mb-0">Todavía no hay solicitudes para esta mascota.</p>
