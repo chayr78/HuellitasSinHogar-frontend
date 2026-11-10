@@ -114,6 +114,7 @@
               class="form-control"
               formControlName="nombre"
               autocomplete="name"
+              [placeholder]="esRefugio ? 'Ej. Refugio Patitas 24' : 'Ej. María López'"
               [class.is-invalid]="invalido(formulario.controls.nombre)"
             />
             <div class="invalid-feedback">
@@ -155,6 +156,7 @@
                 class="form-control"
                 formControlName="telefono"
                 autocomplete="tel"
+                placeholder="Ej. 5512345678"
                 [class.is-invalid]="invalido(formulario.controls.telefono)"
               />
               <div class="invalid-feedback">
@@ -178,6 +180,7 @@
                 class="form-control con-boton"
                 formControlName="password"
                 autocomplete="new-password"
+                placeholder="Mín. {{ longitudMinima }}, mayúscula y símbolo"
                 aria-describedby="ayuda-password"
                 [type]="verPassword() ? 'text' : 'password'"
                 [class.is-invalid]="invalido(formulario.controls.password)"
@@ -208,6 +211,7 @@
                 class="form-control"
                 formControlName="confirmacion"
                 autocomplete="new-password"
+                placeholder="Repite tu contraseña"
                 [type]="verPassword() ? 'text' : 'password'"
                 [class.is-invalid]="
                   invalido(formulario.controls.confirmacion) ||
