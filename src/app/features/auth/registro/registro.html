@@ -194,13 +194,13 @@
               >
                 <i class="bi" [class.bi-eye]="!verPassword()" [class.bi-eye-slash]="verPassword()" aria-hidden="true"></i>
               </button>
-              <div class="invalid-feedback">Usa al menos {{ longitudMinima }} caracteres.</div>
+              <div class="invalid-feedback">Usa al menos {{ longitudMinima }} caracteres, con una mayúscula y un carácter especial.</div>
             </div>
             <!-- Avance hacia la longitud mínima -->
             <div class="avance" aria-hidden="true">
               <span class="avance-barra" [style.width.%]="avancePassword()" [class.completo]="avancePassword() === 100"></span>
             </div>
-            <div id="ayuda-password" class="form-text">Mínimo {{ longitudMinima }} caracteres.</div>
+            <div id="ayuda-password" class="form-text">Mínimo {{ longitudMinima }} caracteres, una mayúscula y un carácter especial (p. ej. ! @ # $).</div>
           </div>
           <div class="col-md-6">
             <label for="confirmacion" class="form-label">Confírmala</label>

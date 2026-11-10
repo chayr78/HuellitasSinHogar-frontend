@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { mensajeError } from '../../../core/http/api.util';
 import { ToastService } from '../../../services/toast.service';
-import { LONGITUD_MINIMA_PASSWORD, passwordsCoinciden } from '../../../shared/validators/password.validators';
+import { LONGITUD_MINIMA_PASSWORD, passwordSegura, passwordsCoinciden } from '../../../shared/validators/password.validators';
 
 /** Nueva contraseña (/restablecer?token=...), desde el enlace que llega por correo. */
 @Component({
@@ -26,7 +26,7 @@ export class RestablecerPassword {
 
   protected readonly formulario = this.fb.group(
     {
-      nuevaPassword: ['', [Validators.required, Validators.minLength(LONGITUD_MINIMA_PASSWORD)]],
+      nuevaPassword: ['', [Validators.required, Validators.minLength(LONGITUD_MINIMA_PASSWORD), passwordSegura]],
       confirmacion: ['', [Validators.required]],
     },
     { validators: passwordsCoinciden('nuevaPassword', 'confirmacion') },

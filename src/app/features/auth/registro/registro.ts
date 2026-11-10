@@ -17,7 +17,7 @@ import { RegistroRequest } from '../../../models/auth.model';
 import { TipoPublicador } from '../../../models/mascota.model';
 import { MUNICIPIOS_EDOMEX } from '../../../models/municipios-edomex';
 import { mensajeError } from '../../../core/http/api.util';
-import { LONGITUD_MINIMA_PASSWORD, passwordsCoinciden } from '../../../shared/validators/password.validators';
+import { LONGITUD_MINIMA_PASSWORD, passwordSegura, passwordsCoinciden } from '../../../shared/validators/password.validators';
 import { nombreRefugioValido, nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
 
 type RolRegistro = RegistroRequest['rol'];
@@ -71,7 +71,7 @@ export class Registro {
       ubicacion: ['Tecámac'],
       correo: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, telefonoValido]],
-      password: ['', [Validators.required, Validators.minLength(LONGITUD_MINIMA_PASSWORD)]],
+      password: ['', [Validators.required, Validators.minLength(LONGITUD_MINIMA_PASSWORD), passwordSegura]],
       confirmacion: ['', [Validators.required]],
     },
     { validators: [passwordsCoinciden('password', 'confirmacion'), datosPublicadorCompletos] },

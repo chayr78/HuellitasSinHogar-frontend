@@ -28,13 +28,14 @@ function validarNombre(control: AbstractControl, patron: RegExp): ValidationErro
   return patron.test(texto) && letras >= 2 ? null : { nombreInvalido: true };
 }
 
-/** Marca `telefonoInvalido` si trae letras o símbolos, o no tiene entre 10 y 15 dígitos. Vacío pasa. */
+/** Marca `telefonoInvalido` si trae letras o símbolos, no tiene entre 10 y 15 dígitos o son todos cero. Vacío pasa. */
 export const telefonoValido: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   if (!control.value) {
     return null;
   }
   const texto = String(control.value).trim();
   const digitos = texto.replace(/\D/g, '').length;
-  const valido = PATRON_TELEFONO.test(texto) && digitos >= MIN_DIGITOS_TELEFONO && digitos <= MAX_DIGITOS_TELEFONO;
+  const valido =
+    PATRON_TELEFONO.test(texto) && digitos >= MIN_DIGITOS_TELEFONO && digitos <= MAX_DIGITOS_TELEFONO && /[1-9]/.test(texto);
   return valido ? null : { telefonoInvalido: true };
 };

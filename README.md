@@ -30,7 +30,7 @@ La salida queda en `dist/huellitas-frontend/browser`.
 La URL de la API se define en un solo lugar: `src/app/core/config/api.config.ts`.
 
 - En `localhost` / `127.0.0.1`: `http://localhost:8080/api`
-- En cualquier otro dominio (producción): `https://huellitassinhogar-production-4c97.up.railway.app/api`
+- En cualquier otro dominio (producción): `https://huellitassinhogar-production-8690.up.railway.app/api`
 
 ## Despliegue en Netlify
 
