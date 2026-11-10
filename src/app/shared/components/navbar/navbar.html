@@ -13,7 +13,7 @@
     <!-- Acciones: siempre visibles (a la derecha en escritorio, en la primera fila en móvil) -->
     <div class="d-flex align-items-center gap-2 ms-auto order-1 order-lg-3">
       @if (auth.usuario(); as usuario) {
-        <div ngbDropdown placement="bottom-end" class="d-inline-block">
+        <div ngbDropdown placement="bottom-end" class="dropdown d-inline-block">
           <button
             type="button"
             class="btn-icono position-relative"
@@ -47,11 +47,11 @@
           </div>
         </div>
 
-        <div ngbDropdown placement="bottom-end" class="d-inline-block">
+        <div ngbDropdown placement="bottom-end" class="dropdown d-inline-block">
           <button type="button" class="btn-icono" ngbDropdownToggle [attr.aria-label]="'Menú de ' + usuario.nombre">
             <app-avatar [fotoUrl]="usuario.fotoPerfilUrl" [nombre]="usuario.nombre" [tamano]="36" />
           </button>
-          <div ngbDropdownMenu class="py-2">
+          <div ngbDropdownMenu class="menu-cuenta py-2">
             <div class="px-3 pb-2 mb-1 border-bottom">
               <div class="fw-bold">{{ usuario.nombre }}</div>
               <div class="small text-hs-muted">{{ etiquetaRol[usuario.rol] }}</div>

@@ -45,6 +45,8 @@ body {
   caret-color: $hs-primary;
   accent-color: $hs-primary;
   scrollbar-color: #cdbfac var(--bs-body-bg);
+  // Un correo, URL o nombre muy largo se parte en vez de ensanchar la página en el teléfono
+  overflow-wrap: break-word;
 }
 
 // Superficies del navegador con la paleta
@@ -299,6 +301,39 @@ table,
   --bs-btn-disabled-bg: #15803d;
   --bs-btn-disabled-border-color: #15803d;
   border-radius: 999px;
+}
+
+// Pantallas táctiles (teléfono y tablet): áreas de toque de al menos ~44 px de alto.
+// Se sube el relleno vertical en vez de usar min-height para que el texto siga centrado.
+@media (pointer: coarse) {
+  .btn {
+    --bs-btn-padding-y: 0.5625rem; // 38 px -> 44 px
+  }
+
+  .btn-sm {
+    --bs-btn-padding-y: 0.65rem; // 31 px -> 44 px
+  }
+
+  .btn-lg {
+    --bs-btn-padding-y: 0.5rem; // ya mide 48 px: se deja igual
+  }
+
+  .hs-chip,
+  .btn-icono {
+    min-height: 44px;
+  }
+
+  .btn-icono {
+    min-width: 44px;
+  }
+
+  .dropdown-menu {
+    --bs-dropdown-item-padding-y: 0.65rem;
+  }
+
+  .navbar-nav {
+    --bs-nav-link-padding-y: 0.625rem;
+  }
 }
 
 // Texto rojizo para botones de borrar/dar de baja (va junto con .btn-hs-outline)

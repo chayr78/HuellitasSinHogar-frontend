@@ -44,7 +44,7 @@ export class Home implements OnInit, OnDestroy {
     { icono: 'bi-send', titulo: 'Envía tu solicitud', texto: 'Llénala desde la ficha de la mascota que te robó el corazón.' },
     {
       icono: 'bi-chat-heart',
-      titulo: 'El refugio te contacta',
+      titulo: 'Te contactan',
       texto: 'Quien la publicó revisa tu solicitud y se comunica contigo para continuar.',
     },
   ];

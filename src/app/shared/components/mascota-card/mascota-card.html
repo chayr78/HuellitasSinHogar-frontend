@@ -7,7 +7,7 @@
 
     <span class="estado">
       @if (adoptado) {
-        <span class="hs-badge-ok"><i class="bi bi-heart-fill me-1" aria-hidden="true"></i>¡Adoptado!</span>
+        <span class="hs-badge-ok"><i class="bi bi-heart-fill me-1" aria-hidden="true"></i>{{ m.sexo === 'HEMBRA' ? '¡Adoptada!' : '¡Adoptado!' }}</span>
       } @else {
         <span appBadgeEstado [estado]="m.estado"></span>
       }

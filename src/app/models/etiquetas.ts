@@ -68,7 +68,7 @@ export const ESTADO_SOLICITUD_ADOPTANTE: Record<EstadoSolicitud, { etiqueta: str
     explicacion: 'El publicador aún está revisando tu solicitud.',
   },
   CONTACTADA: {
-    etiqueta: 'El refugio te contactó',
+    etiqueta: 'Te contactaron',
     clase: 'hs-badge-ok',
     explicacion: 'Revisa tu teléfono o correo: se comunicaron contigo para continuar con la adopción.',
   },

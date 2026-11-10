@@ -81,7 +81,7 @@ export class MiPerfil {
       })
       .subscribe({
         next: () => {
-          this.toast.success('Perfil actualizado');
+          this.toast.success('Perfil actualizado.');
           this.formulario.markAsPristine();
           this.guardando.set(false);
         },

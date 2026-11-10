@@ -60,8 +60,8 @@ export class GestionMascotaModal {
     const mascota = solicitud.mascotaNombre ?? this.mascota()?.nombre;
     return enlaceWhatsapp(
       solicitud.telefonoContacto,
-      `Hola ${solicitud.nombreContacto}, soy ${publicador} de Huellitas Sin Hogar. ` +
-        `Recibí tu solicitud para adoptar a ${mascota}. ¿Podemos platicar para conocernos?`,
+      `Hola ${solicitud.nombreContacto}, soy ${publicador}, cuidador actual de ${mascota}. ` +
+        `Recibí tu solicitud para adoptar, ¿podemos hablar de la adopción?`,
     );
   }
 

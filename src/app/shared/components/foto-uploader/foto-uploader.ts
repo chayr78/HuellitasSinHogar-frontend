@@ -142,7 +142,7 @@ export class FotoUploader implements OnDestroy {
       reducida = await prepararImagen(archivo, this.ladoMaximo);
     } catch (error: unknown) {
       if (intento === this.intento) {
-        this.terminar(error instanceof ErrorImagen ? error.message : 'No pudimos procesar esta imagen, prueba con otra.');
+        this.terminar(error instanceof ErrorImagen ? error.message : 'No pudimos procesar esta imagen. Prueba con otra.');
       }
       return;
     }

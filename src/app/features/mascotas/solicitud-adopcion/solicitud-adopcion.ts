@@ -149,13 +149,11 @@ export class SolicitudAdopcion implements OnDestroy {
     this.solicitudService.crear(solicitud).subscribe({
       next: (respuesta) => {
         this.encuestaState.limpiar();
-        let texto =
-          `Hola, soy ${solicitud.nombreContacto}. Acabo de enviar una solicitud para adoptar a ` +
-          `${respuesta.mascotaNombre ?? this.mascota()?.nombre} en Huellitas Sin Hogar. ` +
-          `Mi teléfono es ${solicitud.telefonoContacto}.`;
-        if (porcentaje !== null) {
-          texto += ` Compatibilidad: ${porcentaje} %`;
-        }
+        // Mensaje que el adoptante le manda por WhatsApp a quien publicó la mascota
+        const texto =
+          `Hola ${respuesta.publicadorNombre ?? this.mascota()?.publicadorNombre}. ` +
+          `Soy ${solicitud.nombreContacto}, vi tu publicación en Huellitas sin Hogar. ` +
+          `Me interesa adoptar a ${respuesta.mascotaNombre ?? this.mascota()?.nombre}, ¿podemos hablar sobre la adopción?`;
         this.enviada.set({
           porcentaje,
           enlaceWhatsapp: enlaceWhatsapp(respuesta.whatsappPublicador, texto),

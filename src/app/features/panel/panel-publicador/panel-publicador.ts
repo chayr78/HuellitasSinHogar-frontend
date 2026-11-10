@@ -187,7 +187,7 @@ export class PanelPublicador implements OnInit {
 
     const publicacion = this.publicaciones().find((p) => p.mascota.id === pendiente.mascotaId);
     if (!publicacion) {
-      this.toast.error('No encontramos esa mascota');
+      this.toast.error('No encontramos esa mascota.');
       return;
     }
     this.abrirGestion(publicacion, pendiente.solicitudId);

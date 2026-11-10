@@ -23,7 +23,7 @@ export async function prepararImagen(archivo: File, ladoMaximo = 1600): Promise<
   try {
     reducida = await reducirImagen(archivo, ladoMaximo);
   } catch {
-    throw new ErrorImagen('No pudimos procesar esta imagen, prueba con otra.');
+    throw new ErrorImagen('No pudimos procesar esta imagen. Prueba con otra.');
   }
   if (reducida.size > TAMANO_MAXIMO_BYTES) {
     throw new ErrorImagen('La imagen es demasiado grande. Prueba con otra foto.');

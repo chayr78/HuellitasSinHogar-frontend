@@ -204,7 +204,7 @@ export class PublicarMascota {
 
     peticion.subscribe({
       next: (mascota) => {
-        this.toast.success(id === null ? `¡${mascota.nombre} ya está publicado!` : 'Cambios guardados.');
+        this.toast.success(id === null ? `¡Publicaste a ${mascota.nombre}!` : 'Cambios guardados.');
         this.router.navigateByUrl('/panel');
       },
       error: (error: unknown) => {

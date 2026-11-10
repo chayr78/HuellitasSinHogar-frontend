@@ -113,10 +113,40 @@
   border-radius: 999px;
 }
 
+// Menús de la campana y del avatar. Dentro de .navbar, ng-bootstrap no calcula la posición
+// (placement no aplica) y Bootstrap los pone con left: 0. Se alinean al borde derecho del botón
+// (su contenedor lleva la clase .dropdown, que es position: relative) para que se abran hacia la izquierda.
+.menu-notificaciones,
+.menu-cuenta {
+  right: 0 !important;
+  left: auto !important;
+}
+
 .menu-notificaciones {
   width: min(340px, 90vw);
   max-height: 420px;
   overflow-y: auto;
+}
+
+// En teléfono, el contenedor deja de ser la referencia y el menú se mide contra la barra completa
+// (que siempre está posicionada: sticky, o fixed sobre el banner): ocupa el ancho con margen a cada lado.
+// No se usa position: fixed porque con la barra transparente top: 100% se mediría contra la ventana.
+@media (max-width: 575.98px) {
+  .dropdown:has(> .menu-notificaciones),
+  .dropdown:has(> .menu-cuenta) {
+    position: static;
+  }
+
+  .menu-notificaciones,
+  .menu-cuenta {
+    right: 0.75rem !important;
+    left: 0.75rem !important;
+    width: auto;
+  }
+
+  .menu-notificaciones {
+    max-height: min(420px, 70vh);
+  }
 }
 
 .item-notificacion {

@@ -134,7 +134,7 @@ export class AdminPanel implements OnInit {
     this.adminService.cambiarEstadoUsuario(usuario.id, activar).subscribe({
       next: () => {
         this.usuarios.update((lista) => lista?.map((u) => (u.id === usuario.id ? { ...u, activo: activar } : u)) ?? null);
-        this.toast.success(activar ? `${usuario.nombre} fue reactivado.` : `${usuario.nombre} fue dado de baja.`);
+        this.toast.success(activar ? `La cuenta de ${usuario.nombre} se reactivó.` : `La cuenta de ${usuario.nombre} se dio de baja.`);
         this.procesando.set(null);
       },
       error: (error: unknown) => {
@@ -149,7 +149,7 @@ export class AdminPanel implements OnInit {
       titulo: `¿Dar de baja la publicación de ${mascota.nombre}?`,
       mensaje:
         'Se eliminará la publicación y también todas sus solicitudes de adopción. Esta acción no se puede deshacer.',
-      textoConfirmar: 'Dar de baja publicación',
+      textoConfirmar: 'Dar de baja la publicación',
       peligro: true,
     });
     if (!confirmado) {
