@@ -73,10 +73,14 @@ export class SolicitudAdopcion implements OnDestroy {
   protected readonly errorDuplicada = signal(false);
   protected readonly avisoSolicitudActiva = signal(false);
   /**
-   * Resultado del envío. Guarda el porcentaje porque la encuesta se borra al enviar, y el enlace de WhatsApp
-   * al publicador (null si no tiene un número válido).
+   * Resultado del envío. Guarda el porcentaje porque la encuesta se borra al enviar, el enlace de WhatsApp
+   * al publicador (null si no tiene un número válido) y si salió el correo de confirmación.
    */
-  protected readonly enviada = signal<{ porcentaje: number | null; enlaceWhatsapp: string | null } | null>(null);
+  protected readonly enviada = signal<{
+    porcentaje: number | null;
+    enlaceWhatsapp: string | null;
+    correoEnviado: boolean;
+  } | null>(null);
 
   /** Porcentaje de la encuesta, si el usuario la hizo para esta mascota. */
   protected porcentajeEncuesta(): number | null {
@@ -152,7 +156,11 @@ export class SolicitudAdopcion implements OnDestroy {
         if (porcentaje !== null) {
           texto += ` Compatibilidad: ${porcentaje} %`;
         }
-        this.enviada.set({ porcentaje, enlaceWhatsapp: enlaceWhatsapp(respuesta.whatsappPublicador, texto) });
+        this.enviada.set({
+          porcentaje,
+          enlaceWhatsapp: enlaceWhatsapp(respuesta.whatsappPublicador, texto),
+          correoEnviado: respuesta.correoConfirmacionEnviado === true,
+        });
         this.enviando.set(false);
         this.toast.success('¡Tu solicitud fue enviada!');
         this.notificaciones.refrescar();

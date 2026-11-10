@@ -48,6 +48,12 @@
             Tu compatibilidad con {{ m.nombre }}: <span class="hs-badge-ok fs-6">{{ resultado.porcentaje }}%</span>
           </p>
         }
+        <!-- Solo si el backend confirma que el correo salió -->
+        @if (resultado.correoEnviado) {
+          <p class="small mb-3">
+            <i class="bi bi-envelope-check me-1 text-hs-muted" aria-hidden="true"></i>Te enviamos un correo de confirmación
+          </p>
+        }
         @if (resultado.enlaceWhatsapp; as enlace) {
           <!-- En celular ocupa todo el ancho (d-grid); desde sm, solo lo que necesita -->
           <div class="d-grid d-sm-block mb-3">
