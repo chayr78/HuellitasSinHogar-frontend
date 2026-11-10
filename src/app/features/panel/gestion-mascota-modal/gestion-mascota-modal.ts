@@ -96,11 +96,12 @@ export class GestionMascotaModal {
 
   protected async cambiarEstadoMascota(estado: EstadoMascota): Promise<void> {
     const mascota = this.mascota();
-    if (!mascota || mascota.estado === estado || this.guardandoEstado()) {
+    // Una mascota adoptada ya no cambia de estado (el backend también lo rechaza)
+    if (!mascota || mascota.estado === estado || mascota.estado === 'ADOPTADO' || this.guardandoEstado()) {
       return;
     }
-    // Entrar o salir de ADOPTADO tiene consecuencias: se pide confirmación.
-    const mensaje = this.mensajeConfirmacion(mascota.estado, estado);
+    // Pasar a ADOPTADO no tiene vuelta atrás: se pide confirmación.
+    const mensaje = this.mensajeConfirmacion(estado);
     if (mensaje) {
       const confirmado = await this.confirm.confirmar({
         titulo: `¿Cambiar el estado de ${mascota.nombre}?`,
@@ -153,13 +154,10 @@ export class GestionMascotaModal {
     });
   }
 
-  /** Texto de confirmación al entrar o salir de ADOPTADO; null si no hace falta confirmar. */
-  private mensajeConfirmacion(actual: EstadoMascota, nuevo: EstadoMascota): string | null {
+  /** Texto de confirmación al pasar a ADOPTADO; null si no hace falta confirmar. */
+  private mensajeConfirmacion(nuevo: EstadoMascota): string | null {
     if (nuevo === 'ADOPTADO') {
-      return 'Se cerrarán las solicitudes abiertas y ya no podrás editar sus datos. ¿Continuar?';
-    }
-    if (actual === 'ADOPTADO') {
-      return 'Volverá a mostrarse en el catálogo. ¿Continuar?';
+      return 'Se cerrarán las solicitudes abiertas y ya no podrás cambiar su estado ni editar sus datos. Esta acción no se puede deshacer. ¿Continuar?';
     }
     return null;
   }

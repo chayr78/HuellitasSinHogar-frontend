@@ -20,7 +20,8 @@
             class="hs-chip"
             [class.active]="m.estado === estado"
             [attr.aria-pressed]="m.estado === estado"
-            [disabled]="guardandoEstado()"
+            [disabled]="guardandoEstado() || m.estado === 'ADOPTADO'"
+            [attr.title]="m.estado === 'ADOPTADO' ? 'Ya fue adoptada: su estado no se puede cambiar' : null"
             (click)="cambiarEstadoMascota(estado)"
           >
             {{ etiquetaEstado[estado] }}
