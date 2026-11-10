@@ -48,10 +48,10 @@
             Tu compatibilidad con {{ m.nombre }}: <span class="hs-badge-ok fs-6">{{ resultado.porcentaje }}%</span>
           </p>
         }
-        <!-- Solo si el backend confirma que el correo salió -->
+        <!-- Solo si el correo está activado en el backend: se envía en segundo plano y llega al correo de la cuenta -->
         @if (resultado.correoEnviado) {
           <p class="small mb-3">
-            <i class="bi bi-envelope-check me-1 text-hs-muted" aria-hidden="true"></i>Te enviamos un correo de confirmación
+            <i class="bi bi-envelope-check me-1 text-hs-muted" aria-hidden="true"></i>Te enviaremos un correo de confirmación al correo de tu cuenta
           </p>
         }
         @if (resultado.enlaceWhatsapp; as enlace) {

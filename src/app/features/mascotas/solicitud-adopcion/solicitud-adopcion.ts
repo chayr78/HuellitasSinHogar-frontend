@@ -74,7 +74,7 @@ export class SolicitudAdopcion implements OnDestroy {
   protected readonly avisoSolicitudActiva = signal(false);
   /**
    * Resultado del envío. Guarda el porcentaje porque la encuesta se borra al enviar, el enlace de WhatsApp
-   * al publicador (null si no tiene un número válido) y si salió el correo de confirmación.
+   * al publicador (null si no tiene un número válido) y si el correo de confirmación va en camino.
    */
   protected readonly enviada = signal<{
     porcentaje: number | null;

@@ -27,7 +27,7 @@ export interface SolicitudResponse {
   adoptanteFotoUrl: string | null;
   /** Teléfono del publicador para WhatsApp. Solo llega al crear la solicitud; en las demás respuestas es null. */
   whatsappPublicador: string | null;
-  /** True si al adoptante le llegó el correo de confirmación. Solo viene al crear la solicitud. */
+  /** True si el correo está activado y la confirmación va en camino (no garantiza que ya llegó). Solo viene al crear la solicitud. */
   correoConfirmacionEnviado: boolean | null;
 }
 
