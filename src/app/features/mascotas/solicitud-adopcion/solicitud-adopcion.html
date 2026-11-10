@@ -66,6 +66,7 @@
               type="text"
               class="form-control"
               formControlName="nombreContacto"
+              maxlength="150"
               autocomplete="name"
               placeholder="Ej. María López"
               [class.is-invalid]="invalido(formulario.controls.nombreContacto)"
@@ -87,6 +88,7 @@
                 type="tel"
                 class="form-control"
                 formControlName="telefonoContacto"
+                maxlength="20"
                 autocomplete="tel"
                 placeholder="Ej. 5512345678"
                 [class.is-invalid]="invalido(formulario.controls.telefonoContacto)"
@@ -106,6 +108,7 @@
                 type="email"
                 class="form-control"
                 formControlName="correoContacto"
+                maxlength="150"
                 autocomplete="email"
                 placeholder="tu@correo.com"
                 [class.is-invalid]="invalido(formulario.controls.correoContacto)"
@@ -127,6 +130,7 @@
               class="form-control"
               rows="4"
               formControlName="mensaje"
+              maxlength="2000"
               [placeholder]="'Cuéntale al refugio por qué ' + m.nombre + ' sería parte ideal de tu familia...'"
             ></textarea>
           </div>

@@ -18,7 +18,7 @@ import { TipoPublicador } from '../../../models/mascota.model';
 import { MUNICIPIOS_EDOMEX } from '../../../models/municipios-edomex';
 import { mensajeError } from '../../../core/http/api.util';
 import { LONGITUD_MINIMA_PASSWORD, passwordSegura, passwordsCoinciden } from '../../../shared/validators/password.validators';
-import { nombreRefugioValido, nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
+import { correoValido, nombreRefugioValido, nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
 
 type RolRegistro = RegistroRequest['rol'];
 
@@ -69,7 +69,7 @@ export class Registro {
       tipoPublicador: this.fb.control<TipoPublicador | null>(null),
       nombre: ['', [Validators.required, nombreSegunCuenta]],
       ubicacion: ['Tecámac'],
-      correo: ['', [Validators.required, Validators.email]],
+      correo: ['', [Validators.required, correoValido]],
       telefono: ['', [Validators.required, telefonoValido]],
       password: ['', [Validators.required, Validators.minLength(LONGITUD_MINIMA_PASSWORD), passwordSegura]],
       confirmacion: ['', [Validators.required]],

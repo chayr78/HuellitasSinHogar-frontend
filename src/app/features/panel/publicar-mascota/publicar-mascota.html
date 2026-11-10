@@ -62,6 +62,7 @@
             type="text"
             class="form-control"
             formControlName="nombre"
+            maxlength="80"
             placeholder="Ej. Firulais"
             [class.is-invalid]="invalido(formulario.controls.nombre)"
           />
@@ -200,6 +201,7 @@
             class="form-control"
             rows="5"
             formControlName="descripcion"
+            maxlength="5000"
             placeholder="Temperamento, historial, raza aparente, cómo se lleva con otros animales..."
           ></textarea>
         </div>

@@ -13,7 +13,7 @@ import { SolicitudService } from '../../../services/solicitud.service';
 import { ToastService } from '../../../services/toast.service';
 import { AdopcionResponsableModal } from '../../../shared/components/adopcion-responsable-modal/adopcion-responsable-modal';
 import { FotoMascota } from '../../../shared/components/foto-mascota/foto-mascota';
-import { nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
+import { correoValido, nombreValido, telefonoValido } from '../../../shared/validators/texto.validators';
 
 /**
  * Formulario de solicitud de adopción (/mascotas/:id/solicitud). Envía los datos de contacto
@@ -62,7 +62,7 @@ export class SolicitudAdopcion implements OnDestroy {
   protected readonly formulario = this.fb.group({
     nombreContacto: [this.auth.usuario()?.nombre ?? '', [Validators.required, nombreValido]],
     telefonoContacto: [this.auth.usuario()?.telefono ?? '', [Validators.required, telefonoValido]],
-    correoContacto: [this.auth.usuario()?.correo ?? '', [Validators.required, Validators.email]],
+    correoContacto: [this.auth.usuario()?.correo ?? '', [Validators.required, correoValido]],
     mensaje: [''],
   });
 

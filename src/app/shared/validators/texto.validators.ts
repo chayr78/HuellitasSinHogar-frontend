@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 /** Letras (con acentos y ñ), espacios, punto, apóstrofo y guion. Sin números ni otros símbolos. */
 const PATRON_NOMBRE = /^[\p{L}\p{M}\s.'-]+$/u;
@@ -6,6 +6,8 @@ const PATRON_NOMBRE = /^[\p{L}\p{M}\s.'-]+$/u;
 const PATRON_NOMBRE_REFUGIO = /^[\p{L}\p{M}\d\s.'-]+$/u;
 /** Dígitos con un + inicial opcional; se permiten espacios, guiones y paréntesis como separadores. */
 const PATRON_TELEFONO = /^\+?[\d\s()-]+$/;
+/** Algo@dominio.terminación: `Validators.email` acepta "ana@correo" sin dominio. Igual que Textos.PATRON_CORREO del backend. */
+const PATRON_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$/;
 
 const MIN_DIGITOS_TELEFONO = 10;
 const MAX_DIGITOS_TELEFONO = 15;
@@ -27,6 +29,15 @@ function validarNombre(control: AbstractControl, patron: RegExp): ValidationErro
   const letras = texto.match(/\p{L}/gu)?.length ?? 0;
   return patron.test(texto) && letras >= 2 ? null : { nombreInvalido: true };
 }
+
+/** Marca `email` (el mismo error que `Validators.email`) si el correo no es válido o no tiene terminación. Vacío pasa. */
+export const correoValido: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  if (!control.value) {
+    return null;
+  }
+  const texto = String(control.value).trim();
+  return Validators.email(control) === null && PATRON_CORREO.test(texto) ? null : { email: true };
+};
 
 /** Marca `telefonoInvalido` si trae letras o símbolos, no tiene entre 10 y 15 dígitos o son todos cero. Vacío pasa. */
 export const telefonoValido: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
